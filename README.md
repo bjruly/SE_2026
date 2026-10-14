@@ -10,11 +10,11 @@
 
 ## Thành viên và phân công
 
-| STT | Họ tên | GitHub | Công việc phụ trách | Trạng thái |
-|---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| STT | Họ tên | MSSV | GitHub | Công việc phụ trách | Trạng thái |
+|---|---|---|---|---|---|
+| 1 |  |  |  |  |  |
+| 2 |  |  |  |  |  |
+| 3 |  |  |  |  |  |
 
 ## Mốc quan trọng
 - Tuần 7: kiểm tra tiến độ giữa kỳ
