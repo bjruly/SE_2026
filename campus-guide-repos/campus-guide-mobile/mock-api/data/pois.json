@@ -1,0 +1,25 @@
+{
+  "_note": "DỮ LIỆU MẪU - thay bằng nội dung thật của nhóm. Chưa chốt ngôn ngữ phụ, hiện chỉ có vi và en.",
+  "pois": [
+    {
+      "id": "poi-001",
+      "qrCode": "CG-POI-001",
+      "location": { "lat": null, "lng": null, "radiusMeters": null },
+      "active": true,
+      "translations": {
+        "vi": { "name": "Điểm mẫu 1", "description": "Nội dung thuyết minh mẫu (tiếng Việt).", "audioUrl": null },
+        "en": { "name": "Sample point 1", "description": "Sample narration text (English).", "audioUrl": null }
+      }
+    },
+    {
+      "id": "poi-002",
+      "qrCode": "CG-POI-002",
+      "location": { "lat": null, "lng": null, "radiusMeters": null },
+      "active": true,
+      "translations": {
+        "vi": { "name": "Điểm mẫu 2", "description": "Nội dung thuyết minh mẫu (tiếng Việt).", "audioUrl": null },
+        "en": { "name": "Sample point 2", "description": "Sample narration text (English).", "audioUrl": null }
+      }
+    }
+  ]
+}

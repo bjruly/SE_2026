@@ -1,0 +1,22 @@
+# KHUNG CI - chưa chạy thử. Chỉnh lại sau khi khởi tạo dự án.
+# Các bước dùng "--if-present" nên sẽ bỏ qua nếu script chưa tồn tại trong package.json.
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22   # CHỈNH cho khớp yêu cầu Node của bản React Native / công cụ web bạn khởi tạo
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm test --if-present
+      - run: npm run build --if-present
