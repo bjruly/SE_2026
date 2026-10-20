@@ -25,7 +25,7 @@ Repository dùng **1 repo chung** cho cả web và mobile.
 | STT | Họ tên | MSSV | GitHub | Công việc phụ trách | Vai trò |
 |---|---|---|---|---|---|
 | 1 | Trần Lê Gia Bảo | 3124411038  |  |  | Nhóm trưởng |
-| 2 |  |  |  |  |  |
+| 2 | Tô Thành Nhân  | 3124411198  |  |  | Thành Viên |
 | 3 |  |  |  |  |  |
 
 ## Mốc quan trọng (theo slide của thầy)
