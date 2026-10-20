@@ -1,0 +1,68 @@
+[
+  {
+    "id": "poi-001",
+    "qrCode": "DHSG-POI-001",
+    "latitude": 10.76,
+    "longitude": 106.682,
+    "radiusMeters": 25,
+    "name": {
+      "vi": "Điểm mẫu 1",
+      "en": "Sample point 1",
+      "zh": "示例地点 1"
+    },
+    "description": {
+      "vi": "Đây là nội dung thuyết minh mẫu của điểm số một.",
+      "en": "This is the sample narration for point number one.",
+      "zh": "这是第一个地点的示例讲解内容。"
+    },
+    "audioUrl": {
+      "vi": null,
+      "en": null,
+      "zh": null
+    }
+  },
+  {
+    "id": "poi-002",
+    "qrCode": "DHSG-POI-002",
+    "latitude": 10.7604,
+    "longitude": 106.682,
+    "radiusMeters": 25,
+    "name": {
+      "vi": "Điểm mẫu 2",
+      "en": "Sample point 2",
+      "zh": "示例地点 2"
+    },
+    "description": {
+      "vi": "Đây là nội dung thuyết minh mẫu của điểm số hai.",
+      "en": "This is the sample narration for point number two.",
+      "zh": "这是第二个地点的示例讲解内容。"
+    },
+    "audioUrl": {
+      "vi": null,
+      "en": null,
+      "zh": null
+    }
+  },
+  {
+    "id": "poi-003",
+    "qrCode": "DHSG-POI-003",
+    "latitude": 10.76,
+    "longitude": 106.6824,
+    "radiusMeters": 25,
+    "name": {
+      "vi": "Điểm mẫu 3",
+      "en": "Sample point 3",
+      "zh": "示例地点 3"
+    },
+    "description": {
+      "vi": "Đây là nội dung thuyết minh mẫu của điểm số ba.",
+      "en": "This is the sample narration for point number three.",
+      "zh": "这是第三个地点的示例讲解内容。"
+    },
+    "audioUrl": {
+      "vi": null,
+      "en": null,
+      "zh": null
+    }
+  }
+]
