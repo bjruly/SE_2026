@@ -3,9 +3,9 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Bản đồ Leaflet + OpenStreetMap. Chỉ chạy trên trình duyệt (được nạp bằng next/dynamic, ssr: false).
-const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
-const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+// Bản đồ Leaflet + CartoDB Voyager. Chỉ chạy trên trình duyệt (được nạp bằng next/dynamic, ssr: false).
+const TILE_URL = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
 
 export default function MapView({ pois, lang, position, selectedId, insideIds, onSelect, onMapClick }) {
   const containerRef = useRef(null);

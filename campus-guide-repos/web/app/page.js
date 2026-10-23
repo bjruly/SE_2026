@@ -36,6 +36,22 @@ export default function Home() {
   const trackerRef = useRef(null);
   if (!trackerRef.current) trackerRef.current = createGeofenceTracker({ cooldownMs: COOLDOWN_MS });
 
+  // Tự động mở địa điểm nếu người dùng quét QR từ camera điện thoại có kèm đường link (?poi=... hoặc ?qr=...)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('poi') || params.get('qr');
+    if (code) {
+      const match = pois.find(
+        (p) => p.id.toLowerCase() === code.toLowerCase() || p.qrCode.toLowerCase() === code.toLowerCase()
+      );
+      if (match) {
+        setSelectedId(match.id);
+        setTab('list');
+      }
+    }
+  }, []);
+
   const evaluate = (pos, autoOn) => {
     const r = trackerRef.current.update(pos, pois);
     setInsideIds(r.insideIds);
