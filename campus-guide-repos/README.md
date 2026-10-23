@@ -103,16 +103,18 @@ Sửa `data/pois.json` (web) và `src/data/pois.json` (mobile), giữ hai file g
 ## Chưa xác định (cần nhóm quyết hoặc hỏi thầy)
 
 - Số repo GitHub (1 hay 2).
-- **CD/CI:** bắt buộc theo slide, nhưng **chưa được làm** trong demo; công cụ và nơi triển khai chưa chọn.
+- **CD/CI:** Đã thiết lập hoàn chỉnh qua GitHub Actions (`.github/workflows/ci.yml`): tự động chạy Unit Test, build Next.js (Web), bundle Expo (Mobile) và tự động triển khai (CD) Web lên GitHub Pages.
 - Nghĩa chính xác của "tự động" theo thầy, và mức độ yêu cầu ở mốc tuần 7.
 - Dữ liệu thật của các địa điểm trong khuôn viên; việc chuyển sang file audio riêng.
 - Loại UML mà môn học yêu cầu.
 
 ## Nhật ký
-
 | Ngày | Việc đã làm |
 |---|---|
 | 19/10/2026 | Chốt: chủ đề khuôn viên ĐHSG; nền tảng web PWA (Next.js) và app React Native (Expo); ngôn ngữ Việt, Anh, Trung; JavaScript; bản đồ Leaflet + OpenStreetMap; dữ liệu mẫu trong mã nguồn. Dựng bản demo web và mobile. |
 |  |  |
 
 *(Các ngày trước 19/10/2026: nhóm tự bổ sung nếu cần.)*
+
+
+

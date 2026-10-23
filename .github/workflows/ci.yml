@@ -1,0 +1,90 @@
+name: CI / CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Quyền hạn cần thiết để deploy lên GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'ci-cd-${{ github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  web-ci:
+    name: Web CI (Test & Build Next.js)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: campus-guide-repos/web/package-lock.json
+
+      - name: Cài đặt dependencies (Web)
+        working-directory: campus-guide-repos/web
+        run: npm ci
+
+      - name: Chạy Unit Test Geofence
+        working-directory: campus-guide-repos/web
+        run: npm test
+
+      - name: Build ứng dụng Web PWA
+        working-directory: campus-guide-repos/web
+        run: npm run build
+
+      - name: Tạo file .nojekyll cho GitHub Pages
+        run: touch campus-guide-repos/web/out/.nojekyll
+
+      - name: Đóng gói artifact cho GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: campus-guide-repos/web/out
+
+  mobile-ci:
+    name: Mobile CI (Bundle Expo Android)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: campus-guide-repos/mobile/package-lock.json
+
+      - name: Cài đặt dependencies (Mobile)
+        working-directory: campus-guide-repos/mobile
+        run: npm ci
+
+      - name: Kiểm tra biên dịch Metro Bundle Android
+        working-directory: campus-guide-repos/mobile
+        run: npx expo export --platform android
+
+  deploy-pages:
+    name: Deploy Web lên GitHub Pages
+    needs: [web-ci, mobile-ci]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Triển khai lên GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+

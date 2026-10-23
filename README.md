@@ -79,7 +79,7 @@ Các thư mục nặng (`node_modules`, `.next`, `out`, `dist`) đã được `.
 
 ## Chưa xác định (cần nhóm quyết hoặc hỏi thầy)
 
-- **CD/CI:** bắt buộc nhưng **chưa được làm**; công cụ và nơi triển khai chưa chọn.
+- **CD/CI:** Đã thiết lập hoàn chỉnh qua GitHub Actions (`.github/workflows/ci.yml`): tự động chạy Unit Test, build Next.js (Web), bundle Expo (Mobile) và tự động triển khai (CD) Web lên GitHub Pages.
 - Nghĩa chính xác của "tự động" theo thầy, và thầy cần thấy gì ở mốc tuần 7.
 - Dữ liệu thật của các địa điểm trong khuôn viên; thời điểm chuyển sang file audio riêng.
 - Loại UML mà môn học yêu cầu.
@@ -95,4 +95,5 @@ Các thư mục nặng (`node_modules`, `.next`, `out`, `dist`) đã được `.
 | ~14/10/2026 | Viết PRD bản ĐHSG đầu tiên. |
 | 19/10/2026 | Đọc báo cáo của nhóm (viết cho ẩm thực Quận 4) rồi quay lại chủ đề ĐHSG. Chốt nền tảng web PWA (Next.js) và app React Native (Expo), ngôn ngữ Việt, Anh, Trung, JavaScript, bản đồ Leaflet + OpenStreetMap, dữ liệu mẫu trong mã nguồn. Dựng bản demo web và mobile. |
 | 20/10/2026 | Chốt tên folder `campus-guide-repos` và dùng 1 repo. Tạo README giới thiệu repository (file này), tách README dự án vào `campus-guide-repos/README.md`. Bổ sung các dòng nhật ký trước 19/10. |
+| 23/10/2026 | Sửa lỗi cú pháp Web QrScanner; đồng bộ Expo SDK 57 cho Mobile; thiết lập quy trình CI/CD hoàn chỉnh bằng GitHub Actions (`.github/workflows/ci.yml`). |
 |  |  |
