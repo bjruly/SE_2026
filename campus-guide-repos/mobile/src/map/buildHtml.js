@@ -22,7 +22,19 @@ export function buildMapHtml() {
   var group = L.layerGroup().addTo(map);
   var userMarker = null;
   var fitted = false;
-  function post(msg) { window.ReactNativeWebView.postMessage(JSON.stringify(msg)); }
+  function post(msg) {
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify(msg));
+    } else if (window.parent) {
+      window.parent.postMessage(JSON.stringify(msg), '*');
+    }
+  }
+
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.__update) {
+      window.__update(e.data.__update);
+    }
+  });
 
   map.on('click', function (e) { post({ type: 'mapClick', lat: e.latlng.lat, lng: e.latlng.lng }); });
 
