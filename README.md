@@ -26,7 +26,7 @@ Repository dùng **1 repo chung** cho cả web và mobile.
 |---|---|---|---|---|---|
 | 1 | Trần Lê Gia Bảo | 3124411038  |  |  | Nhóm trưởng |
 | 2 | Tô Thành Nhân  | 3124411198  |  |  | Thành Viên |
-| 3 |  |  |  |  |  |
+| 3 |  Lê Đăng Tiến | 3124411311  |  |  | Thành Viên |
 
 ## Mốc quan trọng (theo slide của thầy)
 
