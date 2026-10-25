@@ -6,7 +6,7 @@
     "longitude": 106.682,
     "radiusMeters": 25,
     "name": {
-      "vi": "Giới Thiệu Trường Đại Học Sài Gòn",
+      "vi": "Giới Thiệu về Trường Đại học Sài Gòn",
       "en": "Introduction to Saigon University",
       "zh": "介绍西贡大学"
     },
@@ -28,14 +28,14 @@
     "longitude": 106.682,
     "radiusMeters": 25,
     "name": {
-      "vi": "Điểm mẫu 2",
-      "en": "Sample point 2",
-      "zh": "示例地点 2"
+      "vi": "Cảnh quan sân trường",
+      "en": "Campus Scenery",
+      "zh": "校园风景"
     },
     "description": {
-      "vi": "Đây là nội dung thuyết minh mẫu của điểm số hai.",
-      "en": "This is the sample narration for point number two.",
-      "zh": "这是第二个地点的示例讲解内容。"
+      "vi": "nổi bật với vẻ đẹp cổ kính, trầm mặc mang đậm dấu ấn lịch sử hơn một thế kỷ giữa lòng Thành phố Hồ Chí Minh",
+      "en": "It stands out with its ancient and quiet beauty, bearing the historical mark of over a century in the heart of Ho Chi Minh City.",
+      "zh": "它以古老而宁静的美丽脱颖而出，承载着胡志明市百年历史的印记。"
     },
     "audioUrl": {
       "vi": null,
@@ -50,14 +50,14 @@
     "longitude": 106.6824,
     "radiusMeters": 25,
     "name": {
-      "vi": "Điểm mẫu 3",
-      "en": "Sample point 3",
-      "zh": "示例地点 3"
+      "vi": "Kiến trúc trăm tuổi phong cách Pháp lẫn Trung Hoa",
+      "en": "Centennial Architecture with French and Chinese Styles",
+      "zh": "百年历史的法中风格建筑"
     },
     "description": {
-      "vi": "Đây là nội dung thuyết minh mẫu của điểm số ba.",
-      "en": "This is the sample narration for point number three.",
-      "zh": "这是第三个地点的示例讲解内容。"
+      "vi": "Cổng mặt tiền tòa nhà B mang đặc trưng kiến trúc thấp tầng với mái đón, cửa sổ dạng vòm, đắp nổi những viên gạch gốm men xanh. Hình tượng rồng mây được khảm nổi.Đây là dãy phòng học đầu tiên được xây dựng, khánh thành và đưa vào sử dụng từ năm 1910.",
+      "en": "The front gate of Building B features low-rise architecture with a welcoming roof, arched windows, and embossed green ceramic tiles. The dragon and cloud motifs are inlaid in relief. This was the first row of classrooms built, inaugurated, and put into use in 1910.",
+      "zh": "B楼的正门采用低层建筑风格，设有迎宾屋顶、拱形窗户，并镶嵌绿色陶瓷砖。龙云图案以浮雕形式镶嵌。这是第一排教室，于1910年建成、启用。"
     },
     "audioUrl": {
       "vi": null,

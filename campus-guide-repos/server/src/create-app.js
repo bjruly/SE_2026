@@ -5,9 +5,9 @@ import { publicRoutes } from './routes/public.js';
 import { authRoutes } from './routes/auth.js';
 import { adminRoutes } from './routes/admin.js';
 
-// Tạo ứng dụng Express. Tách riêng khỏi việc "mở cổng" để kiểm thử và triển khai serverless dùng chung.
-export function createApp({ db, config }) {
-  const app = express();
+// Tạo ứng dụng Express. Tách riêng khỏi entrypoint Vercel để dùng chung khi kiểm thử.
+export function createApp({ db, config, expressFactory = express }) {
+  const app = expressFactory();
   app.set('trust proxy', 1);
   app.disable('x-powered-by');
 
