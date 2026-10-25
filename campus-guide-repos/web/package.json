@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "html5-qrcode": "^2.3.8",
-    "leaflet": "^1.9.4",
+    "maplibre-gl": "^5.24.0",
     "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0"

@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { buildMapHtml } from '../map/buildHtml';
 
-// Bản đồ Leaflet + CartoDB nhúng trong WebView (Mobile) hoặc iframe (khi mở trên Web)
-export default function MapWebView({ pois, lang, position, selectedId, insideIds, onSelect, onMapClick }) {
+// Bản đồ MapLibre GL nhúng trong WebView (Mobile) hoặc iframe (khi mở trên Web)
+export default function MapWebView({ pois, lang, position, selectedId, insideIds, onSelect, onMapClick, errorText }) {
   const webRef = useRef(null);
   const iframeRef = useRef(null);
   const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
   const html = useMemo(() => buildMapHtml(), []);
 
   // Cập nhật trạng thái bản đồ khi có thay đổi
@@ -36,6 +37,7 @@ export default function MapWebView({ pois, lang, position, selectedId, insideIds
       }
       if (!msg || typeof msg !== 'object') return;
       if (msg.type === 'ready') setReady(true);
+      else if (msg.type === 'mapError') setFailed(true);
       else if (msg.type === 'select') onSelect(msg.id);
       else if (msg.type === 'mapClick' && onMapClick) onMapClick({ lat: msg.lat, lng: msg.lng });
     };
@@ -51,9 +53,18 @@ export default function MapWebView({ pois, lang, position, selectedId, insideIds
       return;
     }
     if (msg.type === 'ready') setReady(true);
+      else if (msg.type === 'mapError') setFailed(true);
     else if (msg.type === 'select') onSelect(msg.id);
     else if (msg.type === 'mapClick' && onMapClick) onMapClick({ lat: msg.lat, lng: msg.lng });
   };
+
+  if (failed) {
+    return (
+      <View style={[styles.fill, styles.center]}>
+        <Text>{errorText}</Text>
+      </View>
+    );
+  }
 
   if (Platform.OS === 'web') {
     return (
@@ -82,4 +93,4 @@ export default function MapWebView({ pois, lang, position, selectedId, insideIds
   );
 }
 
-const styles = StyleSheet.create({ fill: { flex: 1 } });
+const styles = StyleSheet.create({ fill: { flex: 1 }, center: { alignItems: 'center', justifyContent: 'center' } });

@@ -17,6 +17,8 @@ body {
 .layout { flex: 1; display: grid; grid-template-columns: 1fr 380px; min-height: 0; }
 .map-wrap { position: relative; min-height: 320px; }
 .map { position: absolute; inset: 0; z-index: 0; }
+/* CSS của MapLibre đặt position: relative cho .maplibregl-map; viết chọn lọc hơn để bản đồ luôn phủ kín khung */
+.map-wrap .map { position: absolute; inset: 0; }
 .map-loading { display: grid; place-items: center; background: #e5e7eb; }
 .panel {
   background: #fff; padding: 12px 14px; overflow-y: auto;

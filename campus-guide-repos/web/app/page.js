@@ -1,17 +1,19 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
-import pois from '@/data/pois.json';
 import { LANGS, STRINGS } from '@/lib/i18n';
 import { createGeofenceTracker } from '@/lib/geofence';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useNarration } from '@/hooks/useNarration';
+import { usePois } from '@/hooks/usePois';
+import { sendEvent } from '@/lib/poiSource';
+import { extractCode, findPoiByCode } from '@/lib/qr';
 import PoiList from '@/components/PoiList';
 import PoiDetail from '@/components/PoiDetail';
 import QrScanner from '@/components/QrScanner';
 import SimulationPanel from '@/components/SimulationPanel';
 
-// Leaflet chỉ chạy trên trình duyệt nên nạp với ssr: false
+// Bản đồ (MapLibre) chỉ chạy trên trình duyệt nên nạp với ssr: false
 const MapView = dynamic(() => import('@/components/MapView'), {
   ssr: false,
   loading: () => <div className="map map-loading">…</div>,
@@ -30,6 +32,7 @@ export default function Home() {
   const [qrNotFound, setQrNotFound] = useState(false);
 
   const t = STRINGS[lang];
+  const { pois, source } = usePois();
   const gps = useGeolocation(sim.mode === 'gps');
   const position = sim.mode === 'sim' ? sim.pos : gps.position;
   const narration = useNarration();
@@ -37,27 +40,40 @@ export default function Home() {
   if (!trackerRef.current) trackerRef.current = createGeofenceTracker({ cooldownMs: COOLDOWN_MS });
 
   // Tự động mở địa điểm nếu người dùng quét QR từ camera điện thoại có kèm đường link (?poi=... hoặc ?qr=...)
+  // Chạy lại khi danh sách địa điểm từ máy chủ về, vì địa điểm trong link có thể chỉ có ở dữ liệu máy chủ.
+  const urlHandled = useRef(false);
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (urlHandled.current || typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
     const code = params.get('poi') || params.get('qr');
-    if (code) {
-      const match = pois.find(
-        (p) => p.id.toLowerCase() === code.toLowerCase() || p.qrCode.toLowerCase() === code.toLowerCase()
-      );
-      if (match) {
-        setSelectedId(match.id);
-        setTab('list');
-      }
+    if (!code) {
+      urlHandled.current = true;
+      return;
     }
-  }, []);
+    const match = findPoiByCode(pois, code);
+    if (match) {
+      urlHandled.current = true;
+      setSelectedId(match.id);
+      setTab('list');
+      sendEvent({ poiId: match.id, type: 'qr_scan', lang });
+    } else if (source !== 'loading') {
+      urlHandled.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pois, source]);
+
+  // Phát thuyết minh và ghi nhận một lượt nghe (how: 'auto' = vào vùng, 'manual' = bấm nút phát)
+  const playPoi = (poi, how) => {
+    narration.speak(poi, lang);
+    sendEvent({ poiId: poi.id, type: 'listen', lang, source: how });
+  };
 
   const evaluate = (pos, autoOn) => {
     const r = trackerRef.current.update(pos, pois);
     setInsideIds(r.insideIds);
     if (r.candidate && autoOn) {
       trackerRef.current.markPlayed(r.candidate.id);
-      narration.speak(r.candidate, lang);
+      playPoi(r.candidate, 'auto');
       setSelectedId(r.candidate.id);
       setTab('list');
     }
@@ -89,11 +105,11 @@ export default function Home() {
   };
 
   const openByQr = (raw) => {
-    const code = String(raw || '').trim().toLowerCase();
-    const poi = pois.find((p) => p.qrCode.toLowerCase() === code);
+    const poi = findPoiByCode(pois, extractCode(raw));
     if (poi) {
       setQrNotFound(false);
       selectPoi(poi.id);
+      sendEvent({ poiId: poi.id, type: 'qr_scan', lang });
     } else {
       setQrNotFound(true);
     }
@@ -131,6 +147,7 @@ export default function Home() {
             selectedId={selectedId}
             insideIds={insideIds}
             onSelect={selectPoi}
+            errorText={t.mapError}
             onMapClick={
               sim.mode === 'sim' ? (pos) => setSim({ mode: 'sim', pos, key: 'custom' }) : undefined
             }
@@ -140,6 +157,7 @@ export default function Home() {
         <aside className="panel">
           <div className="status">
             <span>{statusText}</span>
+            <span className="muted">{{ api: t.dataApi, loading: t.dataLoading, fallback: t.dataFallback, local: t.dataLocal }[source]}</span>
             {position && (
               <span className="coords">{position.lat.toFixed(5)}, {position.lng.toFixed(5)}</span>
             )}
@@ -160,7 +178,7 @@ export default function Home() {
           </nav>
 
           {tab === 'list' && (selected ? (
-            <PoiDetail poi={selected} lang={lang} t={t} narration={narration} onBack={() => setSelectedId(null)} />
+            <PoiDetail poi={selected} lang={lang} t={t} narration={narration} onBack={() => setSelectedId(null)} onPlay={(poi) => playPoi(poi, 'manual')} />
           ) : (
             <PoiList pois={pois} lang={lang} t={t} position={position} insideIds={insideIds} onSelect={selectPoi} />
           ))}

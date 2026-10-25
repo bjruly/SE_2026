@@ -1,6 +1,6 @@
 'use client';
 
-export default function PoiDetail({ poi, lang, t, narration, onBack }) {
+export default function PoiDetail({ poi, lang, t, narration, onBack, onPlay }) {
   const mine = narration.currentId === poi.id;
   const playing = mine && narration.status === 'playing';
   const paused = mine && narration.status === 'paused';
@@ -19,7 +19,7 @@ export default function PoiDetail({ poi, lang, t, narration, onBack }) {
 
       <div className="controls">
         {!playing && !paused && (
-          <button type="button" className="btn primary" disabled={!narration.supported} onClick={() => narration.speak(poi, lang)}>
+          <button type="button" className="btn primary" disabled={!narration.supported} onClick={() => onPlay(poi)}>
             ▶ {t.play}
           </button>
         )}

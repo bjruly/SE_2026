@@ -1,120 +1,107 @@
-# Thuyết minh tự động đa ngôn ngữ – Khuôn viên Đại học Sài Gòn (bản demo)
+# campus-guide-repos – Tổng quan dự án
 
-Đồ án môn học, **hướng 1: FE Dev** (React Native + React.js, gồm CD/CI). Nhóm 3 thành viên, giao tiếp và nộp bài qua GitHub.
+Hệ thống **thuyết minh tự động đa ngôn ngữ** tại khuôn viên Đại học Sài Gòn. Khi người dùng đi vào vùng của một địa điểm, web hoặc app tự phát thuyết minh theo ngôn ngữ họ chọn (Việt, Anh, Trung). Giới thiệu repository, danh sách thành viên và nhật ký nằm ở `README.md` **ngoài** folder này.
 
-Ứng dụng tự động phát thuyết minh theo ngôn ngữ người dùng chọn khi họ đi vào vùng của một địa điểm trong khuôn viên. Repo này gồm **bản demo chạy được** cho cả **web (PWA, Next.js)** và **app di động (Expo, React Native)**.
+> **Lưu ý:** địa điểm hiện chỉ là **3 điểm mẫu với tọa độ tạm** (chưa phải vị trí thật trong khuôn viên). Dữ liệu thật nhập qua dashboard (xem mục "Thay dữ liệu thật").
 
-> **Lưu ý:** dữ liệu địa điểm hiện chỉ là **3 điểm mẫu với tọa độ tạm** (chưa phải vị trí thật trong khuôn viên). Cần thay bằng dữ liệu thật của nhóm (xem mục "Thay dữ liệu thật").
-
-## Thành viên và phân công
-
-| STT | Họ tên | MSSV | GitHub | Công việc phụ trách | Trạng thái |
-|---|---|---|---|---|---|
-| 1 |  |  |  |  |  |
-| 2 |  |  |  |  |  |
-| 3 |  |  |  |  |  |
-
-## Mốc quan trọng (theo slide của thầy)
-- Tuần 7: kiểm tra tiến độ giữa kỳ
-- Tuần 11, 12: báo cáo cuối kỳ (đồ án)
-
-## Chức năng trong demo
-
-| Mã | Chức năng | Web | Mobile |
-|---|---|---|---|
-| F1 | Chọn ngôn ngữ: Việt, Anh, Trung | có | có |
-| F2 | Tự động phát thuyết minh khi đi vào vùng của địa điểm (GPS) | có | có |
-| F3 | Xem bản đồ và vị trí hiện tại | có | có |
-| F4 | Danh sách và chi tiết địa điểm | có | có |
-| F5 | Phát, tạm dừng, dừng thuyết minh bằng tay | có | có |
-| F6 | Quét mã QR để mở địa điểm | có | có |
-| — | Giả lập vị trí để thử F2 mà không cần đi bộ | có | có |
-
-Âm thanh hiện là **giọng đọc của thiết bị** (đọc văn bản). Nhóm muốn về sau dùng file audio riêng: dữ liệu đã có sẵn trường `audioUrl` (đang để trống), nhưng **phần phát file audio chưa được làm**.
-
-## Cấu trúc thư mục
+## Các phần của hệ thống
 
 ```
-thuyet-minh-dhsg-demo/
-├─ README.md            (file này)
-├─ web/                 Web PWA: Next.js (JavaScript) + Leaflet
-├─ mobile/              App di động: Expo (JavaScript) + Leaflet trong WebView
-└─ qr-samples/          3 ảnh mã QR mẫu để thử chức năng quét
+ Người dùng                         Nhóm quản trị
+ ┌────────┐  ┌──────────┐            ┌─────────────┐
+ │  web   │  │  mobile  │            │  dashboard  │
+ │Next.js │  │  Expo    │            │  Next.js    │
+ └───┬────┘  └────┬─────┘            └──────┬──────┘
+     └────────────┼─────────────────────────┘
+                  ▼
+            ┌──────────┐      ┌─────────────────────┐
+            │  server  │ ───▶ │ PostgreSQL (Neon)   │
+            │ Express  │      │ địa điểm, bản dịch, │
+            └──────────┘      │ tài khoản, thống kê │
+                              └─────────────────────┘
 ```
 
-`web/` và `mobile/` là hai dự án độc lập, **tách thành 2 repo hay để chung 1 repo đều được** (số repo là việc nhóm chưa chốt).
-Hai file được **sao chép giống hệt** giữa 2 dự án: `lib/geofence.js` (logic vùng địa điểm) và `data/pois.json` (dữ liệu). Sửa ở đâu thì sửa cả hai nơi.
+| Thư mục | Là gì | README |
+|---|---|---|
+| `web/` | Web PWA cho người dùng (Next.js, MapLibre) | `web/README.md` |
+| `mobile/` | App di động (Expo, React Native) | `mobile/README.md` |
+| `server/` | Backend API + SQL (Express, PostgreSQL) | `server/README.md`, sơ đồ bảng `server/docs/ERD.md` |
+| `dashboard/` | Trang quản trị (Next.js) | `dashboard/README.md` |
+| `qr-samples/` | 3 ảnh mã QR mẫu để thử chức năng quét | |
 
-## Cách chạy nhanh
+Web và app **vẫn chạy được khi không có backend**: chưa cấu hình hoặc không kết nối được API thì dùng file `pois.json` dự phòng (không ghi được thống kê).
 
-Cần cài **Node.js** (bản LTS, khuyến nghị 22 trở lên) và **npm**.
+## Chức năng
 
-**Web**
-```bash
-cd web
-npm install
-npm run dev          # mở http://localhost:3000
-```
+**Web và app (người dùng)**
 
-**App di động** (cần điện thoại cài ứng dụng **Expo Go**, cùng mạng Wi-Fi với máy tính)
-```bash
-cd mobile
-npm install
-npx expo start       # quét mã QR hiện trên terminal bằng Expo Go
-```
+| Mã | Chức năng |
+|---|---|
+| F1 | Chọn ngôn ngữ: Việt, Anh, Trung |
+| F2 | Tự động phát thuyết minh khi đi vào vùng của địa điểm (GPS) |
+| F3 | Xem bản đồ và vị trí hiện tại |
+| F4 | Danh sách và chi tiết địa điểm |
+| F5 | Phát, tạm dừng, dừng thuyết minh bằng tay |
+| F6 | Quét mã QR (hoặc mở liên kết QR) để mở địa điểm |
+| — | Giả lập vị trí để thử F2 mà không cần đi bộ |
 
-Chi tiết, kèm cách xử lý lỗi thường gặp: xem `web/README.md` và `mobile/README.md`.
+**Dashboard (quản trị):** thêm/sửa/xóa địa điểm và bản dịch 3 ngôn ngữ, tạo và tải mã QR, thống kê lượt nghe và lượt quét QR theo địa điểm và ngôn ngữ, quản lý tài khoản admin với 2 vai trò (Quản trị, Biên tập).
+
+Âm thanh hiện là **giọng đọc của thiết bị** (đọc văn bản). Nhóm muốn về sau dùng file audio riêng: database và API đã có trường `audioUrl`, nhưng **phần phát file audio và tải file lên chưa được làm**.
+
+## Chạy toàn bộ trên máy
+
+Cần **Node.js** (LTS, khuyến nghị 22 trở lên). Làm theo thứ tự (Windows PowerShell: dùng `npm.cmd` / `npx.cmd` nếu `npm` bị chặn):
+
+1. **Backend** (`server/README.md`): tạo database PostgreSQL (ví dụ Neon), điền `.env`, rồi `npm install`, `npm run db:schema`, `npm run db:seed`, `npm run admin:create`, `npm run dev` (cổng 4000).
+2. **Web**: `cd web`, `npm install`, copy `.env.example` thành `.env.local`, `npm run dev` (cổng 3000).
+3. **Dashboard**: `cd dashboard`, `npm install`, copy `.env.example` thành `.env.local`, `npm run dev -- -p 3001`.
+4. **App di động**: `cd mobile`, `npm install`, copy `.env.example` thành `.env` (nhớ dùng IP máy tính, không dùng localhost), `npx expo start`, quét QR bằng Expo Go.
+
+Mỗi phần chạy ở một cửa sổ terminal riêng. Chỉ muốn xem web/app mà không cần backend: bỏ qua bước 1 và 3, không tạo file `.env`.
 
 ## Cách thử tính năng tự động phát (không cần đi bộ)
 
-1. Chọn ngôn ngữ (Việt, Anh hoặc Trung).
+1. Chọn ngôn ngữ.
 2. Bấm **Tự động phát: TẮT** để chuyển sang **BẬT**.
 3. Ở phần **Giả lập vị trí**, chọn **Ngoài vùng**, rồi chọn **Tại Điểm mẫu 1**: ứng dụng tự phát thuyết minh của điểm đó.
-4. Chọn lại **Ngoài vùng**, rồi vào lại cùng điểm ngay: **không phát lại** vì còn trong thời gian nghỉ (60 giây). Chờ hết thời gian nghỉ rồi thử lại sẽ phát.
+4. Chọn lại **Ngoài vùng**, rồi vào lại cùng điểm ngay: **không phát lại** vì còn trong thời gian nghỉ (60 giây).
 5. Khi đang giả lập, chạm lên bản đồ để đặt vị trí tùy ý.
+6. Xem kết quả trong dashboard, trang **Thống kê**.
 
 ## Thay dữ liệu thật
 
-Sửa `data/pois.json` (web) và `src/data/pois.json` (mobile), giữ hai file giống nhau. Mỗi địa điểm có:
+- **Cách chính:** đăng nhập dashboard, thêm/sửa địa điểm (tên, mô tả 3 ngôn ngữ, tọa độ, bán kính). Mã địa điểm và mã QR tự sinh; mã QR không đổi khi sửa. Tải ảnh QR ở trang **Mã QR**.
+- **Dữ liệu dự phòng:** web/app dùng file `web/data/pois.json` và `mobile/src/data/pois.json` khi không gọi được API. Muốn cập nhật cho khớp dữ liệu thật: mở `<địa chỉ backend>/api/pois`, lưu nội dung thành hai file đó (hình dạng giống hệt nhau).
+- Hai file `lib/geofence.js` của `web/` và `mobile/` (logic vùng địa điểm), và `lib/qr.js` là **bản sao giống hệt nhau**; sửa ở đâu thì sửa cả hai nơi.
 
-| Trường | Ý nghĩa |
-|---|---|
-| `id` | Mã địa điểm (không trùng nhau) |
-| `qrCode` | Nội dung mã QR của địa điểm |
-| `latitude`, `longitude` | Tọa độ |
-| `radiusMeters` | Bán kính vùng tự động phát, tính bằng mét |
-| `name`, `description` | Tên và nội dung thuyết minh theo `vi`, `en`, `zh` |
-| `audioUrl` | Dành cho file audio sau này (hiện chưa dùng) |
+## Triển khai
 
-Ảnh mã QR mẫu nằm trong `qr-samples/`. Khi đổi `qrCode`, hãy tạo lại ảnh QR tương ứng (nội dung mã QR chính là chuỗi `qrCode`).
+Mỗi phần là một project Vercel riêng (đặt **Root Directory** tương ứng `campus-guide-repos/web`, `/server`, `/dashboard`), chi tiết ở README từng phần. Thứ tự: database (Neon) → server → đặt `NEXT_PUBLIC_API_URL` cho web và dashboard → triển khai lại web và dashboard. **Chưa triển khai thử server và dashboard thật.**
+
+## CD/CI
+
+- `.github/workflows/ci.yml` (của nhóm): Unit Test, build Next.js (web), bundle Expo (mobile), triển khai lên GitHub Pages.
+- `.github/workflows/server-dashboard-ci.yml` (thêm mới, **chưa chạy thử trên GitHub**): kiểm thử `server` và build `dashboard`.
+- Nếu `ci.yml` của bạn có gọi `scripts/build-leaflet-inline.js` thì cần xóa dòng đó: file này đã được thay bằng `scripts/build-maplibre-inline.js` (file sinh ra đã nằm sẵn trong mã nguồn nên CI không cần chạy nó).
+- Web trên GitHub Pages nằm ở đường dẫn con (`/<tên-repo>/`), còn web xuất tĩnh dùng đường dẫn tuyệt đối, nên có thể hỏng hình/script nếu không cấu hình `basePath`. Web đang chạy trên Vercel nên không gặp vấn đề này.
 
 ## Đã kiểm tra gì, chưa kiểm tra gì
 
-- **Web:** `npm run build` thành công; logic vùng địa điểm có 5 bài kiểm thử tự động (`npm test`) đều đạt.
-- **Mobile:** đóng gói (bundle) thành công cho Android và iOS, tức là mã nguồn biên dịch và import đúng.
-- **Chưa kiểm tra:** giao diện chưa được mở trên trình duyệt thật, và app chưa được chạy trên điện thoại hay máy ảo. Hãy chạy thử và ghi lại lỗi nếu có.
+**Đã kiểm tra** (trong môi trường của mình, không có mạng ra ngoài):
+- `server`: 10 bài kiểm thử API đạt trên cả PGlite lẫn PostgreSQL 16 thật; chạy thử toàn bộ (schema, seed, tạo admin, đăng nhập, CORS) trên PostgreSQL 16.
+- `web`: 8 bài kiểm thử đơn vị đạt, build thành công; 15 kiểm tra trong trình duyệt headless (Chromium, WebGL phần mềm) với backend thật: tải trang, lấy dữ liệu từ API, dự phòng khi API lỗi, đổi ngôn ngữ, tự động phát đúng 1 lần, thời gian nghỉ, QR dạng mã và dạng liên kết, khổ điện thoại; sự kiện thống kê vào đúng database.
+- `dashboard`: build thành công; 16 kiểm tra trong trình duyệt headless với backend và PostgreSQL thật: đăng nhập, thống kê, thêm/sửa/xóa địa điểm, mã QR, tạo tài khoản, phân quyền Quản trị và Biên tập.
+- `mobile`: đóng gói thành công cho Android, iOS và web; trang bản đồ trong app đạt 8 kiểm tra trong trình duyệt headless (giả lập cách WebView gửi và nhận tin nhắn).
+
+**Chưa kiểm tra:**
+- App chưa được chạy trên điện thoại hay máy ảo (GPS, giọng đọc, camera quét QR, WebView thật).
+- **Bản đồ vector OpenFreeMap chưa được xác nhận hiển thị**: môi trường của mình không truy cập được mạng ngoài, nên mình chỉ thử được đường dự phòng sang OpenStreetMap (đã hoạt động). Nếu bạn không thấy nền bản đồ, hãy báo lỗi.
+- Triển khai thật lên Vercel và Neon, và các workflow GitHub Actions.
+- Giọng đọc tiếng Việt và tiếng Trung phụ thuộc thiết bị.
 
 ## Giá trị tạm của demo (chưa phải quyết định cuối)
 
-- Bán kính vùng 25 mét; thời gian nghỉ trước khi phát lại cùng địa điểm 60 giây (`COOLDOWN_MS`).
-- Khi nhiều vùng chồng nhau: phát điểm gần nhất.
+- Bán kính vùng 25 mét; thời gian nghỉ trước khi phát lại cùng địa điểm 60 giây (`COOLDOWN_MS`); khi nhiều vùng chồng nhau thì phát điểm gần nhất.
+- Quyền của Biên tập: được thêm và sửa địa điểm, **không được xóa** (xem `server/README.md`).
 - Tọa độ và nội dung 3 điểm mẫu.
-
-## Chưa xác định (cần nhóm quyết hoặc hỏi thầy)
-
-- Số repo GitHub (1 hay 2).
-- **CD/CI:** Đã thiết lập hoàn chỉnh qua GitHub Actions (`.github/workflows/ci.yml`): tự động chạy Unit Test, build Next.js (Web), bundle Expo (Mobile) và tự động triển khai (CD) Web lên GitHub Pages.
-- Nghĩa chính xác của "tự động" theo thầy, và mức độ yêu cầu ở mốc tuần 7.
-- Dữ liệu thật của các địa điểm trong khuôn viên; việc chuyển sang file audio riêng.
-- Loại UML mà môn học yêu cầu.
-
-## Nhật ký
-| Ngày | Việc đã làm |
-|---|---|
-| 19/10/2026 | Chốt: chủ đề khuôn viên ĐHSG; nền tảng web PWA (Next.js) và app React Native (Expo); ngôn ngữ Việt, Anh, Trung; JavaScript; bản đồ Leaflet + OpenStreetMap; dữ liệu mẫu trong mã nguồn. Dựng bản demo web và mobile. |
-|  |  |
-
-*(Các ngày trước 19/10/2026: nhóm tự bổ sung nếu cần.)*
-
-
-

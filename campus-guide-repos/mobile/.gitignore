@@ -39,3 +39,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# cấu hình cá nhân (địa chỉ API trong mạng nội bộ)
+.env
+!.env.example

@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors, shared } from '../styles';
 
-export default function PoiDetail({ poi, lang, t, narration, onBack }) {
+export default function PoiDetail({ poi, lang, t, narration, onBack, onPlay }) {
   const mine = narration.currentId === poi.id;
   const playing = mine && narration.status === 'playing';
   const paused = mine && narration.status === 'paused';
@@ -20,7 +20,7 @@ export default function PoiDetail({ poi, lang, t, narration, onBack }) {
 
       <View style={styles.controls}>
         {!playing && !paused && (
-          <Pressable style={[shared.btn, shared.btnPrimary]} onPress={() => narration.speak(poi, lang)}>
+          <Pressable style={[shared.btn, shared.btnPrimary]} onPress={() => onPlay(poi)}>
             <Text style={[shared.btnText, shared.btnPrimaryText]}>▶ {t.play}</Text>
           </Pressable>
         )}

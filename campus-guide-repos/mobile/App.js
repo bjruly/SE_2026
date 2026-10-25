@@ -3,12 +3,14 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import pois from './src/data/pois.json';
 import { COOLDOWN_MS } from './src/config';
 import { LANGS, STRINGS } from './src/lib/i18n';
 import { createGeofenceTracker } from './src/lib/geofence';
 import { useGps } from './src/hooks/useGps';
 import { useNarration } from './src/hooks/useNarration';
+import { usePois } from './src/hooks/usePois';
+import { sendEvent } from './src/lib/poiSource';
+import { extractCode, findPoiByCode } from './src/lib/qr';
 import MapWebView from './src/components/MapWebView';
 import PoiList from './src/components/PoiList';
 import PoiDetail from './src/components/PoiDetail';
@@ -34,18 +36,25 @@ function Main() {
   const [qrNotFound, setQrNotFound] = useState(false);
 
   const t = STRINGS[lang];
+  const { pois, source } = usePois();
   const gps = useGps(sim.mode === 'gps');
   const position = sim.mode === 'sim' ? sim.pos : gps.position;
   const narration = useNarration();
   const trackerRef = useRef(null);
   if (!trackerRef.current) trackerRef.current = createGeofenceTracker({ cooldownMs: COOLDOWN_MS });
 
+  // Phát thuyết minh và ghi nhận một lượt nghe (how: 'auto' = vào vùng, 'manual' = bấm nút phát)
+  const playPoi = (poi, how) => {
+    narration.speak(poi, lang);
+    sendEvent({ poiId: poi.id, type: 'listen', lang, source: how });
+  };
+
   const evaluate = (pos, autoOn) => {
     const r = trackerRef.current.update(pos, pois);
     setInsideIds(r.insideIds);
     if (r.candidate && autoOn) {
       trackerRef.current.markPlayed(r.candidate.id);
-      narration.speak(r.candidate, lang);
+      playPoi(r.candidate, 'auto');
       setSelectedId(r.candidate.id);
     }
   };
@@ -76,11 +85,11 @@ function Main() {
   };
 
   const openByQr = (raw) => {
-    const code = String(raw || '').trim().toLowerCase();
-    const poi = pois.find((p) => p.qrCode.toLowerCase() === code);
+    const poi = findPoiByCode(pois, extractCode(raw));
     if (poi) {
       setQrNotFound(false);
       selectPoi(poi.id);
+      sendEvent({ poiId: poi.id, type: 'qr_scan', lang });
     } else {
       setQrNotFound(true);
     }
@@ -121,12 +130,14 @@ function Main() {
                 selectedId={selectedId}
                 insideIds={insideIds}
                 onSelect={selectPoi}
+                errorText={t.mapError}
                 onMapClick={sim.mode === 'sim' ? (pos) => setSim({ mode: 'sim', pos, key: 'custom' }) : undefined}
               />
             </View>
             <View style={styles.sheet}>
               <View style={styles.statusRow}>
                 <Text style={styles.status} numberOfLines={2}>{statusText}</Text>
+                <Text style={styles.coords}>{{ api: t.dataApi, loading: t.dataLoading, fallback: t.dataFallback, local: t.dataLocal }[source]}</Text>
                 {position && (
                   <Text style={styles.coords}>{position.lat.toFixed(5)}, {position.lng.toFixed(5)}</Text>
                 )}
@@ -155,7 +166,7 @@ function Main() {
         )}
 
         {tab === 'list' && (selected ? (
-          <PoiDetail poi={selected} lang={lang} t={t} narration={narration} onBack={() => setSelectedId(null)} />
+          <PoiDetail poi={selected} lang={lang} t={t} narration={narration} onBack={() => setSelectedId(null)} onPlay={(poi) => playPoi(poi, 'manual')} />
         ) : (
           <PoiList pois={pois} lang={lang} t={t} position={position} insideIds={insideIds} onSelect={selectPoi} />
         ))}
