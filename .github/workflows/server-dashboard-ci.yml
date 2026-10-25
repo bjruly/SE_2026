@@ -1,0 +1,53 @@
+# CI cho backend (server) và dashboard. Chưa chạy thử trên GitHub Actions: nếu lỗi, hãy gửi nhật ký lỗi để sửa.
+# Workflow của web và mobile đã có ở file khác (ci.yml), file này không thay thế nó.
+name: Server và Dashboard CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'campus-guide-repos/server/**'
+      - 'campus-guide-repos/dashboard/**'
+      - 'campus-guide-repos/web/data/pois.json'
+      - '.github/workflows/server-dashboard-ci.yml'
+  pull_request:
+    paths:
+      - 'campus-guide-repos/server/**'
+      - 'campus-guide-repos/dashboard/**'
+      - 'campus-guide-repos/web/data/pois.json'
+      - '.github/workflows/server-dashboard-ci.yml'
+
+jobs:
+  server-test:
+    name: Server (kiểm thử API)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: campus-guide-repos/server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: campus-guide-repos/server/package-lock.json
+      - run: npm ci
+      - run: npm test   # dùng PGlite trong bộ nhớ, không cần database thật
+
+  dashboard-build:
+    name: Dashboard (build Next.js)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: campus-guide-repos/dashboard
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: campus-guide-repos/dashboard/package-lock.json
+      - run: npm ci
+      - run: npm run build
