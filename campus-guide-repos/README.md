@@ -77,13 +77,22 @@ Mỗi phần chạy ở một cửa sổ terminal riêng. Chỉ muốn xem web/a
 
 ## Triển khai
 
-Mỗi phần là một project Vercel riêng (đặt **Root Directory** tương ứng `campus-guide-repos/web`, `/server`, `/dashboard`), chi tiết ở README từng phần. Thứ tự: database (Neon) → server → đặt `NEXT_PUBLIC_API_URL` cho web và dashboard → triển khai lại web và dashboard. **Chưa triển khai thử server và dashboard thật.**
+Web, dashboard và backend là ba project triển khai riêng; app mobile được đóng gói/phân phối bằng Expo, không deploy lên Vercel.
+
+Thứ tự triển khai:
+
+1. Tạo PostgreSQL trên Neon.
+2. Deploy `server/` lên Vercel với **Root Directory** `campus-guide-repos/server`, cấu hình `DATABASE_URL`, `JWT_SECRET` (ít nhất 32 ký tự ngẫu nhiên) và `CORS_ORIGINS`.
+3. Chạy `db:schema`, `db:seed` và `admin:create` theo `server/README.md`. Không dùng mật khẩu mẫu trong `.env.example`.
+4. Deploy `dashboard/` với **Root Directory** `campus-guide-repos/dashboard`; đặt `NEXT_PUBLIC_API_URL` bằng URL backend và `NEXT_PUBLIC_WEB_URL` bằng URL web nếu muốn tạo QR dạng liên kết.
+5. Deploy `web/` với **Root Directory** `campus-guide-repos/web`; đặt `NEXT_PUBLIC_API_URL` bằng URL backend.
+
+Dashboard có thể build/deploy tách rời, nhưng không thể đăng nhập hay quản lý dữ liệu nếu API và database chưa hoạt động. Sau khi thay biến môi trường trên Vercel, cần redeploy project tương ứng. Xem hướng dẫn chi tiết ở README từng phần. **Chưa triển khai thử các project lên Vercel/Neon.**
 
 ## CD/CI
 
 - `.github/workflows/ci.yml` (của nhóm): Unit Test, build Next.js (web), bundle Expo (mobile), triển khai lên GitHub Pages.
 - `.github/workflows/server-dashboard-ci.yml` (thêm mới, **chưa chạy thử trên GitHub**): kiểm thử `server` và build `dashboard`.
-- Nếu `ci.yml` của bạn có gọi `scripts/build-leaflet-inline.js` thì cần xóa dòng đó: file này đã được thay bằng `scripts/build-maplibre-inline.js` (file sinh ra đã nằm sẵn trong mã nguồn nên CI không cần chạy nó).
 - Web trên GitHub Pages nằm ở đường dẫn con (`/<tên-repo>/`), còn web xuất tĩnh dùng đường dẫn tuyệt đối, nên có thể hỏng hình/script nếu không cấu hình `basePath`. Web đang chạy trên Vercel nên không gặp vấn đề này.
 
 ## Đã kiểm tra gì, chưa kiểm tra gì

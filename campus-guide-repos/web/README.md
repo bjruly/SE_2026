@@ -41,11 +41,12 @@ web/
 │  ├─ layout.js, globals.css   khung trang và giao diện
 │  ├─ manifest.js              khai báo PWA
 │  └─ ServiceWorkerRegister.js đăng ký service worker (chỉ ở bản production)
-├─ hooks/                      useGeolocation, useNarration, usePois (lấy địa điểm từ API, có dự phòng)
 ├─ components/                 MapView (MapLibre), PoiList, PoiDetail, QrScanner, SimulationPanel
-├─ hooks/                      useGeolocation (GPS), useNarration (đọc giọng nói)
+├─ hooks/                      useGeolocation (GPS), useNarration (đọc giọng nói), usePois (API/dự phòng)
 ├─ lib/
-│  ├─ geofence.js              logic vùng địa điểm (có test: geofence.test.js)
+│  ├─ geofence.js, circle.js   logic vùng và hình học (có kiểm thử)
+│  ├─ poiSource.js, qr.js      API/dữ liệu dự phòng, xử lý mã QR
+│  ├─ mapConfig.js             cấu hình nhà cung cấp bản đồ
 │  └─ i18n.js                  chuỗi giao diện Việt, Anh, Trung
 ├─ data/pois.json              dữ liệu địa điểm (mẫu)
 └─ public/                     sw.js, icon-192.png, icon-512.png
