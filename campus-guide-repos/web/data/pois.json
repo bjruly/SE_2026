@@ -6,14 +6,14 @@
     "longitude": 106.682,
     "radiusMeters": 25,
     "name": {
-      "vi": "Điểm mẫu 1",
-      "en": "Sample point 1",
-      "zh": "示例地点 1"
+      "vi": "Giới Thiệu Trường Đại Học Sài Gòn",
+      "en": "Introduction to Saigon University",
+      "zh": "介绍西贡大学"
     },
     "description": {
-      "vi": "Đây là nội dung thuyết minh mẫu của điểm số một.",
-      "en": "This is the sample narration for point number one.",
-      "zh": "这是第一个地点的示例讲解内容。"
+      "vi": "Trường Đại học Sài Gòn là một trong những ngôi trường có bề dày lịch sử lâu đời và cảnh quan độc đáo bậc nhất tại Thành phố Hồ Chí Minh",
+      "en": "Saigon University is one of the universities with a long history and unique scenery in Ho Chi Minh City.",
+      "zh": "西贡大学是胡志明市历史悠久、风景独特的知名学府之一。"
     },
     "audioUrl": {
       "vi": null,
