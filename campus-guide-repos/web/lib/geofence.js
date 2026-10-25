@@ -44,7 +44,11 @@ export function createGeofenceTracker({ cooldownMs = 60000 } = {}) {
         return last === undefined || nowMs - last >= cooldownMs;
       });
       inside = ids;
-      return { insideIds: ids, candidate: entered.length ? entered[0].poi : null };
+      return {
+        insideIds: ids,
+        candidate: entered.length ? entered[0].poi : null,
+        nearbyPois: zones.map((z) => z.poi),
+      };
     },
     markPlayed(id, nowMs = Date.now()) {
       lastPlayed.set(id, nowMs);
@@ -52,6 +56,9 @@ export function createGeofenceTracker({ cooldownMs = 60000 } = {}) {
     // Quên trạng thái "đang ở trong vùng" (ví dụ khi mất vị trí), giữ nguyên thời gian nghỉ
     clearInside() {
       inside = new Set();
+    },
+    clearCooldowns() {
+      lastPlayed.clear();
     },
     reset() {
       inside = new Set();

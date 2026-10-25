@@ -65,7 +65,7 @@ Mỗi phần chạy ở một cửa sổ terminal riêng. Chỉ muốn xem web/a
 1. Chọn ngôn ngữ.
 2. Bấm **Tự động phát: TẮT** để chuyển sang **BẬT**.
 3. Ở phần **Giả lập vị trí**, chọn **Ngoài vùng**, rồi chọn **Tại Điểm mẫu 1**: ứng dụng tự phát thuyết minh của điểm đó.
-4. Chọn lại **Ngoài vùng**, rồi vào lại cùng điểm ngay: **không phát lại** vì còn trong thời gian nghỉ (60 giây).
+4. Chọn lại **Ngoài vùng**, rồi vào lại cùng điểm: ở chế độ giả lập, thuyết minh phát lại ngay để tiện kiểm thử. Với GPS thật, cùng địa điểm vẫn có thời gian nghỉ 60 giây để tránh phát lặp do tín hiệu dao động.
 5. Khi đang giả lập, chạm lên bản đồ để đặt vị trí tùy ý.
 6. Xem kết quả trong dashboard, trang **Thống kê**.
 

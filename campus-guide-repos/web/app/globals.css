@@ -68,6 +68,9 @@ code { background: #f3f4f6; padding: 1px 4px; border-radius: 4px; }
 .sim { border-top: 1px dashed #d1d5db; padding-top: 10px; }
 .sim h3, .qr h3 { margin: 0 0 6px; font-size: 0.9rem; }
 .sim select, .qr input { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #d1d5db; }
+.overlap-choice { padding: 12px; border: 1px solid #bfdbfe; border-radius: 10px; background: #eff6ff; }
+.overlap-choice h3 { margin: 0 0 4px; font-size: 0.95rem; }
+.overlap-options { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .qr { display: flex; flex-direction: column; gap: 8px; }
 .qr-reader { width: 100%; }
 .manual { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; }

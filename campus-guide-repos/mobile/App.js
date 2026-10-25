@@ -33,6 +33,7 @@ function Main() {
   const [auto, setAuto] = useState(false);
   const [sim, setSim] = useState({ mode: 'gps', pos: null, key: 'gps' });
   const [insideIds, setInsideIds] = useState(() => new Set());
+  const [overlapPois, setOverlapPois] = useState([]);
   const [qrNotFound, setQrNotFound] = useState(false);
 
   const t = STRINGS[lang];
@@ -41,6 +42,7 @@ function Main() {
   const position = sim.mode === 'sim' ? sim.pos : gps.position;
   const narration = useNarration();
   const trackerRef = useRef(null);
+  const handledOverlapRef = useRef('');
   if (!trackerRef.current) trackerRef.current = createGeofenceTracker({ cooldownMs: COOLDOWN_MS });
 
   // Phát thuyết minh và ghi nhận một lượt nghe (how: 'auto' = vào vùng, 'manual' = bấm nút phát)
@@ -52,6 +54,13 @@ function Main() {
   const evaluate = (pos, autoOn) => {
     const r = trackerRef.current.update(pos, pois);
     setInsideIds(r.insideIds);
+    if (r.nearbyPois.length > 1) {
+      const overlapKey = r.nearbyPois.map((poi) => poi.id).sort().join('|');
+      setOverlapPois(handledOverlapRef.current === overlapKey ? [] : r.nearbyPois);
+      return;
+    }
+    handledOverlapRef.current = '';
+    setOverlapPois([]);
     if (r.candidate && autoOn) {
       trackerRef.current.markPlayed(r.candidate.id);
       playPoi(r.candidate, 'auto');
@@ -62,13 +71,14 @@ function Main() {
   // Mỗi khi vị trí đổi thì kiểm tra có vừa đi vào vùng nào không
   useEffect(() => {
     if (position) {
+      if (sim.mode === 'sim') trackerRef.current.clearCooldowns();
       evaluate(position, auto);
     } else {
       trackerRef.current.clearInside();
       setInsideIds(new Set());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [position]);
+  }, [position, sim.mode]);
 
   const toggleAuto = () => {
     const next = !auto;
@@ -82,6 +92,12 @@ function Main() {
   const selectPoi = (id) => {
     setSelectedId(id);
     setTab('list');
+  };
+
+  const chooseOverlapPoi = (poi) => {
+    handledOverlapRef.current = overlapPois.map((item) => item.id).sort().join('|');
+    setOverlapPois([]);
+    selectPoi(poi.id);
   };
 
   const openByQr = (raw) => {
@@ -120,6 +136,17 @@ function Main() {
       </View>
 
       <View style={styles.body}>
+        {overlapPois.length > 1 && (
+          <View style={styles.overlapChoice} accessibilityLiveRegion="polite">
+            <Text style={styles.overlapTitle}>{t.overlapTitle}</Text>
+            <Text style={shared.meta}>{t.overlapHint}</Text>
+            {overlapPois.map((poi) => (
+              <Pressable key={poi.id} style={styles.overlapOption} onPress={() => chooseOverlapPoi(poi)}>
+                <Text style={styles.overlapOptionText}>{poi.name[lang]}</Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
         {tab === 'map' && (
           <View style={styles.fill}>
             <View style={styles.mapBox}>
@@ -210,4 +237,15 @@ const styles = StyleSheet.create({
   tabActive: { borderTopColor: colors.primary },
   tabText: { fontSize: 14, color: colors.muted },
   tabTextActive: { color: colors.primary, fontWeight: '700' },
+  overlapChoice: {
+    position: 'absolute', top: 12, left: 12, right: 12, zIndex: 2, padding: 12,
+    borderRadius: 10, borderWidth: 1, borderColor: colors.border, backgroundColor: '#fff',
+    gap: 8, elevation: 4,
+  },
+  overlapTitle: { fontSize: 15, fontWeight: '700', color: colors.text },
+  overlapOption: {
+    minHeight: 44, justifyContent: 'center', paddingHorizontal: 12,
+    borderRadius: 8, borderWidth: 1, borderColor: colors.border,
+  },
+  overlapOptionText: { fontSize: 15, color: colors.primary, fontWeight: '600' },
 });

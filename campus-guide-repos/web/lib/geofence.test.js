@@ -35,10 +35,20 @@ test('ra rồi vào lại trong thời gian nghỉ thì không báo; sau thời 
   assert.equal(t.update(at(pois[0]), pois, 7000).candidate.id, 'poi-001');
 });
 
+test('xóa thời gian nghỉ cho phép giả lập vào lại ngay', () => {
+  const t = createGeofenceTracker({ cooldownMs: 5000 });
+  t.update(FAR, pois, 0);
+  t.markPlayed(t.update(at(pois[0]), pois, 1000).candidate.id, 1000);
+  t.update(FAR, pois, 2000);
+  t.clearCooldowns();
+  assert.equal(t.update(at(pois[0]), pois, 3000).candidate.id, 'poi-001');
+});
+
 test('nhiều vùng chồng nhau thì chọn điểm gần nhất', () => {
   const a = { id: 'a', latitude: 10, longitude: 106, radiusMeters: 100 };
   const b = { id: 'b', latitude: 10.0003, longitude: 106, radiusMeters: 100 };
   const t = createGeofenceTracker();
   const r = t.update({ lat: 10.00025, lng: 106 }, [a, b], 0);
   assert.equal(r.candidate.id, 'b');
+  assert.deepEqual(r.nearbyPois.map((poi) => poi.id), ['b', 'a']);
 });

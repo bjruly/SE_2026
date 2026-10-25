@@ -29,6 +29,7 @@ export default function Home() {
   const [auto, setAuto] = useState(false);
   const [sim, setSim] = useState({ mode: 'gps', pos: null, key: 'gps' });
   const [insideIds, setInsideIds] = useState(() => new Set());
+  const [overlapPois, setOverlapPois] = useState([]);
   const [qrNotFound, setQrNotFound] = useState(false);
 
   const t = STRINGS[lang];
@@ -37,6 +38,7 @@ export default function Home() {
   const position = sim.mode === 'sim' ? sim.pos : gps.position;
   const narration = useNarration();
   const trackerRef = useRef(null);
+  const handledOverlapRef = useRef('');
   if (!trackerRef.current) trackerRef.current = createGeofenceTracker({ cooldownMs: COOLDOWN_MS });
 
   // Tự động mở địa điểm nếu người dùng quét QR từ camera điện thoại có kèm đường link (?poi=... hoặc ?qr=...)
@@ -71,6 +73,13 @@ export default function Home() {
   const evaluate = (pos, autoOn) => {
     const r = trackerRef.current.update(pos, pois);
     setInsideIds(r.insideIds);
+    if (r.nearbyPois.length > 1) {
+      const overlapKey = r.nearbyPois.map((poi) => poi.id).sort().join('|');
+      setOverlapPois(handledOverlapRef.current === overlapKey ? [] : r.nearbyPois);
+      return;
+    }
+    handledOverlapRef.current = '';
+    setOverlapPois([]);
     if (r.candidate && autoOn) {
       trackerRef.current.markPlayed(r.candidate.id);
       playPoi(r.candidate, 'auto');
@@ -82,13 +91,14 @@ export default function Home() {
   // Mỗi khi vị trí đổi thì kiểm tra có vừa đi vào vùng nào không
   useEffect(() => {
     if (position) {
+      if (sim.mode === 'sim') trackerRef.current.clearCooldowns();
       evaluate(position, auto);
     } else {
       trackerRef.current.clearInside();
       setInsideIds(new Set());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [position]);
+  }, [position, sim.mode]);
 
   const toggleAuto = () => {
     const next = !auto;
@@ -102,6 +112,12 @@ export default function Home() {
   const selectPoi = (id) => {
     setSelectedId(id);
     setTab('list');
+  };
+
+  const chooseOverlapPoi = (poi) => {
+    handledOverlapRef.current = overlapPois.map((item) => item.id).sort().join('|');
+    setOverlapPois([]);
+    selectPoi(poi.id);
   };
 
   const openByQr = (raw) => {
@@ -167,6 +183,20 @@ export default function Home() {
             {auto ? t.autoOn : t.autoOff}
           </button>
           {!auto && <p className="meta">{t.autoHint}</p>}
+
+          {overlapPois.length > 1 && (
+            <section className="overlap-choice" aria-live="polite">
+              <h3>{t.overlapTitle}</h3>
+              <p className="meta">{t.overlapHint}</p>
+              <div className="overlap-options">
+                {overlapPois.map((poi) => (
+                  <button key={poi.id} type="button" className="btn" onClick={() => chooseOverlapPoi(poi)}>
+                    {poi.name[lang]}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
 
           <nav className="tabs" role="tablist">
             <button type="button" role="tab" aria-selected={tab === 'list'} className={tab === 'list' ? 'active' : ''} onClick={() => setTab('list')}>
