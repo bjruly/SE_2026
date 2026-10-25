@@ -19,7 +19,32 @@ body {
 .map { position: absolute; inset: 0; z-index: 0; }
 /* CSS của MapLibre đặt position: relative cho .maplibregl-map; viết chọn lọc hơn để bản đồ luôn phủ kín khung */
 .map-wrap .map { position: absolute; inset: 0; }
+.map-wrap .maplibregl-ctrl-compass { display: none !important; }
 .map-loading { display: grid; place-items: center; background: #e5e7eb; }
+.map-qr { position: absolute; top: 16px; left: 16px; z-index: 3; }
+.map-qr-bubble {
+  display: grid; width: 48px; height: 48px; place-items: center; padding: 0;
+  border: 0; border-radius: 50%; background: #1d4ed8; color: #fff; cursor: pointer;
+  box-shadow: 0 2px 10px #0003;
+}
+.map-qr-bubble svg { width: 24px; height: 24px; }
+.map-qr-bubble:hover { background: #1e40af; }
+.map-qr-bubble:focus-visible, .map-qr-close:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+.map-qr-card {
+  position: absolute; top: 60px; left: 0; width: min(260px, calc(100vw - 48px));
+  padding: 18px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff;
+  box-shadow: 0 8px 24px #0003; text-align: center;
+}
+.map-qr-card h2 { margin: 2px 18px 12px; font-size: 0.95rem; }
+.map-qr-close {
+  position: absolute; top: 6px; right: 8px; width: 30px; height: 30px;
+  border: 0; border-radius: 6px; background: transparent; color: #4b5563;
+  font-size: 1.5rem; line-height: 1; cursor: pointer;
+}
+.map-qr-close:hover { background: #f3f4f6; }
+.map-qr-image { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+.map-qr-message { min-height: 180px; display: grid; place-items: center; margin: 0; color: #6b7280; font-size: 0.9rem; }
+.map-qr-url { margin: 10px 0 0; color: #4b5563; font-size: 0.75rem; overflow-wrap: anywhere; }
 .panel {
   background: #fff; padding: 12px 14px; overflow-y: auto;
   display: flex; flex-direction: column; gap: 10px; border-left: 1px solid #e5e7eb;

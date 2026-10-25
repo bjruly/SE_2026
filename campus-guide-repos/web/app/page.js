@@ -12,6 +12,7 @@ import PoiList from '@/components/PoiList';
 import PoiDetail from '@/components/PoiDetail';
 import QrScanner from '@/components/QrScanner';
 import SimulationPanel from '@/components/SimulationPanel';
+import AppQrBubble from '@/components/AppQrBubble';
 
 // Bản đồ (MapLibre) chỉ chạy trên trình duyệt nên nạp với ssr: false
 const MapView = dynamic(() => import('@/components/MapView'), {
@@ -156,6 +157,7 @@ export default function Home() {
 
       <main className="layout">
         <section className="map-wrap">
+          <AppQrBubble t={t} />
           <MapView
             pois={pois}
             lang={lang}
