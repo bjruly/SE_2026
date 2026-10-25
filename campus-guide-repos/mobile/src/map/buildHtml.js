@@ -1,5 +1,12 @@
 import { MAPLIBRE_CSS, MAPLIBRE_JS } from './maplibreInline';
-import { MAP_STYLE } from '../config';
+import {
+  CAMPUS_MAP_BOUNDS,
+  CAMPUS_MAP_FIT_MAX_ZOOM,
+  CAMPUS_MAP_INITIAL_ZOOM,
+  CAMPUS_MAP_MAX_ZOOM,
+  CAMPUS_MAP_MIN_ZOOM,
+  MAP_STYLE,
+} from '../config';
 
 // Trang HTML chứa bản đồ MapLibre GL (dữ liệu vector), hiển thị trong WebView (hoặc iframe khi chạy trên web).
 // App gửi trạng thái vào bằng window.__update(state) hoặc postMessage({ __update: state });
@@ -27,6 +34,7 @@ export function buildMapHtml() {
     layers: [{ id: 'osm', type: 'raster', source: 'osm' }]
   };
   var STYLE = ${style === 'OSM' ? 'OSM' : style};
+  var CAMPUS_BOUNDS = ${JSON.stringify(CAMPUS_MAP_BOUNDS)};
 
   function post(msg) {
     if (window.ReactNativeWebView) {
@@ -50,7 +58,15 @@ export function buildMapHtml() {
 
   var map;
   try {
-    map = new maplibregl.Map({ container: 'map', style: STYLE, center: [106.682, 10.76], zoom: 16 });
+    map = new maplibregl.Map({
+      container: 'map',
+      style: STYLE,
+      center: [106.682, 10.76],
+      zoom: ${CAMPUS_MAP_INITIAL_ZOOM},
+      minZoom: ${CAMPUS_MAP_MIN_ZOOM},
+      maxZoom: ${CAMPUS_MAP_MAX_ZOOM},
+      maxBounds: CAMPUS_BOUNDS,
+    });
   } catch (err) {
     post({ type: 'mapError' });
     return;
@@ -92,9 +108,7 @@ export function buildMapHtml() {
     map.getSource('user').setData({ type: 'FeatureCollection', features: s.position
       ? [{ type: 'Feature', geometry: { type: 'Point', coordinates: [s.position.lng, s.position.lat] }, properties: {} }] : [] });
     if (!fitted && s.pois.length) {
-      var b = new maplibregl.LngLatBounds();
-      s.pois.forEach(function (p) { b.extend([p.longitude, p.latitude]); });
-      map.fitBounds(b, { padding: 60, maxZoom: 18, duration: 0 });
+      map.fitBounds(CAMPUS_BOUNDS, { padding: 32, maxZoom: ${CAMPUS_MAP_FIT_MAX_ZOOM}, duration: 0 });
       fitted = true;
     }
   }

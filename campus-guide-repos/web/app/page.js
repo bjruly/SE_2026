@@ -13,6 +13,97 @@ import PoiDetail from '@/components/PoiDetail';
 import QrScanner from '@/components/QrScanner';
 import SimulationPanel from '@/components/SimulationPanel';
 
+function LanguagePicker({ lang, onChange, label }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+  const triggerRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const selected = rootRef.current?.querySelector('[aria-checked="true"]');
+    selected?.focus();
+
+    const onPointerDown = (event) => {
+      if (!rootRef.current?.contains(event.target)) setOpen(false);
+    };
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [open]);
+
+  const handleOptionKeyDown = (event) => {
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const options = [...rootRef.current.querySelectorAll('[role="menuitemradio"]')];
+    const currentIndex = options.indexOf(document.activeElement);
+    const nextIndex = event.key === 'Home'
+      ? 0
+      : event.key === 'End'
+        ? options.length - 1
+        : (currentIndex + (event.key === 'ArrowDown' ? 1 : options.length - 1)) % options.length;
+    options[nextIndex]?.focus();
+  };
+
+  return (
+    <div className="lang-picker" ref={rootRef}>
+      <span className="lang-label">{label}</span>
+      <button
+        ref={triggerRef}
+        type="button"
+        className="lang-trigger"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={label}
+        onClick={() => setOpen((value) => !value)}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowDown' && !open) {
+            event.preventDefault();
+            setOpen(true);
+          }
+        }}
+      >
+        <span className="lang-code">{lang.toUpperCase()}</span>
+        <span className="lang-current">{LANGS.find((item) => item.code === lang)?.label}</span>
+        <svg className={`lang-chevron ${open ? 'is-open' : ''}`} viewBox="0 0 16 16" aria-hidden="true">
+          <path d="m4 6 4 4 4-4" />
+        </svg>
+      </button>
+      {open && (
+        <div className="lang-menu" role="menu" aria-label={label}>
+          {LANGS.map((item) => (
+            <button
+              key={item.code}
+              type="button"
+              role="menuitemradio"
+              aria-checked={lang === item.code}
+              className={`lang-option ${lang === item.code ? 'selected' : ''}`}
+              onClick={() => {
+                onChange(item.code);
+                setOpen(false);
+                triggerRef.current?.focus();
+              }}
+              onKeyDown={handleOptionKeyDown}
+            >
+              <span className="lang-option-code">{item.code.toUpperCase()}</span>
+              <span>{item.label}</span>
+              {lang === item.code && <span className="lang-check" aria-hidden="true">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Bản đồ (MapLibre) chỉ chạy trên trình duyệt nên nạp với ssr: false
 const MapView = dynamic(() => import('@/components/MapView'), {
   ssr: false,
@@ -143,15 +234,19 @@ export default function Home() {
   return (
     <div className="app">
       <header className="header">
-        <h1>{t.appTitle}</h1>
-        <label className="lang">
-          <span>{t.language}</span>
-          <select value={lang} onChange={(e) => setLang(e.target.value)}>
-            {LANGS.map((l) => (
-              <option key={l.code} value={l.code}>{l.label}</option>
-            ))}
-          </select>
-        </label>
+        <div className="brand">
+          <img
+            className="brand-mark"
+            src="/logo-sgu.png"
+            alt="Logo Đại học Sài Gòn"
+          />
+          <div className="brand-copy">
+            <p className="brand-eyebrow">{t.brandEyebrow}</p>
+            <h1>{t.appTitle}</h1>
+            <p className="brand-subtitle">{t.brandSubtitle}</p>
+          </div>
+        </div>
+        <LanguagePicker lang={lang} onChange={setLang} label={t.language} />
       </header>
 
       <main className="layout">
@@ -171,18 +266,46 @@ export default function Home() {
         </section>
 
         <aside className="panel">
-          <div className="status">
-            <span>{statusText}</span>
-            <span className="muted">{{ api: t.dataApi, loading: t.dataLoading, fallback: t.dataFallback, local: t.dataLocal }[source]}</span>
+          <div className="panel-heading">
+            <div>
+              <p className="panel-eyebrow">{t.panelEyebrow}</p>
+              <h2>{t.panelTitle}</h2>
+              <p>{t.panelDescription}</p>
+            </div>
+            <span className="panel-heading-mark" aria-hidden="true">⌖</span>
+          </div>
+
+          <div className={`status-card ${sim.mode === 'sim' ? 'is-sim' : gps.status === 'ok' ? 'is-ready' : gps.status === 'denied' ? 'is-warning' : ''}`}>
+            <div className="status-main">
+              <span className="status-dot" />
+              <span>{statusText}</span>
+            </div>
+            <span className="data-source">{{ api: t.dataApi, loading: t.dataLoading, fallback: t.dataFallback, local: t.dataLocal }[source]}</span>
             {position && (
               <span className="coords">{position.lat.toFixed(5)}, {position.lng.toFixed(5)}</span>
             )}
           </div>
 
-          <button type="button" className={`btn auto ${auto ? 'on' : ''}`} onClick={toggleAuto}>
-            {auto ? t.autoOn : t.autoOff}
-          </button>
-          {!auto && <p className="meta">{t.autoHint}</p>}
+          <section className={`auto-card ${auto ? 'is-on' : ''}`}>
+            <div className="auto-card-copy">
+              <span className="auto-card-icon" aria-hidden="true">♫</span>
+              <div>
+                <span className="auto-card-label">{t.autoFeature}</span>
+                <p>{auto ? t.autoEnabledHint : t.autoHint}</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className={`auto-switch ${auto ? 'on' : ''}`}
+              onClick={toggleAuto}
+              role="switch"
+              aria-checked={auto}
+              aria-label={auto ? t.autoOn : t.autoOff}
+            >
+              <span>{auto ? t.autoOn : t.autoOff}</span>
+              <span className="switch-track" aria-hidden="true"><span /></span>
+            </button>
+          </section>
 
           {overlapPois.length > 1 && (
             <section className="overlap-choice" aria-live="polite">
@@ -210,7 +333,16 @@ export default function Home() {
           {tab === 'list' && (selected ? (
             <PoiDetail poi={selected} lang={lang} t={t} narration={narration} onBack={() => setSelectedId(null)} onPlay={(poi) => playPoi(poi, 'manual')} />
           ) : (
-            <PoiList pois={pois} lang={lang} t={t} position={position} insideIds={insideIds} onSelect={selectPoi} />
+            <>
+              <div className="section-heading">
+                <div>
+                  <h3>{t.placesHeading}</h3>
+                  <p>{t.placesDescription}</p>
+                </div>
+                <span className="count-badge">{pois.length}</span>
+              </div>
+              <PoiList pois={pois} lang={lang} t={t} position={position} insideIds={insideIds} onSelect={selectPoi} />
+            </>
           ))}
           {tab === 'qr' && <QrScanner t={t} onCode={openByQr} notFound={qrNotFound} />}
 

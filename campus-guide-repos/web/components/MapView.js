@@ -3,7 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { circlePolygon } from '@/lib/circle';
-import { getMapStyle, OSM_RASTER_STYLE } from '@/lib/mapConfig';
+import {
+  CAMPUS_MAP_BOUNDS,
+  CAMPUS_MAP_FIT_MAX_ZOOM,
+  CAMPUS_MAP_INITIAL_ZOOM,
+  CAMPUS_MAP_MAX_ZOOM,
+  CAMPUS_MAP_MIN_ZOOM,
+  getMapStyle,
+  OSM_RASTER_STYLE,
+} from '@/lib/mapConfig';
 
 // Bản đồ MapLibre GL (dữ liệu vector, mặc định OpenFreeMap). Chỉ chạy trên trình duyệt (nạp bằng next/dynamic, ssr: false).
 // Nếu style bản đồ không tải được trong 8 giây thì tự chuyển sang ô ảnh OpenStreetMap (chỉ thử một lần).
@@ -57,7 +65,15 @@ export default function MapView({ pois, lang, position, selectedId, insideIds, o
   useEffect(() => {
     let map;
     try {
-      map = new maplibregl.Map({ container: containerRef.current, style: getMapStyle(), center: [106.682, 10.76], zoom: 16 });
+      map = new maplibregl.Map({
+        container: containerRef.current,
+        style: getMapStyle(),
+        center: [106.682, 10.76],
+        zoom: CAMPUS_MAP_INITIAL_ZOOM,
+        minZoom: CAMPUS_MAP_MIN_ZOOM,
+        maxZoom: CAMPUS_MAP_MAX_ZOOM,
+        maxBounds: CAMPUS_MAP_BOUNDS,
+      });
     } catch {
       setFailed(true);
       return undefined;
@@ -116,13 +132,12 @@ export default function MapView({ pois, lang, position, selectedId, insideIds, o
       if (!loaded) useOsmFallback();
     });
 
-    // Khung nhìn ban đầu: ôm vừa tất cả địa điểm
-    const first = latest.current.pois;
-    if (first && first.length) {
-      const bounds = new maplibregl.LngLatBounds();
-      first.forEach((p) => bounds.extend([p.longitude, p.latitude]));
-      map.fitBounds(bounds, { padding: 80, maxZoom: 18, duration: 0 });
-    }
+    // Mở ở tầm nhìn toàn khuôn viên, không zoom sát vào nhóm điểm mẫu.
+    map.fitBounds(CAMPUS_MAP_BOUNDS, {
+      padding: 48,
+      maxZoom: CAMPUS_MAP_FIT_MAX_ZOOM,
+      duration: 0,
+    });
 
     map.on('click', 'poi-points', (e) => {
       const f = e.features && e.features[0];
