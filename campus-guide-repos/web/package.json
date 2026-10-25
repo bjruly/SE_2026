@@ -12,6 +12,7 @@
     "html5-qrcode": "^2.3.8",
     "maplibre-gl": "^5.24.0",
     "next": "16.4.2",
+    "qrcode": "^1.5.4",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },

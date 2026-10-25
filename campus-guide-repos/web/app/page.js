@@ -12,6 +12,7 @@ import PoiList from '@/components/PoiList';
 import PoiDetail from '@/components/PoiDetail';
 import QrScanner from '@/components/QrScanner';
 import SimulationPanel from '@/components/SimulationPanel';
+import AppQrBubble from '@/components/AppQrBubble';
 
 function LanguagePicker({ lang, onChange, label }) {
   const [open, setOpen] = useState(false);
@@ -251,6 +252,7 @@ export default function Home() {
 
       <main className="layout">
         <section className="map-wrap">
+          <AppQrBubble t={t} />
           <MapView
             pois={pois}
             lang={lang}
