@@ -104,7 +104,7 @@ Theo tài liệu của Vercel, Express chạy được mà không cần cấu h�
 server/
 ├─ src/
 │  ├─ index.js        điểm vào (chạy trên máy hoặc Vercel)
-│  ├─ app.js          ghép Express, CORS, xử lý lỗi
+│  ├─ create-app.js   ghép Express, CORS, xử lý lỗi
 │  ├─ config.js       đọc biến môi trường
 │  ├─ db.js           kết nối PostgreSQL
 │  ├─ permissions.js  bảng quyền theo vai trò
