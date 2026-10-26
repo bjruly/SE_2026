@@ -63,7 +63,7 @@ Các API bên dưới cần header `Authorization: Bearer <token>`.
 | POST | `/api/admin/pois` | Quản trị, Biên tập |
 | PUT | `/api/admin/pois/:id` | Quản trị, Biên tập |
 | DELETE | `/api/admin/pois/:id` | **Chỉ Quản trị** |
-| GET | `/api/admin/stats?days=30` | Quản trị, Biên tập |
+| GET | `/api/admin/stats?from=2026-10-01&to=2026-10-26` | Quản trị, Biên tập; khoảng ngày UTC tối đa 365 ngày (có thể truyền `days` để lấy khoảng tính từ hôm nay) |
 | GET | `/api/admin/online` | Quản trị, Biên tập; số phiên online theo nền tảng trong 2 phút gần nhất |
 | GET, POST | `/api/admin/users` | **Chỉ Quản trị** |
 | PATCH | `/api/admin/users/:id` | **Chỉ Quản trị** (đổi tên, vai trò, khóa/mở khóa, đặt lại mật khẩu) |

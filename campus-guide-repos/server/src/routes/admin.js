@@ -50,53 +50,81 @@ export function adminRoutes({ db, config }) {
 
   // ---- Thống kê ----
   r.get('/stats', requirePermission('stats:read'), async (req, res) => {
-    const days = Math.min(365, Math.max(1, parseInt(req.query.days, 10) || 30));
-    const DAY = 86400000;
-    const since = new Date(Date.now() - (days - 1) * DAY).toISOString().slice(0, 10); // ngày UTC
     const today = new Date().toISOString().slice(0, 10);
-    const inRange = "(e.created_at AT TIME ZONE 'UTC')::date >= $1::date";
+    let since;
+    let until;
+
+    if (req.query.from !== undefined || req.query.to !== undefined) {
+      const isDate = (value) => {
+        if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+        const parsed = new Date(`${value}T00:00:00.000Z`);
+        return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+      };
+      since = req.query.from;
+      until = req.query.to;
+      if (!isDate(since) || !isDate(until)) {
+        throw new HttpError(400, 'INVALID_DATE_RANGE', 'Vui lòng chọn ngày bắt đầu và ngày kết thúc hợp lệ');
+      }
+      if (since > until) {
+        throw new HttpError(400, 'INVALID_DATE_RANGE', 'Ngày bắt đầu phải trước hoặc trùng ngày kết thúc');
+      }
+      if (until > today) {
+        throw new HttpError(400, 'INVALID_DATE_RANGE', 'Ngày kết thúc không được ở tương lai');
+      }
+      const rangeDays = (Date.parse(`${until}T00:00:00Z`) - Date.parse(`${since}T00:00:00Z`)) / 86400000 + 1;
+      if (rangeDays > 365) {
+        throw new HttpError(400, 'INVALID_DATE_RANGE', 'Khoảng thời gian tối đa là 365 ngày');
+      }
+    } else {
+      const days = Math.min(365, Math.max(1, parseInt(req.query.days, 10) || 30));
+      since = new Date(Date.now() - (days - 1) * 86400000).toISOString().slice(0, 10);
+      until = today;
+    }
+
+    const days = (Date.parse(`${until}T00:00:00Z`) - Date.parse(`${since}T00:00:00Z`)) / 86400000 + 1;
+    const inRange = "(e.created_at AT TIME ZONE 'UTC')::date >= $1::date AND (e.created_at AT TIME ZONE 'UTC')::date <= $2::date";
     const counts = `count(e.id) FILTER (WHERE e.event_type = 'listen')::int AS listen,
                     count(e.id) FILTER (WHERE e.event_type = 'qr_scan')::int AS qr_scan`;
 
     const [totals, byPoi, byLang, byPoiLang, bySource, byDay] = await Promise.all([
-      db.query(`SELECT ${counts} FROM events e WHERE ${inRange}`, [since]),
+      db.query(`SELECT ${counts} FROM events e WHERE ${inRange}`, [since, until]),
       db.query(
         `SELECT p.id AS poi_id, t.name, ${counts}
          FROM pois p
          LEFT JOIN poi_translations t ON t.poi_id = p.id AND t.lang = 'vi'
          LEFT JOIN events e ON e.poi_id = p.id AND ${inRange}
          GROUP BY p.id, t.name ORDER BY listen DESC, qr_scan DESC, p.id`,
-        [since],
+        [since, until],
       ),
       db.query(
         `SELECT l.code AS lang, ${counts}
          FROM languages l LEFT JOIN events e ON e.lang = l.code AND ${inRange}
          GROUP BY l.code ORDER BY l.code`,
-        [since],
+        [since, until],
       ),
       db.query(
         `SELECT e.poi_id, e.lang, ${counts}
          FROM events e WHERE ${inRange}
          GROUP BY e.poi_id, e.lang ORDER BY e.poi_id, e.lang`,
-        [since],
+        [since, until],
       ),
       db.query(
         `SELECT e.source, count(*)::int AS count
          FROM events e WHERE e.event_type = 'listen' AND ${inRange}
          GROUP BY e.source ORDER BY e.source`,
-        [since],
+        [since, until],
       ),
       db.query(
         `SELECT to_char(d.day, 'YYYY-MM-DD') AS day, ${counts}
          FROM generate_series($1::date, $2::date, interval '1 day') AS d(day)
          LEFT JOIN events e ON (e.created_at AT TIME ZONE 'UTC')::date = d.day::date
          GROUP BY d.day ORDER BY d.day`,
-        [since, today],
+        [since, until],
       ),
     ]);
 
     res.json({
-      range: { days, from: since, to: today, timezone: 'UTC' },
+      range: { days, from: since, to: until, timezone: 'UTC' },
       totals: { listen: totals.rows[0].listen, qrScan: totals.rows[0].qr_scan },
       byPoi: byPoi.rows.map((x) => ({ poiId: x.poi_id, name: x.name, listen: x.listen, qrScan: x.qr_scan })),
       byLang: byLang.rows.map((x) => ({ lang: x.lang, listen: x.listen, qrScan: x.qr_scan })),

@@ -5,6 +5,10 @@ import { api } from '@/lib/api';
 const LANG_LABEL = { vi: 'Tiếng Việt', en: 'English', zh: '中文' };
 const SOURCE_LABEL = { auto: 'Tự động (vào vùng)', manual: 'Bấm phát tay' };
 
+function formatDate(date) {
+  return date.toISOString().slice(0, 10);
+}
+
 function Bar({ value, max }) {
   const pct = max > 0 ? Math.round((value / max) * 100) : 0;
   return (
@@ -15,22 +19,59 @@ function Bar({ value, max }) {
 }
 
 export default function StatsPage() {
-  const [days, setDays] = useState(30);
+  const [to, setTo] = useState(() => formatDate(new Date()));
+  const [from, setFrom] = useState(() => {
+    const date = new Date();
+    date.setUTCDate(date.getUTCDate() - 29);
+    return formatDate(date);
+  });
+  const [appliedRange, setAppliedRange] = useState(() => {
+    const end = new Date();
+    const start = new Date(end);
+    start.setUTCDate(start.getUTCDate() - 29);
+    return { from: formatDate(start), to: formatDate(end) };
+  });
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
+  const [rangeError, setRangeError] = useState('');
   const [online, setOnline] = useState(null);
   const [onlineError, setOnlineError] = useState('');
 
   useEffect(() => {
     let alive = true;
     setError('');
-    api(`/api/admin/stats?days=${days}`)
-      .then((d) => alive && setData(d))
+    const query = new URLSearchParams(appliedRange);
+    api(`/api/admin/stats?${query}`)
+      .then((d) => {
+        if (alive) {
+          setData(d);
+          setError('');
+        }
+      })
       .catch((e) => alive && setError(e.message));
     return () => {
       alive = false;
     };
-  }, [days]);
+  }, [appliedRange]);
+
+  const applyRange = (event) => {
+    event.preventDefault();
+    setRangeError('');
+    if (!from || !to) {
+      setRangeError('Vui lòng chọn cả ngày bắt đầu và ngày kết thúc.');
+      return;
+    }
+    if (from > to) {
+      setRangeError('Ngày bắt đầu phải trước hoặc trùng ngày kết thúc.');
+      return;
+    }
+    const rangeDays = (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86400000 + 1;
+    if (rangeDays > 365) {
+      setRangeError('Khoảng thời gian tối đa là 365 ngày.');
+      return;
+    }
+    setAppliedRange({ from, to });
+  };
 
   useEffect(() => {
     let alive = true;
@@ -53,28 +94,32 @@ export default function StatsPage() {
     };
   }, []);
 
-  if (error) return <p className="error">{error}</p>;
-  if (!data) return <p className="muted">Đang tải thống kê…</p>;
-
-  const maxDay = Math.max(1, ...data.byDay.map((d) => d.listen + d.qrScan));
-  const langs = data.byLang.map((l) => l.lang);
-  const cell = (poiId, lang) => data.byPoiLang.find((x) => x.poiId === poiId && x.lang === lang);
+  const maxDay = Math.max(1, ...(data?.byDay || []).map((d) => d.listen + d.qrScan));
+  const langs = data?.byLang.map((l) => l.lang) || [];
+  const cell = (poiId, lang) => data?.byPoiLang.find((x) => x.poiId === poiId && x.lang === lang);
 
   return (
     <>
       <div className="page-head">
         <h1>Thống kê</h1>
-        <label className="inline">
-          Khoảng thời gian
-          <select value={days} onChange={(e) => setDays(Number(e.target.value))}>
-            <option value={7}>7 ngày qua</option>
-            <option value={30}>30 ngày qua</option>
-            <option value={90}>90 ngày qua</option>
-          </select>
-        </label>
+        <form className="date-range-form" onSubmit={applyRange}>
+          <label>
+            Từ ngày
+            <input type="date" value={from} max={to || formatDate(new Date())} onChange={(e) => setFrom(e.target.value)} />
+          </label>
+          <label>
+            Đến ngày
+            <input type="date" value={to} max={formatDate(new Date())} min={from} onChange={(e) => setTo(e.target.value)} />
+          </label>
+          <button className="btn primary" type="submit">Xem thống kê</button>
+        </form>
       </div>
-      <p className="muted small">Từ {data.range.from} đến {data.range.to} (giờ UTC). Dữ liệu ẩn danh, không lưu vị trí hay thông tin cá nhân.</p>
+      {rangeError && <p className="error">{rangeError}</p>}
+      {error && <p className="error">{error}</p>}
+      {data && <p className="muted small">Từ {data.range.from} đến {data.range.to} (giờ UTC). Dữ liệu ẩn danh, không lưu vị trí hay thông tin cá nhân.</p>}
+      {!data && !error && <p className="muted">Đang tải thống kê…</p>}
 
+      {data && <>
       <div className="cards">
         <div className="card stat">
           <div className="num">{online ? online.total : '—'}</div>
@@ -158,6 +203,7 @@ export default function StatsPage() {
           </tbody>
         </table>
       </div>
+      </>}
     </>
   );
 }

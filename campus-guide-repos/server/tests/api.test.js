@@ -108,6 +108,16 @@ test('thống kê: ghi sự kiện hợp lệ, từ chối sự kiện sai, tổ
   assert.deepEqual(st.body.byLang.find((x) => x.lang === 'zh'), { lang: 'zh', listen: 0, qrScan: 1 });
   assert.deepEqual(st.body.bySource.map((x) => x.source).sort(), ['auto', 'manual']);
   assert.equal(st.body.byPoiLang.length, 3);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const singleDay = await s.api('GET', `/api/admin/stats?from=${today}&to=${today}`, { token: adminToken });
+  assert.equal(singleDay.status, 200);
+  assert.deepEqual(singleDay.body.totals, { listen: 2, qrScan: 1 });
+  assert.equal(singleDay.body.byDay.length, 1);
+  assert.equal(singleDay.body.range.days, 1);
+  assert.equal((await s.api('GET', `/api/admin/stats?from=${today}&to=2020-01-01`, { token: adminToken })).status, 400);
+  assert.equal((await s.api('GET', '/api/admin/stats?from=2026-02-30&to=2026-03-01', { token: adminToken })).status, 400);
+  assert.equal((await s.api('GET', '/api/admin/stats?from=2020-01-01&to=2021-01-01', { token: adminToken })).status, 400);
 });
 
 test('địa điểm bị tắt (active = false) không hiện công khai và không nhận sự kiện', async () => {
