@@ -32,6 +32,7 @@ export default function StatsPage() {
     return { from: formatDate(start), to: formatDate(end) };
   });
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [rangeError, setRangeError] = useState('');
   const [online, setOnline] = useState(null);
@@ -39,6 +40,7 @@ export default function StatsPage() {
 
   useEffect(() => {
     let alive = true;
+    setLoading(true);
     setError('');
     const query = new URLSearchParams(appliedRange);
     api(`/api/admin/stats?${query}`)
@@ -48,7 +50,12 @@ export default function StatsPage() {
           setError('');
         }
       })
-      .catch((e) => alive && setError(e.message));
+      .catch((e) => {
+        if (alive) setError(e.message);
+      })
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
     return () => {
       alive = false;
     };
@@ -111,15 +118,20 @@ export default function StatsPage() {
             Đến ngày
             <input type="date" value={to} max={formatDate(new Date())} min={from} onChange={(e) => setTo(e.target.value)} />
           </label>
-          <button className="btn primary" type="submit">Xem thống kê</button>
+          <button className="btn primary" type="submit" disabled={loading}>Xem thống kê</button>
         </form>
       </div>
       {rangeError && <p className="error">{rangeError}</p>}
       {error && <p className="error">{error}</p>}
-      {data && <p className="muted small">Từ {data.range.from} đến {data.range.to} (giờ UTC). Dữ liệu ẩn danh, không lưu vị trí hay thông tin cá nhân.</p>}
-      {!data && !error && <p className="muted">Đang tải thống kê…</p>}
+      {loading && (
+        <div className="stats-loading" role="status" aria-live="polite">
+          <span className="loading-spinner" aria-hidden="true" />
+          <span>Đang tải thống kê cho khoảng {appliedRange.from} đến {appliedRange.to}…</span>
+        </div>
+      )}
+      {!loading && data && <p className="muted small">Từ {data.range.from} đến {data.range.to} (giờ UTC). Dữ liệu ẩn danh, không lưu vị trí hay thông tin cá nhân.</p>}
 
-      {data && <>
+      {!loading && data && <>
       <div className="cards">
         <div className="card stat">
           <div className="num">{online ? online.total : '—'}</div>
