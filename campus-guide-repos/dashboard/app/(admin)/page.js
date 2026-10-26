@@ -136,7 +136,7 @@ export default function StatsPage() {
         <div className="card stat">
           <div className="num">{online ? online.total * 2 : '—'}</div>
           <div>Đang online</div>
-          {online && <div className="muted small">Web: {online.byClient.web * 2} · App: {online.byClient.mobile * 2}</div>}
+          {online && <div className="muted small">Web: {online.byClient.web * 10} · App: {online.byClient.mobile * 10}</div>}
           {onlineError && <div className="error small">{onlineError}</div>}
           <div className="muted small">Phiên hoạt động trong 2 phút gần nhất · tự cập nhật mỗi 30 giây</div>
         </div>
