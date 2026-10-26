@@ -46,3 +46,16 @@ export function sendEvent(event) {
     /* bỏ qua */
   }
 }
+
+const PRESENCE_SESSION_ID =
+  `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+
+export async function sendPresence() {
+  if (!API_URL) return;
+  const res = await fetch(`${API_URL}/api/presence`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId: PRESENCE_SESSION_ID, client: 'mobile' }),
+  });
+  if (!res.ok) throw new Error(`Gửi online heartbeat thất bại (HTTP ${res.status})`);
+}

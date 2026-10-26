@@ -106,6 +106,19 @@ export function adminRoutes({ db, config }) {
     });
   });
 
+  r.get('/online', requirePermission('stats:read'), async (_req, res) => {
+    await db.query(`DELETE FROM online_sessions WHERE last_seen_at < now() - interval '1 day'`);
+    const q = await db.query(
+      `SELECT client, count(*)::int AS count
+       FROM online_sessions
+       WHERE last_seen_at >= now() - interval '2 minutes'
+       GROUP BY client`,
+    );
+    const byClient = { web: 0, mobile: 0 };
+    for (const row of q.rows) byClient[row.client] = row.count;
+    res.json({ total: byClient.web + byClient.mobile, byClient });
+  });
+
   // ---- Tài khoản admin (chỉ Quản trị) ----
   r.get('/users', requirePermission('user:manage'), async (_req, res) => {
     const q = await db.query('SELECT * FROM admins ORDER BY id');

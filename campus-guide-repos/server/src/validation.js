@@ -30,6 +30,11 @@ export const eventBody = z
     message: 'source không khớp với type (listen: auto|manual, qr_scan: qr)',
   });
 
+export const presenceBody = z.object({
+  sessionId: z.string().regex(/^[a-zA-Z0-9-]{16,64}$/),
+  client: z.enum(['web', 'mobile']),
+});
+
 export const loginBody = z.object({
   email: z.string().trim().min(3).max(200),
   password: z.string().min(1).max(200),

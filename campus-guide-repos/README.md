@@ -45,7 +45,7 @@ Web và app **vẫn chạy được khi không có backend**: chưa cấu hình 
 | F6 | Quét mã QR (hoặc mở liên kết QR) để mở địa điểm |
 | — | Giả lập vị trí để thử F2 mà không cần đi bộ |
 
-**Dashboard (quản trị):** thêm/sửa/xóa địa điểm và bản dịch 3 ngôn ngữ, tạo và tải mã QR, thống kê lượt nghe và lượt quét QR theo địa điểm và ngôn ngữ, quản lý tài khoản admin với 2 vai trò (Quản trị, Biên tập).
+**Dashboard (quản trị):** thêm/sửa/xóa địa điểm và bản dịch 3 ngôn ngữ, tạo và tải mã QR, thống kê lượt nghe và lượt quét QR theo địa điểm và ngôn ngữ, ước tính số phiên web/app online, quản lý tài khoản admin với 2 vai trò (Quản trị, Biên tập).
 
 Âm thanh hiện là **giọng đọc của thiết bị** (đọc văn bản). Nhóm muốn về sau dùng file audio riêng: database và API đã có trường `audioUrl`, nhưng **phần phát file audio và tải file lên chưa được làm**.
 

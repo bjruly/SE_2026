@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { AppState, Pressable, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
@@ -9,7 +9,7 @@ import { createGeofenceTracker } from './src/lib/geofence';
 import { useGps } from './src/hooks/useGps';
 import { useNarration } from './src/hooks/useNarration';
 import { usePois } from './src/hooks/usePois';
-import { sendEvent } from './src/lib/poiSource';
+import { sendEvent, sendPresence } from './src/lib/poiSource';
 import { extractCode, findPoiByCode } from './src/lib/qr';
 import MapWebView from './src/components/MapWebView';
 import PoiList from './src/components/PoiList';
@@ -27,6 +27,37 @@ export default function App() {
 }
 
 function Main() {
+  useEffect(() => {
+    let timer;
+    let loggedFailure = false;
+    const heartbeat = () => {
+      sendPresence()
+        .then(() => {
+          loggedFailure = false;
+        })
+        .catch((error) => {
+          if (!loggedFailure) console.error(error);
+          loggedFailure = true;
+        });
+    };
+    const update = (state) => {
+      if (state === 'active') {
+        heartbeat();
+        if (!timer) timer = setInterval(heartbeat, 30000);
+      } else if (timer) {
+        clearInterval(timer);
+        timer = undefined;
+      }
+    };
+
+    update(AppState.currentState || 'active');
+    const subscription = AppState.addEventListener('change', update);
+    return () => {
+      subscription.remove();
+      if (timer) clearInterval(timer);
+    };
+  }, []);
+
   const [lang, setLang] = useState('vi');
   const [tab, setTab] = useState('map'); // 'map' | 'list' | 'qr'
   const [selectedId, setSelectedId] = useState(null);

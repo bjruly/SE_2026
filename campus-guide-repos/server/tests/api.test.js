@@ -120,6 +120,22 @@ test('địa điểm bị tắt (active = false) không hiện công khai và kh
   assert.equal((await s.api('GET', '/api/admin/pois', { token: adminToken })).body.some((p) => p.id === id), true);
 });
 
+test('presence chỉ tính heartbeat gần đây, phân biệt web/mobile và yêu cầu quyền xem thống kê', async () => {
+  const presence = (sessionId, client) => s.api('POST', '/api/presence', { body: { sessionId, client } });
+  assert.equal((await presence('session-web-0001', 'web')).status, 204);
+  assert.equal((await presence('session-mobile-001', 'mobile')).status, 204);
+  assert.equal((await presence('session-web-0001', 'web')).status, 204);
+  assert.equal((await presence('invalid', 'web')).status, 400);
+  assert.equal((await presence('session-other-0001', 'unknown')).status, 400);
+
+  await s.db.query(`UPDATE online_sessions SET last_seen_at = now() - interval '3 minutes' WHERE session_id = $1`, ['session-mobile-001']);
+  const online = await s.api('GET', '/api/admin/online', { token: adminToken });
+  assert.equal(online.status, 200);
+  assert.deepEqual(online.body, { total: 1, byClient: { web: 1, mobile: 0 } });
+  assert.equal((await s.api('GET', '/api/admin/online')).status, 401);
+  assert.equal((await s.api('GET', '/api/admin/online', { token: editorToken })).status, 200);
+});
+
 test('quản lý tài khoản: tạo, trùng email, không tự khóa mình, khóa người khác thì token hết tác dụng', async () => {
   const mk = (email) => s.api('POST', '/api/admin/users', { token: adminToken, body: { email, fullName: 'Người mới', role: 'editor', password: 'matkhau-moi-1' } });
   const c = await mk('moi@test.vn');

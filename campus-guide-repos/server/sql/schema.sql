@@ -61,3 +61,11 @@ CREATE TABLE IF NOT EXISTS events (
 );
 CREATE INDEX IF NOT EXISTS events_poi_time_idx ON events (poi_id, created_at);
 CREATE INDEX IF NOT EXISTS events_type_time_idx ON events (event_type, created_at);
+
+-- Phiên hoạt động ẩn danh để ước tính số phiên web/app đang online.
+CREATE TABLE IF NOT EXISTS online_sessions (
+  session_id text PRIMARY KEY CHECK (length(session_id) BETWEEN 16 AND 64),
+  client text NOT NULL CHECK (client IN ('web', 'mobile')),
+  last_seen_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS online_sessions_last_seen_idx ON online_sessions (last_seen_at);

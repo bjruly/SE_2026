@@ -42,3 +42,6 @@ next-env.d.ts
 
 # giữ file mẫu cấu hình
 !.env.example
+
+.vercel
+.env*

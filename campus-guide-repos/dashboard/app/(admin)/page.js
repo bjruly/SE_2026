@@ -18,6 +18,8 @@ export default function StatsPage() {
   const [days, setDays] = useState(30);
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
+  const [online, setOnline] = useState(null);
+  const [onlineError, setOnlineError] = useState('');
 
   useEffect(() => {
     let alive = true;
@@ -29,6 +31,27 @@ export default function StatsPage() {
       alive = false;
     };
   }, [days]);
+
+  useEffect(() => {
+    let alive = true;
+    const loadOnline = () => {
+      api('/api/admin/online')
+        .then((result) => {
+          if (!alive) return;
+          setOnline(result);
+          setOnlineError('');
+        })
+        .catch((e) => {
+          if (alive) setOnlineError(e.message);
+        });
+    };
+    loadOnline();
+    const timer = window.setInterval(loadOnline, 30000);
+    return () => {
+      alive = false;
+      window.clearInterval(timer);
+    };
+  }, []);
 
   if (error) return <p className="error">{error}</p>;
   if (!data) return <p className="muted">Đang tải thống kê…</p>;
@@ -53,6 +76,13 @@ export default function StatsPage() {
       <p className="muted small">Từ {data.range.from} đến {data.range.to} (giờ UTC). Dữ liệu ẩn danh, không lưu vị trí hay thông tin cá nhân.</p>
 
       <div className="cards">
+        <div className="card stat">
+          <div className="num">{online ? online.total : '—'}</div>
+          <div>Đang online</div>
+          {online && <div className="muted small">Web: {online.byClient.web} · App: {online.byClient.mobile}</div>}
+          {onlineError && <div className="error small">{onlineError}</div>}
+          <div className="muted small">Phiên hoạt động trong 2 phút gần nhất · tự cập nhật mỗi 30 giây</div>
+        </div>
         <div className="card stat"><div className="num">{data.totals.listen}</div><div>Lượt nghe</div></div>
         <div className="card stat"><div className="num">{data.totals.qrScan}</div><div>Lượt quét QR</div></div>
       </div>

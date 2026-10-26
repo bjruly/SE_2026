@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { listPois } from '../poiRepo.js';
 import { parse } from '../errors.js';
 import { HttpError } from '../errors.js';
-import { eventBody } from '../validation.js';
+import { eventBody, presenceBody } from '../validation.js';
 
 // Các API công khai (web và app gọi, không cần đăng nhập)
 export function publicRoutes({ db }) {
@@ -32,6 +32,20 @@ export function publicRoutes({ db }) {
     );
     if (!ins.rows.length) throw new HttpError(404, 'NOT_FOUND', 'Không tìm thấy địa điểm');
     res.status(201).json({ ok: true });
+  });
+
+  // Heartbeat ẩn danh; không lưu thông tin tài khoản hay vị trí.
+  r.post('/presence', async (req, res) => {
+    const presence = parse(presenceBody, req.body);
+    await db.query(
+      `INSERT INTO online_sessions (session_id, client, last_seen_at)
+       VALUES ($1, $2, now())
+       ON CONFLICT (session_id) DO UPDATE
+       SET client = EXCLUDED.client, last_seen_at = now()`,
+      [presence.sessionId, presence.client],
+    );
+    await db.query(`DELETE FROM online_sessions WHERE last_seen_at < now() - interval '1 day'`);
+    res.status(204).end();
   });
 
   return r;

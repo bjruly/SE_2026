@@ -15,7 +15,7 @@ npm install
 cp .env.example .env         # Windows PowerShell: Copy-Item .env.example .env
 # Mở .env và điền: DATABASE_URL, JWT_SECRET (ít nhất 32 ký tự ngẫu nhiên), ADMIN_EMAIL, ADMIN_PASSWORD
 
-npm run db:schema            # tạo các bảng
+npm run db:schema            # tạo các bảng (chạy lại để thêm bảng online_sessions)
 npm run db:seed              # nạp 3 địa điểm mẫu và 3 ngôn ngữ
 npm run admin:create         # tạo tài khoản Quản trị đầu tiên từ ADMIN_EMAIL / ADMIN_PASSWORD
 npm run dev                  # chạy tại http://localhost:4000
@@ -43,6 +43,7 @@ Mọi lỗi trả về dạng `{ "error": { "code", "message", "details?" } }`.
 | GET | `/api/health` | Kiểm tra backend và database |
 | GET | `/api/pois` | Địa điểm đang hoạt động, cùng hình dạng với `pois.json` |
 | POST | `/api/events` | Ghi sự kiện thống kê: `{ poiId, type: "listen" \| "qr_scan", lang, source?: "auto" \| "manual", client?: "web" \| "mobile" }` |
+| POST | `/api/presence` | Heartbeat ẩn danh: `{ sessionId, client: "web" \| "mobile" }`; gửi 30 giây/lần khi ứng dụng đang ở foreground |
 
 **Đăng nhập**
 
@@ -63,6 +64,7 @@ Các API bên dưới cần header `Authorization: Bearer <token>`.
 | PUT | `/api/admin/pois/:id` | Quản trị, Biên tập |
 | DELETE | `/api/admin/pois/:id` | **Chỉ Quản trị** |
 | GET | `/api/admin/stats?days=30` | Quản trị, Biên tập |
+| GET | `/api/admin/online` | Quản trị, Biên tập; số phiên online theo nền tảng trong 2 phút gần nhất |
 | GET, POST | `/api/admin/users` | **Chỉ Quản trị** |
 | PATCH | `/api/admin/users/:id` | **Chỉ Quản trị** (đổi tên, vai trò, khóa/mở khóa, đặt lại mật khẩu) |
 
@@ -87,6 +89,7 @@ Bạn chỉ nói "Biên tập: sửa địa điểm, xem thống kê", chưa nó
 - Truy vấn SQL dùng tham số (không nối chuỗi), dữ liệu gửi lên được kiểm tra bằng `zod`.
 - `CORS_ORIGINS`: danh sách địa chỉ web được gọi API từ trình duyệt. Để trống là cho phép tất cả (chỉ để phát triển); khi triển khai hãy điền địa chỉ web và dashboard.
 - **Hạn chế:** API ghi sự kiện (`POST /api/events`) là công khai nên có thể bị gửi dữ liệu rác; chưa có giới hạn tốc độ cho API này. Giới hạn đăng nhập sai lưu trong bộ nhớ nên trên Vercel (serverless) chỉ làm chậm chứ không chặn tuyệt đối. Token lưu trong localStorage của dashboard. Thống kê tính theo giờ UTC.
+- Số online là **ước tính số phiên/thiết bị**, không phải số người được xác thực. Web dùng ID ngẫu nhiên lưu trong localStorage; app dùng ID phiên ngẫu nhiên trong bộ nhớ. Không lưu tài khoản, tên hay vị trí; heartbeat chạy mỗi 30 giây ở foreground và dashboard tính online nếu cập nhật trong 2 phút gần nhất.
 
 ## Triển khai lên Vercel
 

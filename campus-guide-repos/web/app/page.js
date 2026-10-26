@@ -5,6 +5,7 @@ import { LANGS, STRINGS } from '@/lib/i18n';
 import { createGeofenceTracker } from '@/lib/geofence';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useNarration } from '@/hooks/useNarration';
+import { useOnlinePresence } from '@/hooks/useOnlinePresence';
 import { usePois } from '@/hooks/usePois';
 import { sendEvent } from '@/lib/poiSource';
 import { extractCode, findPoiByCode } from '@/lib/qr';
@@ -115,6 +116,7 @@ const MapView = dynamic(() => import('@/components/MapView'), {
 const COOLDOWN_MS = 60000;
 
 export default function Home() {
+  useOnlinePresence();
   const [lang, setLang] = useState('vi');
   const [tab, setTab] = useState('list');
   const [selectedId, setSelectedId] = useState(null);

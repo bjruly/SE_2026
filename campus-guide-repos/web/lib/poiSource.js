@@ -46,3 +46,33 @@ export function sendEvent(event) {
     /* bỏ qua */
   }
 }
+
+const PRESENCE_SESSION_KEY = 'tm_presence_session';
+const FALLBACK_PRESENCE_SESSION_ID =
+  `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+
+function getPresenceSessionId() {
+  try {
+    let sessionId = localStorage.getItem(PRESENCE_SESSION_KEY);
+    if (!sessionId) {
+      const bytes = new Uint8Array(16);
+      crypto.getRandomValues(bytes);
+      sessionId = Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+      localStorage.setItem(PRESENCE_SESSION_KEY, sessionId);
+    }
+    return sessionId;
+  } catch {
+    return FALLBACK_PRESENCE_SESSION_ID;
+  }
+}
+
+export async function sendPresence() {
+  if (!API_URL) return;
+  const res = await fetch(`${API_URL}/api/presence`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId: getPresenceSessionId(), client: 'web' }),
+    keepalive: true,
+  });
+  if (!res.ok) throw new Error(`Gửi online heartbeat thất bại (HTTP ${res.status})`);
+}
