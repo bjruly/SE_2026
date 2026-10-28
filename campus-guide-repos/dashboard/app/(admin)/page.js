@@ -134,7 +134,7 @@ export default function StatsPage() {
       {!loading && data && <>
       <div className="cards">
         <div className="card stat">
-          <div className="num">{online ? online.total * 10 : '—'}</div>
+          <div className="num">{online ? online.total : '—'}</div>
           <div>Đang online</div>
           {online && <div className="muted small">Web: {online.byClient.web} · App: {online.byClient.mobile}</div>}
           {onlineError && <div className="error small">{onlineError}</div>}
