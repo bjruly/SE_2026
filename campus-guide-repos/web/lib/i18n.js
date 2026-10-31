@@ -7,7 +7,7 @@ export const LANGS = [
 
 export const STRINGS = {
   vi: {
-    appTitle: 'Đại học Sài Gòn',
+    appTitle: 'Đại Học Sài Gòn',
     brandEyebrow: 'KHÁM PHÁ KHUÔN VIÊN',
     brandSubtitle: 'Thuyết minh tự động đa ngôn ngữ',
     panelEyebrow: 'CẨM NANG THAM QUAN',
@@ -31,6 +31,9 @@ export const STRINGS = {
     stop: 'Dừng',
     back: '← Quay lại danh sách',
     nowPlaying: 'Đang phát',
+    nowPaused: 'Đang tạm dừng',
+    playbackReady: 'Sẵn sàng phát',
+    viewNarration: 'Xem phần thuyết minh',
     distance: 'Cách bạn',
     meters: 'm',
     radius: 'Bán kính vùng',
@@ -91,6 +94,9 @@ export const STRINGS = {
     stop: 'Stop',
     back: '← Back to list',
     nowPlaying: 'Now playing',
+    nowPaused: 'Paused',
+    playbackReady: 'Ready to play',
+    viewNarration: 'View narration',
     distance: 'Distance',
     meters: 'm',
     radius: 'Zone radius',
@@ -151,6 +157,9 @@ export const STRINGS = {
     stop: '停止',
     back: '← 返回列表',
     nowPlaying: '正在播放',
+    nowPaused: '已暂停',
+    playbackReady: '准备播放',
+    viewNarration: '查看讲解内容',
     distance: '距离',
     meters: '米',
     radius: '范围半径',

@@ -10,7 +10,6 @@ import { usePois } from '@/hooks/usePois';
 import { sendEvent } from '@/lib/poiSource';
 import { extractCode, findPoiByCode } from '@/lib/qr';
 import PoiList from '@/components/PoiList';
-import PoiDetail from '@/components/PoiDetail';
 import QrScanner from '@/components/QrScanner';
 import SimulationPanel from '@/components/SimulationPanel';
 import AppQrBubble from '@/components/AppQrBubble';
@@ -121,6 +120,8 @@ export default function Home() {
   const [tab, setTab] = useState('list');
   const [selectedId, setSelectedId] = useState(null);
   const [auto, setAuto] = useState(false);
+  const autoRef = useRef(auto);
+  autoRef.current = auto;
   const [sim, setSim] = useState({ mode: 'gps', pos: null, key: 'gps' });
   const [insideIds, setInsideIds] = useState(() => new Set());
   const [overlapPois, setOverlapPois] = useState([]);
@@ -208,10 +209,30 @@ export default function Home() {
     setTab('list');
   };
 
+  const playSelectedPoi = (id) => {
+    const poi = pois.find((item) => item.id === id);
+    if (!poi) return;
+    setSelectedId(id);
+    setTab('list');
+    if (autoRef.current) playPoi(poi, 'manual');
+  };
+
   const chooseOverlapPoi = (poi) => {
     handledOverlapRef.current = overlapPois.map((item) => item.id).sort().join('|');
     setOverlapPois([]);
-    selectPoi(poi.id);
+    setSelectedId(poi.id);
+    setTab('list');
+    playPoi(poi, 'manual');
+  };
+
+  const chooseMapOverlap = (poiIds, positionAtClick) => {
+    const overlapping = pois.filter((poi) => poiIds.includes(poi.id));
+    if (overlapping.length < 2) return;
+    narration.stop();
+    setSelectedId(null);
+    setOverlapPois(overlapping);
+    setTab('list');
+    if (sim.mode === 'sim') setSim({ mode: 'sim', pos: positionAtClick, key: 'custom' });
   };
 
   const openByQr = (raw) => {
@@ -226,6 +247,16 @@ export default function Home() {
   };
 
   const selected = pois.find((p) => p.id === selectedId) || null;
+  const playingPoi = pois.find((poi) => poi.id === narration.currentId);
+  const playbackPoi = playingPoi || selected;
+
+  const handlePlaybackPlay = () => {
+    if (narration.status === 'paused') {
+      narration.resume();
+      return;
+    }
+    if (selected) playPoi(selected, 'manual');
+  };
 
   let statusText = t.noPosition;
   if (sim.mode === 'sim') statusText = t.simTitle.split(' (')[0];
@@ -241,7 +272,7 @@ export default function Home() {
           <img
             className="brand-mark"
             src="/logo-sgu.png"
-            alt="Logo Đại học Sài Gòn"
+            alt="Logo Đại Học Sài Gòn"
           />
           <div className="brand-copy">
             <p className="brand-eyebrow">{t.brandEyebrow}</p>
@@ -255,17 +286,56 @@ export default function Home() {
       <main className="layout">
         <section className="map-wrap">
           <AppQrBubble t={t} />
+          <div className="playback-bar">
+            <div className="playback-info" role="status" aria-live="polite">
+              <span className="now-playing-icon" aria-hidden="true">♫</span>
+              <span className="playback-copy">
+                <strong>
+                  {narration.status === 'playing'
+                    ? t.nowPlaying
+                    : narration.status === 'paused'
+                      ? t.nowPaused
+                      : playbackPoi
+                        ? t.playbackReady
+                        : t.autoFeature}
+                </strong>
+                <span className="now-playing-name">{playbackPoi?.name[lang] || t.panelDescription}</span>
+              </span>
+            </div>
+            <div className="playback-buttons">
+              <button
+                type="button"
+                className="playback-button primary"
+                onClick={handlePlaybackPlay}
+                disabled={!narration.supported || !selected || narration.status === 'playing'}
+              >
+                {narration.status === 'paused' ? `▶ ${t.resume}` : `▶ ${t.play}`}
+              </button>
+              <button
+                type="button"
+                className="playback-button"
+                onClick={narration.pause}
+                disabled={narration.status !== 'playing'}
+              >
+                ⏸ {t.pause}
+              </button>
+            </div>
+          </div>
           <MapView
             pois={pois}
             lang={lang}
             position={position}
             selectedId={selectedId}
             insideIds={insideIds}
-            onSelect={selectPoi}
+            overlapPois={overlapPois}
+            onSelect={playSelectedPoi}
+            onOverlap={chooseMapOverlap}
             errorText={t.mapError}
-            onMapClick={
-              sim.mode === 'sim' ? (pos) => setSim({ mode: 'sim', pos, key: 'custom' }) : undefined
-            }
+            onMapClick={(pos) => {
+              setSelectedId(null);
+              setOverlapPois([]);
+              if (sim.mode === 'sim') setSim({ mode: 'sim', pos, key: 'custom' });
+            }}
           />
         </section>
 
@@ -334,9 +404,7 @@ export default function Home() {
             </button>
           </nav>
 
-          {tab === 'list' && (selected ? (
-            <PoiDetail poi={selected} lang={lang} t={t} narration={narration} onBack={() => setSelectedId(null)} onPlay={(poi) => playPoi(poi, 'manual')} />
-          ) : (
+          {tab === 'list' && (
             <>
               <div className="section-heading">
                 <div>
@@ -345,9 +413,9 @@ export default function Home() {
                 </div>
                 <span className="count-badge">{pois.length}</span>
               </div>
-              <PoiList pois={pois} lang={lang} t={t} position={position} insideIds={insideIds} onSelect={selectPoi} />
+              <PoiList pois={pois} lang={lang} t={t} position={position} insideIds={insideIds} selectedId={selectedId} onSelect={playSelectedPoi} />
             </>
-          ))}
+          )}
           {tab === 'qr' && <QrScanner t={t} onCode={openByQr} notFound={qrNotFound} />}
 
           <SimulationPanel

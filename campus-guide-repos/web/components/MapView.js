@@ -16,14 +16,29 @@ import {
 // Bản đồ MapLibre GL (dữ liệu vector, mặc định OpenFreeMap). Chỉ chạy trên trình duyệt (nạp bằng next/dynamic, ssr: false).
 // Nếu style bản đồ không tải được trong 8 giây thì tự chuyển sang ô ảnh OpenStreetMap (chỉ thử một lần).
 const STYLE_TIMEOUT_MS = 8000;
+const HAND_CURSOR = `url("data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="28" viewBox="0 0 24 28"><path d="M7 13V5.5a1.7 1.7 0 0 1 3.4 0V12 4.5a1.7 1.7 0 0 1 3.4 0V12 5.5a1.7 1.7 0 0 1 3.4 0V13 8a1.7 1.7 0 0 1 3.4 0v9.5c0 5-3.5 8.5-8.5 8.5h-.8c-2.7 0-4.1-1.1-5.8-3.3L2.4 17a1.8 1.8 0 0 1 2.8-2.2L7 17z" fill="#000" stroke="#fff" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+)}") 7 3, pointer`;
 
-function buildData({ pois, lang, position, selectedId, insideIds }) {
+function buildData({ pois, lang, position, selectedId, insideIds, overlapPois }) {
+  const highlightedIds = new Set(overlapPois.map((poi) => poi.id));
+  const isHighlighted = (poiId) => (
+    selectedId
+      ? poiId === selectedId
+      : highlightedIds.size
+        ? highlightedIds.has(poiId)
+        : insideIds.has(poiId)
+  );
   const zones = {
     type: 'FeatureCollection',
     features: pois.map((p) => ({
       type: 'Feature',
       geometry: circlePolygon(p.latitude, p.longitude, p.radiusMeters),
-      properties: { inside: insideIds.has(p.id), selected: p.id === selectedId },
+      properties: {
+        id: p.id,
+        highlighted: isHighlighted(p.id),
+        selected: p.id === selectedId,
+      },
     })),
   };
   const points = {
@@ -31,7 +46,12 @@ function buildData({ pois, lang, position, selectedId, insideIds }) {
     features: pois.map((p) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [p.longitude, p.latitude] },
-      properties: { id: p.id, name: p.name[lang], inside: insideIds.has(p.id), selected: p.id === selectedId },
+      properties: {
+        id: p.id,
+        name: p.name[lang],
+        highlighted: isHighlighted(p.id),
+        selected: p.id === selectedId,
+      },
     })),
   };
   const user = {
@@ -41,7 +61,7 @@ function buildData({ pois, lang, position, selectedId, insideIds }) {
   return { zones, points, user };
 }
 
-export default function MapView({ pois, lang, position, selectedId, insideIds, onSelect, onMapClick, errorText }) {
+export default function MapView({ pois, lang, position, selectedId, insideIds, overlapPois, onSelect, onOverlap, onMapClick, errorText }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const latest = useRef({});
@@ -49,7 +69,7 @@ export default function MapView({ pois, lang, position, selectedId, insideIds, o
 
   // luôn giữ giá trị mới nhất để các hàm xử lý sự kiện của bản đồ dùng
   useEffect(() => {
-    latest.current = { pois, lang, position, selectedId, insideIds, onSelect, onMapClick };
+    latest.current = { pois, lang, position, selectedId, insideIds, overlapPois, onSelect, onOverlap, onMapClick };
   });
 
   const sync = () => {
@@ -92,17 +112,23 @@ export default function MapView({ pois, lang, position, selectedId, insideIds, o
       map.addSource('user', { type: 'geojson', data: empty });
       map.addLayer({
         id: 'zones-fill', type: 'fill', source: 'zones',
-        paint: { 'fill-color': ['case', ['get', 'inside'], '#16a34a', '#2563eb'], 'fill-opacity': ['case', ['get', 'inside'], 0.3, 0.13] },
+        paint: {
+          'fill-color': ['case', ['get', 'highlighted'], '#16a34a', '#2563eb'],
+          'fill-opacity': ['case', ['get', 'highlighted'], 0.3, 0.13],
+        },
       });
       map.addLayer({
         id: 'zones-line', type: 'line', source: 'zones',
-        paint: { 'line-color': ['case', ['get', 'inside'], '#16a34a', '#2563eb'], 'line-width': ['case', ['get', 'selected'], 3, 1.5] },
+        paint: {
+          'line-color': ['case', ['get', 'highlighted'], '#16a34a', '#2563eb'],
+          'line-width': ['case', ['get', 'selected'], 3, 1.5],
+        },
       });
       map.addLayer({
         id: 'poi-points', type: 'circle', source: 'pois',
         paint: {
           'circle-radius': 9,
-          'circle-color': ['case', ['get', 'inside'], '#16a34a', ['get', 'selected'], '#1d4ed8', '#2563eb'],
+          'circle-color': ['case', ['get', 'highlighted'], '#16a34a', '#2563eb'],
           'circle-stroke-color': '#ffffff',
           'circle-stroke-width': 2,
         },
@@ -139,15 +165,24 @@ export default function MapView({ pois, lang, position, selectedId, insideIds, o
       duration: 0,
     });
 
-    map.on('click', 'poi-points', (e) => {
-      const f = e.features && e.features[0];
-      if (f && latest.current.onSelect) latest.current.onSelect(f.properties.id);
-    });
     map.on('click', (e) => {
+      const overlappingZones = map.getLayer('zones-fill')
+        ? map.queryRenderedFeatures(e.point, { layers: ['zones-fill'] })
+        : [];
+      const overlapIds = [...new Set(overlappingZones.map((feature) => feature.properties.id))];
+      if (overlapIds.length > 1) {
+        latest.current.onOverlap?.(overlapIds, { lat: e.lngLat.lat, lng: e.lngLat.lng });
+        return;
+      }
+
       const hit = map.getLayer('poi-points') ? map.queryRenderedFeatures(e.point, { layers: ['poi-points'] }) : [];
-      if (hit.length === 0 && latest.current.onMapClick) latest.current.onMapClick({ lat: e.lngLat.lat, lng: e.lngLat.lng });
+      if (hit.length > 0) {
+        latest.current.onSelect?.(hit[0].properties.id);
+      } else if (latest.current.onMapClick) {
+        latest.current.onMapClick({ lat: e.lngLat.lat, lng: e.lngLat.lng });
+      }
     });
-    map.on('mouseenter', 'poi-points', () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseenter', 'poi-points', () => { map.getCanvas().style.cursor = HAND_CURSOR; });
     map.on('mouseleave', 'poi-points', () => { map.getCanvas().style.cursor = ''; });
 
     return () => {
@@ -162,7 +197,7 @@ export default function MapView({ pois, lang, position, selectedId, insideIds, o
   useEffect(() => {
     sync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pois, lang, position, selectedId, insideIds]);
+  }, [pois, lang, position, selectedId, insideIds, overlapPois]);
 
   if (failed) return <div className="map map-loading">{errorText}</div>;
   return <div ref={containerRef} className="map" />;

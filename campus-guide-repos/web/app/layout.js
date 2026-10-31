@@ -2,7 +2,7 @@ import './globals.css';
 import ServiceWorkerRegister from './ServiceWorkerRegister';
 
 export const metadata = {
-  title: 'Thuyết minh tự động – ĐHSG',
+  title: 'Thuyết minh tự động – Đại Học Sài Gòn',
   description: 'Demo ứng dụng thuyết minh tự động đa ngôn ngữ (web PWA)',
 };
 

@@ -22,8 +22,8 @@ export function useNarration() {
     if (!('speechSynthesis' in window)) return;
     const synth = window.speechSynthesis;
     const speech = LANGS.find((l) => l.code === lang).speech;
-    synth.cancel();
     const mine = ++token.current;
+    synth.cancel();
     const u = new SpeechSynthesisUtterance(`${poi.name[lang]}. ${poi.description[lang]}`);
     u.lang = speech;
     const voices = synth.getVoices();

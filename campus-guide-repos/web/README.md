@@ -41,7 +41,7 @@ web/
 │  ├─ layout.js, globals.css   khung trang và giao diện
 │  ├─ manifest.js              khai báo PWA
 │  └─ ServiceWorkerRegister.js đăng ký service worker (chỉ ở bản production)
-├─ components/                 MapView (MapLibre), PoiList, PoiDetail, QrScanner, SimulationPanel
+├─ components/                 MapView (MapLibre), PoiList (phần xem lời thuyết minh), QrScanner, SimulationPanel
 ├─ hooks/                      useGeolocation (GPS), useNarration (đọc giọng nói), usePois (API/dự phòng)
 ├─ lib/
 │  ├─ geofence.js, circle.js   logic vùng và hình học (có kiểm thử)
