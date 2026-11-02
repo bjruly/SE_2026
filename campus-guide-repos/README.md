@@ -31,6 +31,8 @@ Hệ thống **thuyết minh tự động đa ngôn ngữ** tại khuôn viên �
 
 Web và app **vẫn chạy được khi không có backend**: chưa cấu hình hoặc không kết nối được API thì dùng file `pois.json` dự phòng (không ghi được thống kê).
 
+Sơ đồ luồng dữ liệu toàn hệ thống (DFD): [`docs/DFD.md`](docs/DFD.md).
+
 ## Chức năng
 
 **Web và app (người dùng)**
