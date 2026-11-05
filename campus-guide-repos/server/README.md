@@ -16,7 +16,7 @@ cp .env.example .env         # Windows PowerShell: Copy-Item .env.example .env
 # Mở .env và điền: DATABASE_URL, JWT_SECRET (ít nhất 32 ký tự ngẫu nhiên), ADMIN_EMAIL, ADMIN_PASSWORD
 
 npm run db:schema            # tạo các bảng (chạy lại để thêm bảng online_sessions)
-npm run db:seed              # nạp 3 địa điểm mẫu và 3 ngôn ngữ
+npm run db:seed              # nạp 6 địa điểm mẫu và 3 ngôn ngữ
 npm run admin:create         # tạo tài khoản Quản trị đầu tiên từ ADMIN_EMAIL / ADMIN_PASSWORD
 npm run dev                  # chạy tại http://localhost:4000
 ```

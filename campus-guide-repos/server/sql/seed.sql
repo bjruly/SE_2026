@@ -1,4 +1,4 @@
--- Dữ liệu mẫu (3 điểm với tọa độ tạm). Chạy lại nhiều lần không lỗi.
+-- Dữ liệu mẫu (6 địa điểm, mã 001-006). Chạy lại nhiều lần không lỗi.
 -- Chạy bằng:  npm run db:seed
 
 INSERT INTO languages (code, name) VALUES ('vi', 'Tiếng Việt'), ('en', 'English'), ('zh', '中文') ON CONFLICT (code) DO NOTHING;
@@ -28,14 +28,21 @@ INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-005'
 INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-005', 'en', 'Building D', 'Building D is one of the areas on the Saigon University campus.') ON CONFLICT (poi_id, lang) DO NOTHING;
 INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-005', 'zh', 'D区', 'D区是西贡大学校园内的区域之一。') ON CONFLICT (poi_id, lang) DO NOTHING;
 
-DELETE FROM pois WHERE id = 'poi-006';
+INSERT INTO pois (id, qr_code, latitude, longitude, radius_meters) VALUES ('poi-006', 'DHSG-POI-006', 10.7598811277565, 106.6825540799044, 25) ON CONFLICT (id) DO NOTHING;
+INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-006', 'vi', 'Trung Tâm Học Liệu (KLF)', E'Và bây giờ, chúng ta đến với Trung tâm Học liệu của Trường Đại học Sài Gòn, hay còn gọi là KLF.\n\nĐây là địa chỉ quen thuộc của sinh viên khi cần tài liệu cho việc học. Ví dụ, các bạn sinh viên đến đây để nhận giáo trình cho các học phần tiếng Anh, cùng tài khoản học trực tuyến đi kèm.\n\nMọi thông tin về thời gian nhận tài liệu đều được cập nhật trên trang thông tin của thư viện nhà trường, giúp sinh viên chủ động sắp xếp thời gian.\n\nCó thể nói, Trung tâm Học liệu là nơi đồng hành cùng sinh viên trên hành trình học tập, từ những cuốn sách đầu tiên cho đến việc học trực tuyến.\n\nXin mời quý khách cùng tiếp tục hành trình khám phá khuôn viên Trường Đại học Sài Gòn.') ON CONFLICT (poi_id, lang) DO UPDATE SET description = EXCLUDED.description;
+INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-006', 'en', 'Learning Resource Center (KLF)', E'And now, we arrive at Saigon University''s Learning Resource Center, also known as KLF.\n\nThis is a familiar place for students looking for learning materials. For example, students come here to receive textbooks for their English courses, along with the accompanying online learning account.\n\nInformation about collection times is updated on the university library''s information page, helping students plan their visits.\n\nThe Learning Resource Center accompanies students throughout their studies, from their first books to online learning.\n\nPlease continue your journey exploring the Saigon University campus.') ON CONFLICT (poi_id, lang) DO UPDATE SET description = EXCLUDED.description;
+INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-006', 'zh', '学习资源中心（KLF）', E'现在，我们来到西贡大学的学习资源中心，也就是大家熟知的KLF。\n\n学生需要学习资料时，常常会来到这里。例如，学生可以在这里领取英语课程的教材，以及配套的在线学习账号。\n\n领取资料的时间信息会在学校图书馆的信息页面上更新，方便学生提前安排时间。\n\n可以说，学习资源中心陪伴学生走过求学之路，从最初的书本学习到在线学习。\n\n欢迎各位继续探索西贡大学校园。') ON CONFLICT (poi_id, lang) DO UPDATE SET description = EXCLUDED.description;
 
-INSERT INTO pois (id, qr_code, latitude, longitude, radius_meters) VALUES ('poi-007', 'DHSG-POI-007', 10.7598811277565, 106.6825540799044, 25) ON CONFLICT (id) DO NOTHING;
-INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-007', 'vi', 'Trung Tâm Học Liệu (KLF)', E'Và bây giờ, chúng ta đến với Trung tâm Học liệu của Trường Đại học Sài Gòn, hay còn gọi là KLF.\n\nĐây là địa chỉ quen thuộc của sinh viên khi cần tài liệu cho việc học. Ví dụ, các bạn sinh viên đến đây để nhận giáo trình cho các học phần tiếng Anh, cùng tài khoản học trực tuyến đi kèm.\n\nMọi thông tin về thời gian nhận tài liệu đều được cập nhật trên trang thông tin của thư viện nhà trường, giúp sinh viên chủ động sắp xếp thời gian.\n\nCó thể nói, Trung tâm Học liệu là nơi đồng hành cùng sinh viên trên hành trình học tập, từ những cuốn sách đầu tiên cho đến việc học trực tuyến.\n\nXin mời quý khách cùng tiếp tục hành trình khám phá khuôn viên Trường Đại học Sài Gòn.') ON CONFLICT (poi_id, lang) DO UPDATE SET description = EXCLUDED.description;
-INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-007', 'en', 'Learning Resource Center (KLF)', E'And now, we arrive at Saigon University''s Learning Resource Center, also known as KLF.\n\nThis is a familiar place for students looking for learning materials. For example, students come here to receive textbooks for their English courses, along with the accompanying online learning account.\n\nInformation about collection times is updated on the university library''s information page, helping students plan their visits.\n\nThe Learning Resource Center accompanies students throughout their studies, from their first books to online learning.\n\nPlease continue your journey exploring the Saigon University campus.') ON CONFLICT (poi_id, lang) DO UPDATE SET description = EXCLUDED.description;
-INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-007', 'zh', '学习资源中心（KLF）', E'现在，我们来到西贡大学的学习资源中心，也就是大家熟知的KLF。\n\n学生需要学习资料时，常常会来到这里。例如，学生可以在这里领取英语课程的教材，以及配套的在线学习账号。\n\n领取资料的时间信息会在学校图书馆的信息页面上更新，方便学生提前安排时间。\n\n可以说，学习资源中心陪伴学生走过求学之路，从最初的书本学习到在线学习。\n\n欢迎各位继续探索西贡大学校园。') ON CONFLICT (poi_id, lang) DO UPDATE SET description = EXCLUDED.description;
+-- Đặt bộ đếm mã địa điểm để địa điểm mới nối tiếp (poi-007, poi-008, ...)
+-- Chuyển mã địa điểm cũ poi-007 sang poi-006 khi seed đã chạy ở phiên bản trước.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pois WHERE id = 'poi-007') THEN
+    UPDATE events SET poi_id = 'poi-006' WHERE poi_id = 'poi-007';
+    DELETE FROM pois WHERE id = 'poi-007';
+  END IF;
+END $$;
 
--- Đặt bộ đếm mã địa điểm để địa điểm mới nối tiếp (poi-008, poi-009, ...)
 SELECT setval(
   'poi_number_seq',
   GREATEST(m.n, 1),

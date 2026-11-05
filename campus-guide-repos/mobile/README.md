@@ -28,7 +28,7 @@ npx.cmd expo export --platform android
 
 ## Cách thử tính năng tự động phát
 
-Xem mục "Cách thử tính năng tự động phát" trong README ở thư mục gốc. Ở tab **Bản đồ**, phần **Giả lập vị trí** cho phép chọn "Ngoài vùng" rồi "Tại Điểm mẫu 1" để thử mà không cần đi bộ. Ảnh mã QR mẫu nằm ở thư mục `../qr-samples` (có thể mở trên máy tính rồi quét bằng tab **Quét QR**).
+Xem mục "Cách thử tính năng tự động phát" trong README ở thư mục gốc. Ở tab **Bản đồ**, phần **Giả lập vị trí** cho phép chọn "Ngoài vùng" rồi "Tại Điểm mẫu 1" để thử mà không cần đi bộ. Sáu ảnh mã QR mẫu tương ứng các POI DHSG-POI-001–006 nằm ở thư mục `../qr-samples` (có thể mở trên máy tính rồi quét bằng tab **Quét QR**).
 
 ## Lưu ý
 

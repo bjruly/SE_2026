@@ -2,7 +2,7 @@
 
 Hệ thống **thuyết minh tự động đa ngôn ngữ** tại khuôn viên Đại học Sài Gòn. Khi người dùng đi vào vùng của một địa điểm, web hoặc app tự phát thuyết minh theo ngôn ngữ họ chọn (Việt, Anh, Trung). Giới thiệu repository, danh sách thành viên và nhật ký nằm ở `README.md` **ngoài** folder này.
 
-> **Lưu ý:** địa điểm hiện chỉ là **3 điểm mẫu với tọa độ tạm** (chưa phải vị trí thật trong khuôn viên). Dữ liệu thật nhập qua dashboard (xem mục "Thay dữ liệu thật").
+> **Lưu ý:** dữ liệu khởi tạo và dự phòng hiện có **6 địa điểm** (mã DHSG-POI-001–006). Tọa độ/nội dung cần được nhóm xác nhận trước khi dùng làm dữ liệu tham quan chính thức; có thể quản lý qua dashboard (xem mục "Thay dữ liệu thật").
 
 ## Các phần của hệ thống
 
@@ -27,7 +27,7 @@ Hệ thống **thuyết minh tự động đa ngôn ngữ** tại khuôn viên �
 | `mobile/` | App di động (Expo, React Native) | `mobile/README.md` |
 | `server/` | Backend API + SQL (Express, PostgreSQL) | `server/README.md`, sơ đồ bảng `server/docs/ERD.md` |
 | `dashboard/` | Trang quản trị (Next.js) | `dashboard/README.md` |
-| `qr-samples/` | 3 ảnh mã QR mẫu để thử chức năng quét | |
+| `qr-samples/` | 6 ảnh QR tương ứng với sáu địa điểm trong dữ liệu mẫu: DHSG-POI-001–006 | |
 
 Web và app **vẫn chạy được khi không có backend**: chưa cấu hình hoặc không kết nối được API thì dùng file `pois.json` dự phòng (không ghi được thống kê).
 
@@ -115,4 +115,4 @@ Dashboard có thể build/deploy tách rời, nhưng không thể đăng nhập 
 
 - Bán kính vùng 25 mét; thời gian nghỉ trước khi phát lại cùng địa điểm 60 giây (`COOLDOWN_MS`); khi nhiều vùng chồng nhau thì phát điểm gần nhất.
 - Quyền của Biên tập: được thêm và sửa địa điểm, **không được xóa** (xem `server/README.md`).
-- Tọa độ và nội dung 3 điểm mẫu.
+- Tọa độ và nội dung của 6 địa điểm khởi tạo (mã DHSG-POI-001–006); cần xác nhận trước khi dùng chính thức.
