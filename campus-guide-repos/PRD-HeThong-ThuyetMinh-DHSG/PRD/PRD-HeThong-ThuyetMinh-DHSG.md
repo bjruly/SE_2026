@@ -496,12 +496,12 @@ Hình 7. Use Case Diagram của dashboard (quản trị)
 | UC11 | Đăng nhập | Quản trị, Biên tập |  |
 | UC12 | Đăng xuất | Quản trị, Biên tập |  |
 | UC13 | Đổi mật khẩu | Quản trị, Biên tập |  |
-| UC14 | Xem thống kê | Quản trị, Biên tập | include UC11 |
-| UC15 | Xem danh sách địa điểm | Quản trị, Biên tập | include UC11 |
-| UC16 | Thêm địa điểm | Quản trị, Biên tập | extend UC15 |
-| UC17 | Sửa địa điểm | Quản trị, Biên tập | extend UC15 |
-| UC18 | Xóa địa điểm | Quản trị | extend UC15 |
-| UC19 | Tạo và tải mã QR | Quản trị, Biên tập | include UC15 |
+| UC14 | Xem thống kê | Quản trị, Biên tập |  |
+| UC15 | Xem danh sách địa điểm | Quản trị, Biên tập |  |
+| UC16 | Thêm địa điểm | Quản trị, Biên tập |  |
+| UC17 | Sửa địa điểm | Quản trị, Biên tập |  |
+| UC18 | Xóa địa điểm | Quản trị |  |
+| UC19 | Tạo và tải mã QR | Quản trị, Biên tập |  |
 | UC20 | Tạo tài khoản admin | Quản trị |  |
 | UC21 | Cập nhật tài khoản admin | Quản trị |  |
 
