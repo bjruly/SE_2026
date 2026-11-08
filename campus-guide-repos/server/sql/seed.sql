@@ -18,7 +18,6 @@ INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-003'
 INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-003', 'en', 'Centennial Architecture with French and Chinese Styles', 'The front gate of Building B features low-rise architecture with a welcoming roof, arched windows, and embossed green ceramic tiles. The dragon and cloud motifs are inlaid in relief. This was the first row of classrooms built, inaugurated, and put into use in 1910.') ON CONFLICT (poi_id, lang) DO NOTHING;
 INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-003', 'zh', '百年历史的法中风格建筑', 'B楼的正门采用低层建筑风格，设有迎宾屋顶、拱形窗户，并镶嵌绿色陶瓷砖。龙云图案以浮雕形式镶嵌。这是第一排教室，于1910年建成、启用。') ON CONFLICT (poi_id, lang) DO NOTHING;
 
-<<<<<<< HEAD
 INSERT INTO pois (id, qr_code, latitude, longitude, radius_meters) VALUES ('poi-004', 'DHSG-POI-004', 10.7596600504704, 106.68156140674834, 25) ON CONFLICT (id) DO NOTHING;
 INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-004', 'vi', 'Sân bóng', E'Và đây là khu sân bóng của Trường Đại học Sài Gòn, nơi nhịp sống sinh viên trở nên sôi động nhất.\n\nSau những giờ học căng thẳng, các bạn sinh viên đến đây để chạy, để chơi bóng và để nạp lại năng lượng. Sân cũng là nơi diễn ra các giờ giáo dục thể chất của nhà trường.\n\nNhưng sân bóng này không chỉ để rèn luyện sức khỏe. Đây còn là nơi diễn ra những cuộc tranh tài giữa các khoa. Mỗi trận đấu là một câu chuyện về tinh thần đồng đội, về sự cố gắng và những tiếng cổ vũ vang lên từ bạn bè.\n\nGiữa trung tâm Quận 5 đông đúc, khoảng sân này như một nhịp thở nhẹ nhàng của trường. Ở đây, sinh viên giải tỏa áp lực, kết nối với nhau và tạo nên những kỷ niệm khó quên.\n\nXin mời quý khách cùng tiếp tục hành trình khám phá khuôn viên Trường Đại học Sài Gòn.') ON CONFLICT (poi_id, lang) DO UPDATE SET description = EXCLUDED.description;
 INSERT INTO poi_translations (poi_id, lang, name, description) VALUES ('poi-004', 'en', 'Football Field', E'And this is the football field of Saigon University, where student life becomes most vibrant.\n\nAfter demanding classes, students come here to run, play football, and recharge. The field is also used for the university''s physical education classes.\n\nBut this field is not only for exercise. It also hosts competitions between faculties. Every match tells a story of teamwork and perseverance, accompanied by friends cheering from the sidelines.\n\nAmid the bustle of District 5, this open space is like a gentle breath for the university. Here, students relieve stress, connect with one another, and create unforgettable memories.\n\nPlease continue your journey exploring the Saigon University campus.') ON CONFLICT (poi_id, lang) DO UPDATE SET description = EXCLUDED.description;
@@ -44,9 +43,6 @@ BEGIN
   END IF;
 END $$;
 
-=======
--- Đặt bộ đếm mã địa điểm để địa điểm mới nối tiếp (poi-004, poi-005, ...)
->>>>>>> parent of d395cea (Update campus POIs and map numbering)
 SELECT setval(
   'poi_number_seq',
   GREATEST(m.n, 1),
