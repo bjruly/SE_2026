@@ -1,5 +1,28 @@
 'use client';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const MapPicker = dynamic(() => import('./MapPicker'), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        height: '280px',
+        borderRadius: '8px',
+        background: '#f3f4f6',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: '1px solid #d1d5db',
+        marginBottom: '14px',
+        color: '#6b7280',
+        fontSize: '0.9rem',
+      }}
+    >
+      Đang tải bản đồ chọn vị trí…
+    </div>
+  ),
+});
 
 const LANGS = [
   { code: 'vi', label: 'Tiếng Việt' },
@@ -65,6 +88,10 @@ export default function PoiForm({ initial, onSubmit, submitLabel }) {
   const setTr = (lang, k, v) =>
     setForm((f) => ({ ...f, translations: { ...f.translations, [lang]: { ...f.translations[lang], [k]: v } } }));
 
+  const handleMapCoordChange = ({ latitude, longitude }) => {
+    setForm((f) => ({ ...f, latitude, longitude }));
+  };
+
   async function submit(e) {
     e.preventDefault();
     setError('');
@@ -86,6 +113,13 @@ export default function PoiForm({ initial, onSubmit, submitLabel }) {
 
   return (
     <form className="card form" onSubmit={submit}>
+      <MapPicker
+        latitude={form.latitude}
+        longitude={form.longitude}
+        radiusMeters={form.radiusMeters}
+        onChange={handleMapCoordChange}
+      />
+
       <div className="grid3">
         <label>Vĩ độ (latitude)
           <input inputMode="decimal" value={form.latitude} onChange={(e) => setField('latitude', e.target.value)} placeholder="10.7600" required />
@@ -96,6 +130,17 @@ export default function PoiForm({ initial, onSubmit, submitLabel }) {
         <label>Bán kính vùng (mét)
           <input inputMode="numeric" value={form.radiusMeters} onChange={(e) => setField('radiusMeters', e.target.value)} required />
         </label>
+      </div>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
+        <a
+          href="https://www.google.com/maps/search/Tr%C6%B0%E1%BB%9Dng+%C4%90%E1%BA%A1i+h%E1%BB%8Dc+S%C3%A0i+G%C3%B2n/@10.7599,106.6822,18z"
+          target="_blank"
+          rel="noreferrer"
+          className="btn"
+          style={{ fontSize: '0.82rem', padding: '0.3rem 0.6rem', textDecoration: 'none' }}
+        >
+          📍 Mở Google Maps ĐHSG để tra nhanh tọa độ
+        </a>
       </div>
       <label className="check">
         <input type="checkbox" checked={form.active} onChange={(e) => setField('active', e.target.checked)} />
@@ -111,9 +156,15 @@ export default function PoiForm({ initial, onSubmit, submitLabel }) {
           <label>Nội dung thuyết minh
             <textarea rows={4} value={form.translations[code].description} onChange={(e) => setTr(code, 'description', e.target.value)} required />
           </label>
-          <label>Đường dẫn audio (tùy chọn, hiện app chưa dùng)
+          <label>Đường dẫn audio (tùy chọn - nếu có, hệ thống ưu tiên phát file này thay vì đọc văn bản)
             <input value={form.translations[code].audioUrl} onChange={(e) => setTr(code, 'audioUrl', e.target.value)} placeholder="https://..." />
           </label>
+          {form.translations[code].audioUrl && form.translations[code].audioUrl.trim().startsWith('http') && (
+            <div style={{ marginTop: '0.35rem', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.8rem', color: '#666', display: 'block', marginBottom: '0.2rem' }}>Nghe thử file audio:</span>
+              <audio controls src={form.translations[code].audioUrl.trim()} style={{ width: '100%', height: '36px' }} />
+            </div>
+          )}
         </fieldset>
       ))}
 

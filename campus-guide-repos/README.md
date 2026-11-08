@@ -49,7 +49,7 @@ Sơ đồ luồng dữ liệu toàn hệ thống (DFD): [`docs/DFD.md`](docs/DFD
 
 **Dashboard (quản trị):** thêm/sửa/xóa địa điểm và bản dịch 3 ngôn ngữ, tạo và tải mã QR, thống kê lượt nghe và lượt quét QR theo địa điểm và ngôn ngữ, ước tính số phiên web/app online, quản lý tài khoản admin với 2 vai trò (Quản trị, Biên tập).
 
-Âm thanh hiện là **giọng đọc của thiết bị** (đọc văn bản). Nhóm muốn về sau dùng file audio riêng: database và API đã có trường `audioUrl`, nhưng **phần phát file audio và tải file lên chưa được làm**.
+Hệ thống hỗ trợ phát âm thanh qua **file audio riêng** (nếu địa điểm có điền đường dẫn `audioUrl`) hoặc tự động dùng **giọng đọc của thiết bị (Web Speech API)** khi không có file audio hoặc file gặp sự cố. Trình quản trị Dashboard hỗ trợ nghe thử file audio trước khi lưu.
 
 ## Chạy toàn bộ trên máy
 

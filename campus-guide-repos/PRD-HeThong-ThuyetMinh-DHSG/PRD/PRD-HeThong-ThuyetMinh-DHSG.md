@@ -200,15 +200,15 @@ Web dành cho người dùng (PWA, Next.js): xem bản đồ, chọn ngôn ngữ
 
 Server API và cơ sở dữ liệu (Express, PostgreSQL): lưu địa điểm, bản dịch, tài khoản, sự kiện thống kê; đăng nhập và phân quyền.
 
-Dashboard quản trị (Next.js): quản lý địa điểm và bản dịch, mã QR, thống kê, tài khoản admin.
+Dashboard quản trị (Next.js): quản lý địa điểm và bản dịch (hỗ trợ chọn trực tiếp tọa độ và xem trước vùng kích hoạt trên bản đồ tương tác MapPicker), mã QR, thống kê, tài khoản admin.
 
 ### Ngoài phạm vi
 
 Ứng dụng di động React Native (Expo) có trong repository nhưng không thuộc tài liệu này.
 
-Phát file audio và tải file audio lên (trường audioUrl đã có nhưng chưa được dùng để phát).
+Tải trực tiếp tệp audio lên máy chủ (hiện cung cấp URL ngoại vi hoặc CDN qua trường `audioUrl`).
 
-Chọn tọa độ trên bản đồ khi thêm địa điểm (hiện nhập tay vĩ độ, kinh độ), xóa tài khoản, thu hồi token phía server, hoạt động offline đầy đủ.
+Xóa tài khoản admin (chỉ khóa), thu hồi token phía server, hoạt động offline đầy đủ.
 
 ## 1.3 Phiên bản mã nguồn được mô tả
 
@@ -233,7 +233,7 @@ Tài liệu mô tả mã nguồn hiện có trong thư mục campus-guide-repos 
 | --- | --- |
 | Địa điểm (POI) | Một điểm trong khuôn viên có tọa độ, bán kính vùng và thuyết minh ba ngôn ngữ |
 | Vùng (geofence) | Hình tròn tâm tại địa điểm, bán kính radiusMeters; vào vùng là điều kiện để tự động phát |
-| Thuyết minh | Nội dung “<tên>. <mô tả>” của địa điểm, được đọc bằng giọng đọc của trình duyệt |
+| Thuyết minh | Nội dung âm thanh của địa điểm, được phát từ file audio riêng (nếu có audioUrl) hoặc đọc văn bản “<tên>. <mô tả>” bằng giọng đọc của trình duyệt |
 | Tự động phát | Chế độ bật/tắt; khi bật, vào vùng của địa điểm thì tự phát thuyết minh |
 | Thời gian nghỉ | Khoảng 60 giây sau một lần tự phát, trong đó địa điểm đó không được tự phát lại |
 | Giả lập vị trí | Chế độ đặt vị trí giả thay cho GPS để thử mà không cần đi bộ |
@@ -455,10 +455,10 @@ Các quy tắc dưới đây là nguồn chính cho hành vi của hệ thống.
 
 | Mã | Quy tắc | Nội dung | Nguồn |
 | --- | --- | --- | --- |
-| BR-H1 | Nguồn âm thanh | Âm thanh thuyết minh là giọng đọc của trình duyệt (Web Speech API) đọc văn bản. Trường audioUrl được lưu và trả về nhưng web chưa dùng để phát file. | web/hooks/useNarration.js |
-| BR-H2 | Chọn giọng | Chọn giọng đầu tiên có mã ngôn ngữ bắt đầu bằng mã (vi, en hoặc zh, không phân biệt hoa thường). Nếu danh sách giọng không rỗng mà không có giọng khớp thì hiển thị cảnh báo “Thiết bị có thể chưa có giọng đọc cho ngôn ngữ này.” và vẫn đọc với mã ngôn ngữ tương ứng. | web/hooks/useNarration.js |
-| BR-H3 | Không hỗ trợ giọng đọc | Nếu trình duyệt không có Web Speech API: hiển thị cảnh báo và vô hiệu nút “Phát”. | web/components/PoiDetail.js |
-| BR-H4 | Điều khiển phát | Nút hiển thị theo trạng thái của địa điểm đang xem: không phát địa điểm này thì “▶ Phát”; đang phát thì “⏸ Tạm dừng” và “⏹ Dừng”; đang tạm dừng thì “▶ Tiếp tục” và “⏹ Dừng”. Đọc xong hoặc lỗi thì về trạng thái nghỉ. Rời khỏi trang thì dừng đọc. | web/components/PoiDetail.js; web/hooks/useNarration.js |
+| BR-H1 | Nguồn âm thanh | Ưu tiên phát file âm thanh nếu địa điểm có trường audioUrl cho ngôn ngữ đang chọn; nếu không có hoặc phát lỗi (mất mạng, URL không hợp lệ), tự động chuyển sang đọc văn bản bằng giọng đọc của trình duyệt (Web Speech API). Hỗ trợ đầy đủ các thao tác Phát, Tạm dừng, Tiếp tục, Dừng. | web/hooks/useNarration.js |
+| BR-H2 | Chọn giọng | Khi phát bằng Web Speech API, chọn giọng đầu tiên có mã ngôn ngữ bắt đầu bằng mã (vi, en hoặc zh, không phân biệt hoa thường). Nếu danh sách giọng không rỗng mà không có giọng khớp thì hiển thị cảnh báo “Thiết bị có thể chưa có giọng đọc cho ngôn ngữ này.” và vẫn đọc với mã ngôn ngữ tương ứng. Khi phát file audio thì không cần chọn giọng. | web/hooks/useNarration.js |
+| BR-H3 | Không hỗ trợ giọng đọc | Nếu trình duyệt không hỗ trợ Web Speech API và địa điểm không có file audio: hiển thị cảnh báo và vô hiệu nút “Phát”. | web/components/PoiDetail.js |
+| BR-H4 | Điều khiển phát | Nút hiển thị theo trạng thái của địa điểm đang xem: không phát địa điểm này thì “▶ Phát”; đang phát thì “⏸ Tạm dừng” và “⏹ Dừng”; đang tạm dừng thì “▶ Tiếp tục” và “⏹ Dừng”. Phát xong hoặc gặp lỗi thì về trạng thái nghỉ. Rời khỏi trang thì dừng phát. | web/components/PoiDetail.js; web/hooks/useNarration.js |
 
 ## 5.9 Nhóm I: PWA
 
@@ -693,8 +693,8 @@ Hình 11. Activity Diagram UC04 Xem danh sách và chi tiết địa điểm
 | Use Case Name | Nghe thuyết minh thủ công |
 | Actor(s) | Người dùng |
 | Maturity | Focused |
-| Summary | Người dùng bấm nút để phát, tạm dừng, tiếp tục hoặc dừng thuyết minh của địa điểm đang xem; giọng đọc là giọng của trình duyệt. |
-| Extension Points | {Phát thuyết minh}: chọn giọng theo BR-H2, đặt mã ngôn ngữ giọng (vi-VN, en-US, zh-CN), đọc, theo dõi trạng thái phát (BR-H4). |
+| Summary | Người dùng bấm nút để phát, tạm dừng, tiếp tục hoặc dừng thuyết minh của địa điểm đang xem; ưu tiên phát file âm thanh (audioUrl) nếu có, hoặc dùng giọng đọc của trình duyệt (Web Speech API). |
+| Extension Points | {Phát thuyết minh}: nếu địa điểm có trường audioUrl cho ngôn ngữ hiện tại thì phát file audio; nếu không có hoặc phát lỗi thì chọn giọng theo BR-H2, đặt mã ngôn ngữ giọng (vi-VN, en-US, zh-CN), đọc bằng Web Speech API và theo dõi trạng thái phát (BR-H1, BR-H4). |
 | Triggers | Người dùng muốn nghe thuyết minh của địa điểm đang xem. |
 | Assumptions | Không có. |
 | Preconditions | Đang ở trang chi tiết của một địa điểm (UC04). |
@@ -708,7 +708,7 @@ Basic Course of Events
 
 | # | Actor Action | System Response |
 | --- | --- | --- |
-| 1 | Người dùng bấm “▶ Phát” ở trang chi tiết. E1 E2 | Dừng thuyết minh khác nếu đang phát (BR-C8), đọc “<tên>. <mô tả>” theo ngôn ngữ hiện tại {Phát thuyết minh}, hiển thị “Đang phát…” cùng nút “⏸ Tạm dừng” và “⏹ Dừng”, gửi sự kiện lượt nghe (UC09, nguồn manual). A2 |
+| 1 | Người dùng bấm “▶ Phát” ở trang chi tiết. E1 E2 E4 | Dừng thuyết minh khác nếu đang phát (BR-C8), phát thuyết minh theo ngôn ngữ hiện tại {Phát thuyết minh}, hiển thị “Đang phát…” cùng nút “⏸ Tạm dừng” và “⏹ Dừng”, gửi sự kiện lượt nghe (UC09, nguồn manual). A2 |
 | 2 | Người dùng bấm “⏸ Tạm dừng”. | Tạm dừng đọc; hiển thị nút “▶ Tiếp tục” và “⏹ Dừng”. |
 | 3 | Người dùng bấm “▶ Tiếp tục”. | Đọc tiếp từ chỗ đã dừng; không ghi thêm sự kiện lượt nghe. |
 | 4 | Người dùng bấm “⏹ Dừng”. | Dừng đọc và hiển thị lại nút “▶ Phát”. Use case kết thúc. |
@@ -723,11 +723,13 @@ A3. Người dùng đổi ngôn ngữ khi đang phát: bài đang đọc vẫn t
 
 Exception Paths
 
-E1. Trình duyệt không hỗ trợ giọng đọc: hiển thị “Trình duyệt không hỗ trợ đọc giọng nói.” và nút “Phát” bị vô hiệu.
+E1. Trình duyệt không hỗ trợ Web Speech API và địa điểm không có file audio: hiển thị “Trình duyệt không hỗ trợ đọc giọng nói.” và nút “Phát” bị vô hiệu.
 
 E2. Thiết bị có danh sách giọng nhưng không có giọng khớp ngôn ngữ: hiển thị “Thiết bị có thể chưa có giọng đọc cho ngôn ngữ này.”; hệ thống vẫn thử đọc với mã ngôn ngữ tương ứng.
 
 E3. Việc đọc gặp lỗi: hệ thống trở về trạng thái nghỉ.
+
+E4. File audio bị lỗi (link hỏng, mất mạng): hệ thống tự động fallback sang đọc văn bản bằng Web Speech API.
 
 ![Hình minh họa](images/image_015.png)
 
@@ -760,7 +762,7 @@ Basic Course of Events
 | 2 | Vị trí người dùng thay đổi (đi bộ hoặc giả lập, UC07). | Với mỗi vị trí mới: tính khoảng cách tới từng địa điểm bằng công thức Haversine và xác định các địa điểm đang trong vùng (khoảng cách ≤ bán kính) {Đánh giá vùng}. E1 |
 | 3 | — | Cập nhật hiển thị: vùng và chấm đổi sang màu xanh lá trên bản đồ, mục tương ứng nổi bật trong danh sách. |
 | 4 | — | Xác định ứng viên: các địa điểm vừa chuyển từ ngoài vào trong vùng và không còn trong thời gian nghỉ 60 giây; nếu có nhiều ứng viên chọn địa điểm gần nhất (BR-C4). A1 A3 A4 |
-| 5 | — | Nếu có ứng viên và “Tự động phát” đang BẬT: ghi thời điểm phát (bắt đầu thời gian nghỉ), dừng thuyết minh đang phát (nếu có), đọc thuyết minh của ứng viên theo ngôn ngữ hiện tại, chọn địa điểm, chuyển sang tab “Địa điểm” hiển thị chi tiết, gửi sự kiện lượt nghe (UC09, nguồn auto). E2 |
+| 5 | — | Nếu có ứng viên và “Tự động phát” đang BẬT: ghi thời điểm phát (bắt đầu thời gian nghỉ), dừng thuyết minh đang phát (nếu có), phát thuyết minh của ứng viên theo ngôn ngữ hiện tại (ưu tiên file audio nếu có, ngược lại đọc bằng Web Speech API), chọn địa điểm, chuyển sang tab “Địa điểm” hiển thị chi tiết, gửi sự kiện lượt nghe (UC09, nguồn auto). E2 |
 | 6 | Người dùng nghe và có thể điều khiển như UC05. Use case kết thúc. | Hệ thống tiếp tục đánh giá vùng ở các lần cập nhật vị trí sau. |
 
 Alternative Paths
@@ -779,7 +781,7 @@ Exception Paths
 
 E1. Mất vị trí (vị trí trở thành rỗng, ví dụ chuyển từ giả lập sang GPS khi chưa có tọa độ): xóa trạng thái “đang trong vùng” nhưng giữ nguyên thời gian nghỉ (BR-C6).
 
-E2. Trình duyệt không hỗ trợ giọng đọc: hệ thống vẫn chọn địa điểm, mở chi tiết, ghi thời gian nghỉ và vẫn gửi sự kiện lượt nghe (nguồn auto), nhưng không có âm thanh. Đây là hành vi hiện tại của mã nguồn.
+E2. Trình duyệt không hỗ trợ Web Speech API và địa điểm không có file audio: hệ thống vẫn chọn địa điểm, mở chi tiết, ghi thời gian nghỉ và vẫn gửi sự kiện lượt nghe (nguồn auto), nhưng không có âm thanh. Đây là hành vi hiện tại của mã nguồn.
 
 ![Hình minh họa](images/image_016.png)
 
@@ -1197,7 +1199,7 @@ Hình 22. Activity Diagram UC15 Xem danh sách địa điểm
 | Summary | Người dùng thêm một địa điểm mới gồm tọa độ, bán kính vùng, trạng thái và tên, mô tả của cả ba ngôn ngữ. |
 | Extension Points | {Kiểm tra địa điểm}: vĩ độ [-90, 90]; kinh độ [-180, 180]; bán kính số nguyên 1–1000; active là true/false (mặc định true); đủ ba bản dịch vi, en, zh; mỗi bản dịch có tên (1–200 ký tự sau khi cắt khoảng trắng), mô tả (1–5000 ký tự), audioUrl tùy chọn (URL hợp lệ ≤ 2000 ký tự, rỗng = không có) (BR-A2, BR-B2). |
 | Triggers | Người dùng muốn thêm địa điểm. |
-| Assumptions | Tọa độ do người dùng nhập tay; chưa có chọn điểm trên bản đồ. |
+| Assumptions | Tọa độ có thể nhập trực tiếp hoặc chọn/kéo thả trực quan trên bản đồ tương tác MapPicker; có nút di chuyển nhanh về khuôn viên trường ĐHSG. |
 | Preconditions | Đã đăng nhập; có quyền poi:create. |
 | Post Conditions | Một địa điểm mới cùng 3 bản dịch được lưu; mã QR được cấp. |
 | Reference: Business Rules | BR-A2, BR-B1, BR-B2, BR-B3, BR-G1 |
@@ -1209,7 +1211,7 @@ Basic Course of Events
 
 | # | Actor Action | System Response |
 | --- | --- | --- |
-| 1 | Bấm “+ Thêm địa điểm” (đường dẫn /pois/new). | Hiển thị biểu mẫu: Vĩ độ, Kinh độ, Bán kính vùng (mét, mặc định 25), ô “Đang hoạt động” (mặc định chọn) và ba khối Tiếng Việt, English, 中文, mỗi khối gồm Tên, Nội dung thuyết minh, Đường dẫn audio (tùy chọn). Có dòng “Mã địa điểm và mã QR được tạo tự động sau khi lưu.”. |
+| 1 | Bấm “+ Thêm địa điểm” (đường dẫn /pois/new). | Hiển thị biểu mẫu: Bản đồ chọn vị trí MapPicker (với marker kéo thả và vòng tròn bán kính geofence xem trước), các ô nhập Vĩ độ, Kinh độ, Bán kính vùng (mét, mặc định 25), ô “Đang hoạt động” (mặc định chọn) và ba khối Tiếng Việt, English, 中文, mỗi khối gồm Tên, Nội dung thuyết minh, Đường dẫn audio (tùy chọn kèm trình nghe thử trực tiếp). Có dòng “Mã địa điểm và mã QR được tạo tự động sau khi lưu.”. |
 | 2 | Nhập dữ liệu và bấm “Lưu địa điểm”. E1 | Kiểm tra vĩ độ, kinh độ, bán kính là số rồi gửi POST /api/admin/pois. |
 | 3 | — | Server kiểm tra dữ liệu {Kiểm tra địa điểm}. E2 |
 | 4 | — | Server sinh mã poi-NNN và mã QR DHSG-POI-NNN, ghi địa điểm và ba bản dịch trong một giao dịch (BR-B1), trả HTTP 201 kèm địa điểm vừa tạo. |
@@ -1254,7 +1256,7 @@ Basic Course of Events
 
 | # | Actor Action | System Response |
 | --- | --- | --- |
-| 1 | Bấm “Sửa” ở một dòng địa điểm (đường dẫn /pois/<mã>). | Gửi GET /api/admin/pois/<mã>; hiển thị “Sửa địa điểm <mã>”, dòng “Mã QR: <mã QR> (không đổi khi sửa, để mã QR đã in vẫn dùng được).” và biểu mẫu điền sẵn dữ liệu hiện tại. E1 |
+| 1 | Bấm “Sửa” ở một dòng địa điểm (đường dẫn /pois/<mã>). | Gửi GET /api/admin/pois/<mã>; hiển thị “Sửa địa điểm <mã>”, dòng “Mã QR: <mã QR> (không đổi khi sửa, để mã QR đã in vẫn dùng được).” và biểu mẫu điền sẵn dữ liệu hiện tại (bao gồm bản đồ định vị vị trí và vùng geofence hiện thời). E1 |
 | 2 | Sửa dữ liệu và bấm “Lưu thay đổi”. E2 | Kiểm tra số rồi gửi PUT /api/admin/pois/<mã> với toàn bộ nội dung biểu mẫu. |
 | 3 | — | Server kiểm tra {Kiểm tra địa điểm} (như UC16), cập nhật địa điểm (đổi thời điểm sửa) và ghi đè đủ ba bản dịch trong một giao dịch, trả HTTP 200 kèm địa điểm đã cập nhật. |
 | 4 | — | Dashboard hiển thị “Đã lưu.” và giữ người dùng ở trang sửa. Use case kết thúc. |
@@ -1492,7 +1494,7 @@ Hình 29. ERD của cơ sở dữ liệu PostgreSQL
 | lang | text | PK, FK → languages.code |  | vi, en hoặc zh |
 | name | text | NN |  | Tên; không rỗng sau khi cắt khoảng trắng |
 | description | text | NN |  | Mô tả thuyết minh; không rỗng sau khi cắt khoảng trắng |
-| audio_url | text |  | NULL | Đường dẫn audio, tùy chọn, chưa được dùng để phát |
+| audio_url | text |  | NULL | Đường dẫn audio (URL), tùy chọn; nếu có, web ưu tiên phát file này thay vì đọc văn bản |
 
 ### Bảng events
 
@@ -2297,13 +2299,14 @@ Mọi trang quản trị (D-02 đến D-08) nằm trong khung gồm thanh bên t
 
 | Trường | Điều khiển | Mặc định | Ghi chú |
 | --- | --- | --- | --- |
-| Vĩ độ (latitude) | Ô nhập (gợi ý 10.7600) | Rỗng | Bắt buộc, số |
-| Kinh độ (longitude) | Ô nhập (gợi ý 106.6820) | Rỗng | Bắt buộc, số |
-| Bán kính vùng (mét) | Ô nhập | 25 | Bắt buộc, số |
+| Bản đồ chọn vị trí (MapPicker) | Bản đồ tương tác (MapLibre OSM) | Tâm ĐHSG | Chạm/click hoặc kéo marker đỏ để cập nhật Vĩ độ và Kinh độ; hiển thị vòng tròn bán kính geofence màu xanh dương theo Bán kính vùng; có nút "Về khuôn viên ĐHSG" |
+| Vĩ độ (latitude) | Ô nhập (gợi ý 10.7600) | Rỗng | Bắt buộc, số (tự đồng bộ khi chọn trên bản đồ) |
+| Kinh độ (longitude) | Ô nhập (gợi ý 106.6820) | Rỗng | Bắt buộc, số (tự đồng bộ khi chọn trên bản đồ, kèm nút tra cứu nhanh Google Maps) |
+| Bán kính vùng (mét) | Ô nhập | 25 | Bắt buộc, số (vòng tròn trên bản đồ tự co giãn theo giá trị này) |
 | Đang hoạt động | Hộp chọn | Chọn | “Đang hoạt động (hiện trong web và app)” |
 | Tên (vi, en, zh) | Ô nhập, mỗi ngôn ngữ một khối | Rỗng | Bắt buộc |
 | Nội dung thuyết minh (vi, en, zh) | Vùng nhập 4 dòng | Rỗng | Bắt buộc |
-| Đường dẫn audio (vi, en, zh) | Ô nhập (gợi ý https://…) | Rỗng | Tùy chọn, ghi “hiện app chưa dùng”; rỗng được gửi thành null |
+| Đường dẫn audio (vi, en, zh) | Ô nhập (gợi ý https://…) | Rỗng | Tùy chọn; nếu có URL hợp lệ hiển thị trình nghe thử audio trực tiếp; rỗng được gửi thành null |
 
 Nút gửi: “Lưu địa điểm” (thêm) hoặc “Lưu thay đổi” (sửa); khi đang gửi hiển thị “Đang lưu…” và vô hiệu. Lỗi hiển thị màu đỏ, kèm danh sách “<trường>: <lỗi>” nếu server trả chi tiết.
 

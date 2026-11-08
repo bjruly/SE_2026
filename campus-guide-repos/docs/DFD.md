@@ -225,7 +225,7 @@ flowchart LR
 |---|---|---|
 | F1 / F2 | `pois.json` trong Web / App | Dữ liệu địa điểm dự phòng khi API chưa cấu hình hoặc không truy cập được; không ghi được thống kê trong chế độ dự phòng. |
 | D1 | `pois` | Mã địa điểm, mã QR, tọa độ, bán kính, trạng thái hoạt động. |
-| D2 | `poi_translations`, `languages` | Tên, mô tả và tùy chọn `audio_url` theo tiếng Việt, Anh, Trung. Hiện tại ứng dụng dùng TTS, chưa phát file audio. |
+| D2 | `poi_translations`, `languages` | Tên, mô tả và tùy chọn `audio_url` theo tiếng Việt, Anh, Trung. Web ưu tiên phát file audio nếu có `audio_url`, tự động chuyển sang TTS nếu không có hoặc phát lỗi. |
 | D3 | `admins` | Email, mật khẩu đã băm, vai trò (`admin` / `editor`) và trạng thái tài khoản. |
 | D4 | `events` | Sự kiện `listen` / `qr_scan`, ngôn ngữ, nguồn, loại client và thời điểm; không lưu tọa độ GPS hay danh tính khách. |
 | D5 | `online_sessions` | Mã phiên ngẫu nhiên, loại client và thời điểm heartbeat; dùng ước tính số phiên online gần đây. |
