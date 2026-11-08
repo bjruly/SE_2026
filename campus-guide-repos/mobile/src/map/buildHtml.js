@@ -20,12 +20,7 @@ export function buildMapHtml() {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <style>${MAPLIBRE_CSS}</style>
-<style>
-html,body,#map{height:100%;margin:0;padding:0}
-.poi-map-marker{display:grid;place-items:center;width:30px;height:30px;padding:0;border:2px solid #fff;border-radius:50%;color:#fff;background:#2563eb;font:750 12px system-ui,sans-serif;box-shadow:0 1px 5px rgba(15,23,42,.35)}
-.poi-map-marker.inside{background:#16a34a}
-.poi-map-marker.selected{background:#15803d;box-shadow:0 0 0 2px #bbf7d0,0 1px 5px rgba(15,23,42,.35)}
-</style>
+<style>html,body,#map{height:100%;margin:0;padding:0}</style>
 </head>
 <body>
 <div id="map"></div>
@@ -79,7 +74,7 @@ html,body,#map{height:100%;margin:0;padding:0}
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
   if (window.__TM_EXPOSE) window.__TM_MAP = map; // chỉ dùng khi kiểm thử tự động
 
-  var pending = null, loaded = false, fellBack = false, fitted = false, poiMarkers = {};
+  var pending = null, loaded = false, fellBack = false, fitted = false;
 
   function addLayers() {
     if (map.getSource('zones')) return;
@@ -110,37 +105,6 @@ html,body,#map{height:100%;margin:0;padding:0}
       return { type: 'Feature', geometry: { type: 'Point', coordinates: [p.longitude, p.latitude] },
         properties: { id: p.id, name: p.name[s.lang], inside: !!inside[p.id], selected: p.id === s.selectedId } };
     }) });
-    var activeIds = {};
-    s.pois.forEach(function (p, index) {
-      activeIds[p.id] = true;
-      var marker = poiMarkers[p.id];
-      if (!marker) {
-        var element = document.createElement('button');
-        element.type = 'button';
-        element.className = 'poi-map-marker';
-        element.addEventListener('click', function (event) {
-          event.stopPropagation();
-          post({ type: 'select', id: p.id });
-        });
-        marker = new maplibregl.Marker({ element: element, anchor: 'center' })
-          .setLngLat([p.longitude, p.latitude])
-          .addTo(map);
-        poiMarkers[p.id] = marker;
-      }
-      var element = marker.getElement();
-      element.textContent = String(index + 1);
-      element.setAttribute('aria-label', String(index + 1) + '. ' + p.name[s.lang]);
-      element.title = String(index + 1) + '. ' + p.name[s.lang];
-      element.classList.toggle('inside', !!inside[p.id]);
-      element.classList.toggle('selected', p.id === s.selectedId);
-      marker.setLngLat([p.longitude, p.latitude]);
-    });
-    Object.keys(poiMarkers).forEach(function (id) {
-      if (!activeIds[id]) {
-        poiMarkers[id].remove();
-        delete poiMarkers[id];
-      }
-    });
     map.getSource('user').setData({ type: 'FeatureCollection', features: s.position
       ? [{ type: 'Feature', geometry: { type: 'Point', coordinates: [s.position.lng, s.position.lat] }, properties: {} }] : [] });
     if (!fitted && s.pois.length) {

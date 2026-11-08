@@ -35,10 +35,14 @@ test('health và danh sách địa điểm công khai giống hệt file pois.js
   assert.equal((await s.api('GET', '/api/health')).body.ok, true);
   const r = await s.api('GET', '/api/pois');
   assert.equal(r.status, 200);
+<<<<<<< HEAD
   assert.equal(r.body.length, 6);
   assert.deepEqual(r.body.map((poi) => poi.id), [
     'poi-001', 'poi-002', 'poi-003', 'poi-004', 'poi-005', 'poi-006',
   ]);
+=======
+  assert.equal(r.body.length, 3);
+>>>>>>> parent of d395cea (Update campus POIs and map numbering)
   const jsonPath = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'web', 'data', 'pois.json');
   if (fs.existsSync(jsonPath)) {
     assert.deepEqual(r.body, JSON.parse(fs.readFileSync(jsonPath, 'utf8')));
@@ -57,12 +61,18 @@ test('đăng nhập: sai mật khẩu bị từ chối, đúng thì có token; k
 test('Biên tập: thêm và sửa được địa điểm, không xóa được, không quản lý tài khoản', async () => {
   const created = await s.api('POST', '/api/admin/pois', { token: editorToken, body: validPoi() });
   assert.equal(created.status, 201);
+<<<<<<< HEAD
   assert.equal(created.body.id, 'poi-007');
   assert.equal(created.body.qrCode, 'DHSG-POI-007');
+=======
+  assert.equal(created.body.id, 'poi-004');
+  assert.equal(created.body.qrCode, 'DHSG-POI-004');
+>>>>>>> parent of d395cea (Update campus POIs and map numbering)
   assert.equal(created.body.name.zh, '新地点');
 
   const upd = validPoi({ radiusMeters: 45 });
   upd.translations.vi.name = 'Đã sửa';
+<<<<<<< HEAD
   const put = await s.api('PUT', '/api/admin/pois/poi-007', { token: editorToken, body: upd });
   assert.equal(put.status, 200);
   assert.equal(put.body.radiusMeters, 45);
@@ -70,14 +80,29 @@ test('Biên tập: thêm và sửa được địa điểm, không xóa được
   assert.equal(put.body.qrCode, 'DHSG-POI-007'); // mã QR không đổi khi sửa
 
   assert.equal((await s.api('DELETE', '/api/admin/pois/poi-007', { token: editorToken })).status, 403);
+=======
+  const put = await s.api('PUT', '/api/admin/pois/poi-004', { token: editorToken, body: upd });
+  assert.equal(put.status, 200);
+  assert.equal(put.body.radiusMeters, 45);
+  assert.equal(put.body.name.vi, 'Đã sửa');
+  assert.equal(put.body.qrCode, 'DHSG-POI-004'); // mã QR không đổi khi sửa
+
+  assert.equal((await s.api('DELETE', '/api/admin/pois/poi-004', { token: editorToken })).status, 403);
+>>>>>>> parent of d395cea (Update campus POIs and map numbering)
   assert.equal((await s.api('GET', '/api/admin/users', { token: editorToken })).status, 403);
   assert.equal((await s.api('GET', '/api/admin/stats', { token: editorToken })).status, 200);
 });
 
 test('Quản trị xóa được địa điểm; địa điểm không còn tồn tại', async () => {
+<<<<<<< HEAD
   assert.equal((await s.api('DELETE', '/api/admin/pois/poi-007', { token: adminToken })).status, 204);
   assert.equal((await s.api('GET', '/api/admin/pois/poi-007', { token: adminToken })).status, 404);
   assert.equal((await s.api('DELETE', '/api/admin/pois/poi-007', { token: adminToken })).status, 404);
+=======
+  assert.equal((await s.api('DELETE', '/api/admin/pois/poi-004', { token: adminToken })).status, 204);
+  assert.equal((await s.api('GET', '/api/admin/pois/poi-004', { token: adminToken })).status, 404);
+  assert.equal((await s.api('DELETE', '/api/admin/pois/poi-004', { token: adminToken })).status, 404);
+>>>>>>> parent of d395cea (Update campus POIs and map numbering)
 });
 
 test('kiểm tra dữ liệu địa điểm: thiếu bản dịch, tọa độ sai, bán kính sai đều bị 400', async () => {

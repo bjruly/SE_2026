@@ -64,6 +64,7 @@
       "en": null,
       "zh": null
     }
+<<<<<<< HEAD
   },
   {
     "id": "poi-004",
@@ -130,5 +131,7 @@
       "en": null,
       "zh": null
     }
+=======
+>>>>>>> parent of d395cea (Update campus POIs and map numbering)
   }
 ]

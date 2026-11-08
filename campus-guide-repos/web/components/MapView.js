@@ -64,7 +64,6 @@ function buildData({ pois, lang, position, selectedId, insideIds, overlapPois })
 export default function MapView({ pois, lang, position, selectedId, insideIds, overlapPois, onSelect, onOverlap, onMapClick, errorText }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
-  const pointMarkersRef = useRef(new Map());
   const latest = useRef({});
   const [failed, setFailed] = useState(false);
 
@@ -80,39 +79,6 @@ export default function MapView({ pois, lang, position, selectedId, insideIds, o
     map.getSource('zones').setData(data.zones);
     map.getSource('pois').setData(data.points);
     map.getSource('user').setData(data.user);
-
-    const activeIds = new Set();
-    latest.current.pois.forEach((poi, index) => {
-      activeIds.add(poi.id);
-      let marker = pointMarkersRef.current.get(poi.id);
-      if (!marker) {
-        const element = document.createElement('button');
-        element.type = 'button';
-        element.className = 'poi-map-marker';
-        element.addEventListener('click', (event) => {
-          event.stopPropagation();
-          latest.current.onSelect?.(poi.id);
-        });
-        marker = new maplibregl.Marker({ element, anchor: 'center' })
-          .setLngLat([poi.longitude, poi.latitude])
-          .addTo(map);
-        pointMarkersRef.current.set(poi.id, marker);
-      }
-      const element = marker.getElement();
-      const highlighted = data.points.features[index].properties.highlighted;
-      element.textContent = String(index + 1);
-      element.setAttribute('aria-label', `${index + 1}. ${poi.name[latest.current.lang]}`);
-      element.title = `${index + 1}. ${poi.name[latest.current.lang]}`;
-      element.classList.toggle('highlighted', highlighted);
-      element.classList.toggle('selected', poi.id === latest.current.selectedId);
-      marker.setLngLat([poi.longitude, poi.latitude]);
-    });
-    pointMarkersRef.current.forEach((marker, id) => {
-      if (!activeIds.has(id)) {
-        marker.remove();
-        pointMarkersRef.current.delete(id);
-      }
-    });
   };
 
   // Tạo bản đồ một lần
@@ -222,7 +188,6 @@ export default function MapView({ pois, lang, position, selectedId, insideIds, o
     return () => {
       clearTimeout(timer);
       map.remove();
-      pointMarkersRef.current.clear();
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
