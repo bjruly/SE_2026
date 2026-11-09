@@ -294,7 +294,7 @@ campus-guide-repos/
 │  ├─ sql/                 schema.sql, seed.sql  
 │  ├─ scripts/             run-sql.js, create-admin.js  
 │  └─ tests/               api.test.js, helpers.js  
-└─ qr-samples/             6 ảnh QR mẫu tương ứng các POI DHSG-POI-001–006
+└─ qr-samples/             3 ảnh QR mẫu cho các POI đang hoạt động DHSG-POI-001–003
 
 ## 2.5 Triển khai
 
@@ -1521,6 +1521,8 @@ Hình 29. ERD của cơ sở dữ liệu PostgreSQL
 
 ## 8.4 Dữ liệu khởi tạo (seed.sql)
 
+Các địa điểm 004–006 trong bảng dưới đây là dữ liệu demo cũ; seed hiện tại chỉ bật 001–003 và giữ các bản ghi cũ ở trạng thái không hoạt động.
+
 | Mã | Mã QR | Vĩ độ | Kinh độ | Bán kính | Tên vi / en / zh |
 | --- | --- | --- | --- | --- | --- |
 | poi-001 | DHSG-POI-001 | 10.76 | 106.682 | 25 | Giới Thiệu về Trường Đại học Sài Gòn / Introduction to Saigon University / 介绍西贡大学 |
@@ -1530,7 +1532,7 @@ Hình 29. ERD của cơ sở dữ liệu PostgreSQL
 | poi-005 | DHSG-POI-005 | 10.759058633501438 | 106.68186891198688 | 25 | Khu D / Building D / D区 |
 | poi-006 | DHSG-POI-006 | 10.7598811277565 | 106.6825540799044 | 25 | Trung Tâm Học Liệu (KLF) / Learning Resource Center (KLF) / 学习资源中心（KLF） |
 
-Seed có sáu địa điểm và ba ngôn ngữ (vi, en, zh), mã liên tục từ poi-001 đến poi-006. Khi nâng cấp cơ sở dữ liệu đã seed phiên bản cũ, poi-007 được chuyển sang poi-006 và các sự kiện thống kê được giữ lại; bộ đếm poi_number_seq được đặt lại theo mã lớn nhất hiện có nên địa điểm mới bắt đầu từ poi-007. Tọa độ và nội dung seed cần được xác nhận trước khi dùng làm dữ liệu tham quan chính thức.
+Seed hiện tại có ba địa điểm hoạt động và ba ngôn ngữ (vi, en, zh), mã poi-001 đến poi-003, đồng bộ với bản web trên Vercel. Khi chạy seed trên database cũ, các bản ghi demo poi-004 đến poi-007 được giữ lại nhưng đặt không hoạt động để không xuất hiện trong app; thống kê cũ không bị xóa. Địa điểm mới tiếp tục từ mã lớn nhất hiện có.
 
 ## 8.5 Hình dạng JSON của địa điểm
 
@@ -2467,7 +2469,7 @@ Danh sách địa điểm sắp xếp theo mã dạng chuỗi nên chỉ đúng 
 | --- | --- | --- |
 | server | npm install | Cài thư viện |
 | server | npm run db:schema | Chạy sql/schema.sql (tạo bảng, chạy lại không lỗi) |
-| server | npm run db:seed | Chạy sql/seed.sql (3 ngôn ngữ, 6 địa điểm mẫu; mã 001–006) |
+| server | npm run db:seed | Chạy sql/seed.sql (3 ngôn ngữ, 3 địa điểm mẫu hoạt động; mã 001–003) |
 | server | npm run admin:create | Tạo tài khoản Quản trị đầu tiên từ biến môi trường |
 | server | npm run dev / npm start | Chạy server trên máy (cổng PORT) |
 | server | npm test | 10 kiểm thử API (PGlite) |
@@ -2500,7 +2502,7 @@ Thứ tự khởi tạo: (1) tạo database PostgreSQL và điền .env của se
 | AC-16 | UC16 | Thêm địa điểm hợp lệ thì có mã poi-NNN và QR tương ứng; thiếu bản dịch, tọa độ hoặc bán kính sai thì bị từ chối kèm lỗi theo trường. | T-S03, T-S05, T-D06, T-D07 | Có |
 | AC-17 | UC17 | Sửa và lưu thì dữ liệu mới có hiệu lực, mã QR không đổi. | T-S03, T-D08, T-D09 | Có |
 | AC-18 | UC18 | Quản trị xóa được; Biên tập không thấy nút Xóa và API trả 403; xóa xong địa điểm và thống kê của nó biến mất. | T-S03, T-S04, T-D12, T-D14 | Có |
-| AC-19 | UC19 | Mỗi địa điểm trong dữ liệu quản trị có ảnh QR kiểu mã và (nếu có NEXT_PUBLIC_WEB_URL) kiểu liên kết; tải được PNG. Với seed hiện tại, trang tạo QR cho đủ 6 địa điểm (mã 001–006). | T-D10 | Một phần (việc tải file chưa thử) |
+| AC-19 | UC19 | Mỗi địa điểm trong dữ liệu quản trị có ảnh QR kiểu mã và (nếu có NEXT_PUBLIC_WEB_URL) kiểu liên kết; tải được PNG. Với seed hiện tại, trang tạo QR cho ba địa điểm hoạt động (mã 001–003). | T-D10 | Một phần (việc tải file chưa thử) |
 | AC-20 | UC20 | Quản trị tạo được tài khoản; email trùng bị 409; mật khẩu ngắn bị 400; Biên tập không vào được trang này. | T-S08, T-D11, T-D13, T-D15 | Có |
 | AC-21 | UC21 | Đổi vai trò, khóa, mở khóa, đặt lại mật khẩu có hiệu lực; không tự hạ vai trò hoặc tự khóa; tài khoản bị khóa mất quyền ngay. | T-S08 | Một phần (kiểm thử API, chưa thử giao diện) |
 
@@ -2530,7 +2532,7 @@ Các kiểm thử dưới đây đã được chạy và đạt: server 10/10 (P
 | T-W08 | Web (đơn vị) | tìm địa điểm theo mã QR hoặc theo id, không phân biệt hoa thường | UC08 | BR-F1 |
 | T-B01 | Web (trình duyệt) | trang tải được, có tiêu đề | UC03 | — |
 | T-B02 | Web (trình duyệt) | dữ liệu lấy từ máy chủ (API) | UC02 | BR-E1 |
-| T-B03 | Web (trình duyệt) | hiện đủ 6 địa điểm | UC04 | BR-B5 |
+| T-B03 | Web (trình duyệt) | hiện đủ 3 địa điểm mẫu | UC04 | BR-B5 |
 | T-B04 | Web (trình duyệt) | có canvas bản đồ MapLibre (WebGL chạy) | UC03 | BR-D3 |
 | T-B05 | Web (trình duyệt) | không hiện thông báo lỗi bản đồ | UC03 | BR-D3 |
 | T-B06 | Web (trình duyệt) | đổi sang tiếng Trung | UC01 | BR-A3 |
@@ -2540,19 +2542,19 @@ Các kiểm thử dưới đây đã được chạy và đạt: server 10/10 (P
 | T-B10 | Web (trình duyệt) | bấm Phát thủ công thì đọc lần 2 | UC05 | BR-C8 |
 | T-B11 | Web (trình duyệt) | nhập link QR thì mở Điểm mẫu 3 | UC08 | BR-F1 |
 | T-B12 | Web (trình duyệt) | không có lỗi JavaScript trong trình duyệt | Tất cả UC web | — |
-| T-B13 | Web (trình duyệt) | API lỗi thì dùng dữ liệu dự phòng và vẫn hiện đủ 6 địa điểm | UC02 | BR-E1 |
+| T-B13 | Web (trình duyệt) | API lỗi thì dùng dữ liệu dự phòng và vẫn hiện đủ 3 địa điểm mẫu | UC02 | BR-E1 |
 | T-B14 | Web (trình duyệt) | mở link ?qr=DHSG-POI-002 thì vào thẳng Điểm mẫu 2 | UC08 | BR-F2 |
 | T-B15 | Web (trình duyệt) | khổ điện thoại không bị tràn ngang | UC03, UC04 | — |
 | T-D01 | Dashboard (trình duyệt) | chưa đăng nhập thì chuyển về trang đăng nhập | UC11 | BR-G7 |
 | T-D02 | Dashboard (trình duyệt) | đăng nhập sai hiện thông báo lỗi | UC11 | BR-G3 |
 | T-D03 | Dashboard (trình duyệt) | đăng nhập đúng vào trang Thống kê (Quản trị thấy menu Tài khoản admin) | UC11 | BR-G1, BR-G7 |
 | T-D04 | Dashboard (trình duyệt) | thống kê có bảng theo địa điểm | UC14 | BR-E5 |
-| T-D05 | Dashboard (trình duyệt) | danh sách địa điểm hiện đủ 6 địa điểm seed | UC15 | BR-B5 |
+| T-D05 | Dashboard (trình duyệt) | danh sách địa điểm hiện đủ 3 địa điểm seed đang hoạt động | UC15 | BR-B5 |
 | T-D06 | Dashboard (trình duyệt) | thêm địa điểm mới thì quay về danh sách và thấy địa điểm | UC16 | BR-B1 |
 | T-D07 | Dashboard (trình duyệt) | mã địa điểm mới được sinh tự động | UC16 | BR-B1 |
 | T-D08 | Dashboard (trình duyệt) | trang sửa hiện mã QR cố định | UC17 | BR-B1 |
 | T-D09 | Dashboard (trình duyệt) | sửa bán kính và lưu thành công | UC17 | BR-B2 |
-| T-D10 | Dashboard (trình duyệt) | trang QR tạo ảnh QR dạng mã và dạng liên kết cho từng địa điểm; với seed hiện tại có 6 địa điểm | UC19 | BR-F3 |
+| T-D10 | Dashboard (trình duyệt) | trang QR tạo ảnh QR dạng mã và dạng liên kết cho từng địa điểm; với seed hiện tại có 3 địa điểm hoạt động | UC19 | BR-F3 |
 | T-D11 | Dashboard (trình duyệt) | tạo tài khoản Biên tập | UC20 | BR-G2 |
 | T-D12 | Dashboard (trình duyệt) | Quản trị xóa được địa điểm thử | UC18 | BR-B4 |
 | T-D13 | Dashboard (trình duyệt) | Biên tập không thấy menu “Tài khoản admin” | UC11, UC20 | BR-G1 |

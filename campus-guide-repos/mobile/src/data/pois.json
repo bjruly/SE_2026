@@ -6,14 +6,14 @@
     "longitude": 106.682,
     "radiusMeters": 25,
     "name": {
-      "vi": "Điểm mẫu 1",
-      "en": "Sample point 1",
-      "zh": "示例地点 1"
+      "vi": "Giới Thiệu về Trường Đại học Sài Gòn",
+      "en": "Introduction to Saigon University",
+      "zh": "介绍西贡大学"
     },
     "description": {
-      "vi": "Đây là nội dung thuyết minh mẫu của điểm số một.",
-      "en": "This is the sample narration for point number one.",
-      "zh": "这是第一个地点的示例讲解内容。"
+      "vi": "Trường Đại học Sài Gòn là một trong những ngôi trường có bề dày lịch sử lâu đời và cảnh quan độc đáo bậc nhất tại Thành phố Hồ Chí Minh",
+      "en": "Saigon University is one of the universities with a long history and unique scenery in Ho Chi Minh City.",
+      "zh": "西贡大学是胡志明市历史悠久、风景独特的知名学府之一。"
     },
     "audioUrl": {
       "vi": null,
@@ -28,14 +28,14 @@
     "longitude": 106.682,
     "radiusMeters": 25,
     "name": {
-      "vi": "Điểm mẫu 2",
-      "en": "Sample point 2",
-      "zh": "示例地点 2"
+      "vi": "Cảnh quan sân trường",
+      "en": "Campus Scenery",
+      "zh": "校园风景"
     },
     "description": {
-      "vi": "Đây là nội dung thuyết minh mẫu của điểm số hai.",
-      "en": "This is the sample narration for point number two.",
-      "zh": "这是第二个地点的示例讲解内容。"
+      "vi": "nổi bật với vẻ đẹp cổ kính, trầm mặc mang đậm dấu ấn lịch sử hơn một thế kỷ giữa lòng Thành phố Hồ Chí Minh",
+      "en": "It stands out with its ancient and quiet beauty, bearing the historical mark of over a century in the heart of Ho Chi Minh City.",
+      "zh": "它以古老而宁静的美丽脱颖而出，承载着胡志明市百年历史的印记。"
     },
     "audioUrl": {
       "vi": null,
@@ -50,88 +50,19 @@
     "longitude": 106.6824,
     "radiusMeters": 25,
     "name": {
-      "vi": "Điểm mẫu 3",
-      "en": "Sample point 3",
-      "zh": "示例地点 3"
+      "vi": "Kiến trúc trăm tuổi phong cách Pháp lẫn Trung Hoa",
+      "en": "Centennial Architecture with French and Chinese Styles",
+      "zh": "百年历史的法中风格建筑"
     },
     "description": {
-      "vi": "Đây là nội dung thuyết minh mẫu của điểm số ba.",
-      "en": "This is the sample narration for point number three.",
-      "zh": "这是第三个地点的示例讲解内容。"
+      "vi": "Cổng mặt tiền tòa nhà B mang đặc trưng kiến trúc thấp tầng với mái đón, cửa sổ dạng vòm, đắp nổi những viên gạch gốm men xanh. Hình tượng rồng mây được khảm nổi. Đây là dãy phòng học đầu tiên được xây dựng, khánh thành và đưa vào sử dụng từ năm 1910.",
+      "en": "The front gate of Building B features low-rise architecture with a welcoming roof, arched windows, and embossed green ceramic tiles. The dragon and cloud motifs are inlaid in relief. This was the first row of classrooms built, inaugurated, and put into use in 1910.",
+      "zh": "B楼的正门采用低层建筑风格，设有迎宾屋顶、拱形窗户，并镶嵌绿色陶瓷砖。龙云图案以浮雕形式镶嵌。这是第一排教室，于1910年建成、启用。"
     },
     "audioUrl": {
       "vi": null,
       "en": null,
       "zh": null
     }
-<<<<<<< HEAD
-  },
-  {
-    "id": "poi-004",
-    "qrCode": "DHSG-POI-004",
-    "latitude": 10.7596600504704,
-    "longitude": 106.68156140674834,
-    "radiusMeters": 25,
-    "name": {
-      "vi": "Sân bóng",
-      "en": "Football Field",
-      "zh": "足球场"
-    },
-    "description": {
-      "vi": "Và đây là khu sân bóng của Trường Đại học Sài Gòn, nơi nhịp sống sinh viên trở nên sôi động nhất.\n\nSau những giờ học căng thẳng, các bạn sinh viên đến đây để chạy, để chơi bóng và để nạp lại năng lượng. Sân cũng là nơi diễn ra các giờ giáo dục thể chất của nhà trường.\n\nNhưng sân bóng này không chỉ để rèn luyện sức khỏe. Đây còn là nơi diễn ra những cuộc tranh tài giữa các khoa. Mỗi trận đấu là một câu chuyện về tinh thần đồng đội, về sự cố gắng và những tiếng cổ vũ vang lên từ bạn bè.\n\nGiữa trung tâm Quận 5 đông đúc, khoảng sân này như một nhịp thở nhẹ nhàng của trường. Ở đây, sinh viên giải tỏa áp lực, kết nối với nhau và tạo nên những kỷ niệm khó quên.\n\nXin mời quý khách cùng tiếp tục hành trình khám phá khuôn viên Trường Đại học Sài Gòn.",
-      "en": "And this is the football field of Saigon University, where student life becomes most vibrant.\n\nAfter demanding classes, students come here to run, play football, and recharge. The field is also used for the university's physical education classes.\n\nBut this field is not only for exercise. It also hosts competitions between faculties. Every match tells a story of teamwork and perseverance, accompanied by friends cheering from the sidelines.\n\nAmid the bustle of District 5, this open space is like a gentle breath for the university. Here, students relieve stress, connect with one another, and create unforgettable memories.\n\nPlease continue your journey exploring the Saigon University campus.",
-      "zh": "这里是西贡大学的足球场，也是校园生活最热闹的地方。\n\n紧张的课程结束后，学生们来到这里跑步、踢球、恢复活力。这里也是学校开展体育课的场地。\n\n但这个足球场不仅用于锻炼身体，这里还举办各学院之间的比赛。每一场比赛都讲述着团队合作与努力拼搏的故事，也伴随着朋友们热情的加油声。\n\n在繁忙的第五郡中心，这片场地仿佛是校园的一次轻柔呼吸。在这里，学生们释放压力、彼此交流，并留下难忘的回忆。\n\n欢迎各位继续探索西贡大学校园。"
-    },
-    "audioUrl": {
-      "vi": null,
-      "en": null,
-      "zh": null
-    }
-  },
-  {
-    "id": "poi-005",
-    "qrCode": "DHSG-POI-005",
-    "latitude": 10.759058633501438,
-    "longitude": 106.68186891198688,
-    "radiusMeters": 25,
-    "name": {
-      "vi": "Khu D",
-      "en": "Building D",
-      "zh": "D区"
-    },
-    "description": {
-      "vi": "Khu D là một trong những khu vực trong khuôn viên Trường Đại học Sài Gòn.",
-      "en": "Building D is one of the areas on the Saigon University campus.",
-      "zh": "D区是西贡大学校园内的区域之一。"
-    },
-    "audioUrl": {
-      "vi": null,
-      "en": null,
-      "zh": null
-    }
-  },
-  {
-    "id": "poi-006",
-    "qrCode": "DHSG-POI-006",
-    "latitude": 10.7598811277565,
-    "longitude": 106.6825540799044,
-    "radiusMeters": 25,
-    "name": {
-      "vi": "Trung Tâm Học Liệu (KLF)",
-      "en": "Learning Resource Center (KLF)",
-      "zh": "学习资源中心（KLF）"
-    },
-    "description": {
-      "vi": "Và bây giờ, chúng ta đến với Trung tâm Học liệu của Trường Đại học Sài Gòn, hay còn gọi là KLF.\n\nĐây là địa chỉ quen thuộc của sinh viên khi cần tài liệu cho việc học. Ví dụ, các bạn sinh viên đến đây để nhận giáo trình cho các học phần tiếng Anh, cùng tài khoản học trực tuyến đi kèm.\n\nMọi thông tin về thời gian nhận tài liệu đều được cập nhật trên trang thông tin của thư viện nhà trường, giúp sinh viên chủ động sắp xếp thời gian.\n\nCó thể nói, Trung tâm Học liệu là nơi đồng hành cùng sinh viên trên hành trình học tập, từ những cuốn sách đầu tiên cho đến việc học trực tuyến.\n\nXin mời quý khách cùng tiếp tục hành trình khám phá khuôn viên Trường Đại học Sài Gòn.",
-      "en": "And now, we arrive at Saigon University's Learning Resource Center, also known as KLF.\n\nThis is a familiar place for students looking for learning materials. For example, students come here to receive textbooks for their English courses, along with the accompanying online learning account.\n\nInformation about collection times is updated on the university library's information page, helping students plan their visits.\n\nThe Learning Resource Center accompanies students throughout their studies, from their first books to online learning.\n\nPlease continue your journey exploring the Saigon University campus.",
-      "zh": "现在，我们来到西贡大学的学习资源中心，也就是大家熟知的KLF。\n\n学生需要学习资料时，常常会来到这里。例如，学生可以在这里领取英语课程的教材，以及配套的在线学习账号。\n\n领取资料的时间信息会在学校图书馆的信息页面上更新，方便学生提前安排时间。\n\n可以说，学习资源中心陪伴学生走过求学之路，从最初的书本学习到在线学习。\n\n欢迎各位继续探索西贡大学校园。"
-    },
-    "audioUrl": {
-      "vi": null,
-      "en": null,
-      "zh": null
-    }
-=======
->>>>>>> parent of d395cea (Update campus POIs and map numbering)
   }
 ]

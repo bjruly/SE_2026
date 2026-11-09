@@ -16,7 +16,7 @@ cp .env.example .env         # Windows PowerShell: Copy-Item .env.example .env
 # Mở .env và điền: DATABASE_URL, JWT_SECRET (ít nhất 32 ký tự ngẫu nhiên), ADMIN_EMAIL, ADMIN_PASSWORD
 
 npm run db:schema            # tạo các bảng (chạy lại để thêm bảng online_sessions)
-npm run db:seed              # nạp 6 địa điểm mẫu và 3 ngôn ngữ
+npm run db:seed              # đồng bộ 3 địa điểm mẫu; các điểm demo cũ 004–007 được đặt không hoạt động
 npm run admin:create         # tạo tài khoản Quản trị đầu tiên từ ADMIN_EMAIL / ADMIN_PASSWORD
 npm run dev                  # chạy tại http://localhost:4000
 ```
@@ -30,7 +30,7 @@ Trên Windows PowerShell nếu `npm` bị chặn, dùng `npm.cmd`.
 ```bash
 npm test
 ```
-Chạy 10 bài kiểm thử (đăng nhập, phân quyền, thêm/sửa/xóa địa điểm, kiểm tra dữ liệu, thống kê, quản lý tài khoản, giới hạn đăng nhập sai). Mặc định dùng **PGlite** (PostgreSQL chạy trong bộ nhớ, không cần cài gì và **không đụng vào database thật của bạn**). Muốn kiểm thử trên PostgreSQL thật: đặt `TEST_DATABASE_URL` (**database đó sẽ bị xóa sạch**, chỉ dùng database thử).
+Chạy 11 bài kiểm thử (đăng nhập, phân quyền, thêm/sửa/xóa địa điểm, kiểm tra dữ liệu, thống kê, quản lý tài khoản, giới hạn đăng nhập sai). Mặc định dùng **PGlite** (PostgreSQL chạy trong bộ nhớ, không cần cài gì và **không đụng vào database thật của bạn**). Muốn kiểm thử trên PostgreSQL thật: đặt `TEST_DATABASE_URL` (**database đó sẽ bị xóa sạch**, chỉ dùng database thử).
 
 ## Các API
 

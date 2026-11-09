@@ -18,7 +18,7 @@ Hệ thống tự động phát thuyết minh theo ngôn ngữ người dùng ch
    ├─ mobile/                     app di động (Expo, React Native)
    ├─ server/                     backend API + SQL (Express, PostgreSQL), có docs/ERD.md
    ├─ dashboard/                  trang quản trị (Next.js)
-   └─ qr-samples/                 3 ảnh mã QR mẫu
+   └─ qr-samples/                 3 ảnh QR; hiện chỉ mã 001–003 thuộc bộ demo hoạt động
 ```
 
 Repository dùng **1 repo chung** cho tất cả các phần.
