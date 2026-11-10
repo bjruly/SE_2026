@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AppState } from 'react-native';
 import { API_URL } from '../config';
 import { fallbackPois, fetchPois } from '../lib/poiSource';
 
@@ -13,11 +14,26 @@ export function usePois() {
   useEffect(() => {
     if (!API_URL) return undefined;
     let alive = true;
-    fetchPois()
-      .then((pois) => alive && setState({ pois, source: 'api' }))
-      .catch(() => alive && setState({ pois: fallbackPois, source: 'fallback' }));
+
+    const load = () => {
+      fetchPois()
+        .then((pois) => alive && setState({ pois, source: 'api' }))
+        .catch(() => alive && setState((current) => ({
+          pois: current.source === 'api' ? current.pois : fallbackPois,
+          source: current.source === 'api' ? 'api' : 'fallback',
+        })));
+    };
+
+    load();
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') load();
+    });
+    const timer = setInterval(load, 30000);
+
     return () => {
       alive = false;
+      subscription.remove();
+      clearInterval(timer);
     };
   }, []);
 
