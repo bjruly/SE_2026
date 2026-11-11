@@ -1,12 +1,12 @@
 # App di động – Thuyết minh tự động (Expo / React Native)
 
-Phần app di động của đồ án. Công nghệ: **Expo SDK 57** (React Native, JavaScript), `expo-location` (GPS), `expo-speech` (giọng đọc của thiết bị), `expo-camera` (quét QR), `react-native-webview` (hiển thị bản đồ MapLibre GL, mặc định OpenFreeMap), `react-native-safe-area-context`.
+Phần app di động của đồ án. Công nghệ: **Expo SDK 58** (React Native, JavaScript), `expo-location` (GPS), `expo-speech` (giọng đọc của thiết bị), `expo-camera` (quét QR), `react-native-webview` (hiển thị bản đồ MapLibre GL, mặc định OpenFreeMap), `react-native-safe-area-context`.
 Xem README ở thư mục gốc để biết tổng quan, chức năng và các điểm chưa xác định.
 
 ## Cách chạy (bằng Expo Go trên điện thoại)
 
 1. Trên máy tính, cài **Node.js** (bản LTS, khuyến nghị 22 trở lên).
-2. Trên điện thoại, cài ứng dụng **Expo Go** từ App Store hoặc Google Play. Dự án dùng **SDK 57** để tương thích với Expo Go hiện có trên điện thoại.
+2. Trên điện thoại, cài ứng dụng **Expo Go** từ App Store hoặc Google Play. Dự án dùng **SDK 58** để tương thích với Expo Go SDK 58.
 3. Máy tính và điện thoại phải **cùng mạng Wi-Fi**.
 4. Chạy:
 
@@ -57,7 +57,7 @@ mobile/
 
 ## Lỗi thường gặp
 
-- **Expo Go báo phiên bản không tương thích:** kiểm tra Expo Go có hỗ trợ SDK 57 và cài lại dependencies bằng `npm.cmd install`.
+- **Expo Go báo phiên bản không tương thích:** kiểm tra Expo Go có hỗ trợ SDK 58 và cài lại dependencies bằng `npm.cmd install`.
 - **Điện thoại không kết nối được:** kiểm tra cùng Wi-Fi, tắt VPN, thử `npx expo start --tunnel`.
 - **Không lấy được vị trí:** kiểm tra đã cấp quyền vị trí cho Expo Go và đã bật định vị trên điện thoại; hoặc dùng **Giả lập vị trí**.
 - **Không quét được QR:** kiểm tra quyền camera; có thể nhập mã thủ công, ví dụ `DHSG-POI-001`.

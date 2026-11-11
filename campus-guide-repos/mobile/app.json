@@ -32,7 +32,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Cho phép $(PRODUCT_NAME) dùng vị trí để tự động phát thuyết minh."
         }
-      ]
+      ],
+      "expo-status-bar"
     ]
   }
 }
