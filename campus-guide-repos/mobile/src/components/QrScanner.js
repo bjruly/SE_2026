@@ -58,10 +58,13 @@ export default function QrScanner({ t, onCode, notFound }) {
 }
 
 const styles = StyleSheet.create({
-  wrap: { flex: 1, padding: 12, gap: 10 },
-  title: { fontSize: 15, fontWeight: '600', color: colors.text },
-  camera: { flex: 1, minHeight: 220, borderRadius: 8, overflow: 'hidden', backgroundColor: '#111827' },
-  permission: { flex: 1, minHeight: 160, alignItems: 'center', justifyContent: 'center', gap: 10 },
+  wrap: { flex: 1, padding: 16, gap: 12, backgroundColor: colors.bg },
+  title: { color: colors.navy, fontSize: 19, lineHeight: 25, fontWeight: '800' },
+  camera: { flex: 1, minHeight: 220, borderRadius: 14, overflow: 'hidden', backgroundColor: '#102c52' },
+  permission: {
+    flex: 1, minHeight: 180, alignItems: 'center', justifyContent: 'center', gap: 12,
+    padding: 20, borderRadius: 14, borderWidth: 1, borderColor: colors.border, backgroundColor: '#fff',
+  },
   row: { flexDirection: 'row', gap: 8 },
   input: { flex: 1 },
 });
