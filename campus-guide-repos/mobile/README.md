@@ -20,6 +20,14 @@ npx.cmd expo start
 
 Nếu điện thoại không kết nối được tới máy tính (mạng công ty/trường chặn, tường lửa), thử `npx.cmd expo start --tunnel`.
 
+## Deploy giao diện mobile lên Vercel (bản web)
+
+Nếu muốn mở giao diện app bằng trình duyệt trên điện thoại, trong Vercel tạo project với **Root Directory** là `campus-guide-repos/mobile`. Vercel dùng `npm run build` để chạy `expo export --platform web` và publish thư mục `dist` theo cấu hình trong `vercel.json`.
+
+Thêm `EXPO_PUBLIC_API_URL` trong **Project Settings → Environment Variables** với URL backend API giống cấu hình web/dashboard, rồi redeploy để giao diện mobile web lấy dữ liệu từ backend. Không dùng URL database hoặc URL web/dashboard. Nếu không cấu hình biến này, app dùng dữ liệu địa điểm mẫu cục bộ.
+
+Đây là bản chạy trong trình duyệt, không phải ứng dụng Android/iOS cài độc lập. Muốn tạo app cài trên điện thoại thì dùng EAS Build.
+
 Kiểm tra nhanh mã nguồn biên dịch được (không cần điện thoại):
 
 ```bash
