@@ -2,7 +2,9 @@
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 
-const LANG_LABEL = { vi: 'Tiếng Việt', en: 'English', zh: '中文' };
+const LANG_LABEL = {
+  vi: 'Tiếng Việt', en: 'English', zh: '中文', ja: '日本語', ko: '한국어', th: 'ภาษาไทย', de: 'Deutsch',
+};
 const SOURCE_LABEL = { auto: 'Tự động (vào vùng)', manual: 'Bấm phát tay' };
 
 function formatDate(date) {

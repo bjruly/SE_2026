@@ -17,6 +17,10 @@ const validPoi = (over = {}) => ({
   translations: {
     vi: { name: 'Điểm mới', description: 'Mô tả mới' },
     en: { name: 'New point', description: 'New description' },
+    ja: { name: 'New place JA', description: 'New description JA' },
+    ko: { name: 'New place KO', description: 'New description KO' },
+    th: { name: 'New place TH', description: 'New description TH' },
+    de: { name: 'New place DE', description: 'New description DE' },
     zh: { name: '新地点', description: '新描述' },
   },
   ...over,

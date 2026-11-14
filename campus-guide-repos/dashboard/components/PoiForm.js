@@ -28,6 +28,10 @@ const LANGS = [
   { code: 'vi', label: 'Tiếng Việt' },
   { code: 'en', label: 'English' },
   { code: 'zh', label: '中文' },
+  { code: 'ja', label: '日本語' },
+  { code: 'ko', label: '한국어' },
+  { code: 'th', label: 'ภาษาไทย' },
+  { code: 'de', label: 'Deutsch' },
 ];
 
 const EMPTY = {
@@ -39,6 +43,10 @@ const EMPTY = {
     vi: { name: '', description: '', audioUrl: '' },
     en: { name: '', description: '', audioUrl: '' },
     zh: { name: '', description: '', audioUrl: '' },
+    ja: { name: '', description: '', audioUrl: '' },
+    ko: { name: '', description: '', audioUrl: '' },
+    th: { name: '', description: '', audioUrl: '' },
+    de: { name: '', description: '', audioUrl: '' },
   },
 };
 

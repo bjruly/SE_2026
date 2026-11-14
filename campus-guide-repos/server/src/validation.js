@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const LANG_CODES = ['vi', 'en', 'zh'];
+export const LANG_CODES = ['vi', 'en', 'zh', 'ja', 'ko', 'th', 'de'];
 
 const emptyToNull = (v) => (typeof v === 'string' && v.trim() === '' ? null : v);
 
@@ -15,7 +15,15 @@ export const poiBody = z.object({
   longitude: z.number().min(-180).max(180),
   radiusMeters: z.number().int().min(1).max(1000),
   active: z.boolean().optional().default(true),
-  translations: z.object({ vi: translation, en: translation, zh: translation }),
+  translations: z.object({
+    vi: translation,
+    en: translation,
+    zh: translation,
+    ja: translation,
+    ko: translation,
+    th: translation,
+    de: translation,
+  }),
 });
 
 export const eventBody = z

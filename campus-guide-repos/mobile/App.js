@@ -59,6 +59,7 @@ function Main() {
   }, []);
 
   const [lang, setLang] = useState('vi');
+  const [languageOpen, setLanguageOpen] = useState(false);
   const [tab, setTab] = useState('map'); // 'map' | 'list' | 'qr'
   const [selectedId, setSelectedId] = useState(null);
   const [auto, setAuto] = useState(false);
@@ -157,12 +158,37 @@ function Main() {
 
       <View style={styles.header}>
         <Text style={styles.title} numberOfLines={1}>{t.appTitle}</Text>
-        <View style={styles.langs}>
-          {LANGS.map((l) => (
-            <Pressable key={l.code} onPress={() => setLang(l.code)} style={[styles.lang, lang === l.code && styles.langActive]}>
-              <Text style={[styles.langText, lang === l.code && styles.langTextActive]}>{l.short}</Text>
-            </Pressable>
-          ))}
+        <View style={styles.languagePicker}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t.language || 'Language'}
+            accessibilityState={{ expanded: languageOpen }}
+            onPress={() => setLanguageOpen((open) => !open)}
+            style={styles.languageButton}
+          >
+            <Text style={styles.languageButtonText}>{LANGS.find((l) => l.code === lang)?.short}</Text>
+            <Text style={styles.languageChevron}>{languageOpen ? '▲' : '▼'}</Text>
+          </Pressable>
+          {languageOpen && (
+            <View style={styles.languageMenu} accessibilityRole="menu">
+              {LANGS.map((l) => (
+                <Pressable
+                  key={l.code}
+                  accessibilityRole="menuitem"
+                  onPress={() => {
+                    setLang(l.code);
+                    setLanguageOpen(false);
+                  }}
+                  style={[styles.languageOption, lang === l.code && styles.languageOptionActive]}
+                >
+                  <Text style={[styles.languageOptionText, lang === l.code && styles.languageOptionTextActive]}>
+                    {l.label}
+                  </Text>
+                  {lang === l.code && <Text style={styles.languageCheck}>✓</Text>}
+                </Pressable>
+              ))}
+            </View>
+          )}
         </View>
       </View>
 
@@ -252,11 +278,25 @@ const styles = StyleSheet.create({
   fill: { flex: 1 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 12, paddingVertical: 8, gap: 8 },
   title: { flex: 1, color: '#fff', fontSize: 16, fontWeight: '700' },
-  langs: { flexDirection: 'row', gap: 6 },
-  lang: { paddingVertical: 4, paddingHorizontal: 10, borderRadius: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.6)' },
-  langActive: { backgroundColor: '#fff' },
-  langText: { color: '#fff', fontSize: 13 },
-  langTextActive: { color: colors.primary, fontWeight: '700' },
+  languagePicker: { position: 'relative', zIndex: 10 },
+  languageButton: {
+    minWidth: 72, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingVertical: 7, paddingHorizontal: 10, borderRadius: 8, backgroundColor: '#fff',
+  },
+  languageButtonText: { color: colors.primary, fontSize: 13, fontWeight: '700' },
+  languageChevron: { color: colors.primary, fontSize: 10, marginLeft: 8 },
+  languageMenu: {
+    position: 'absolute', top: 42, right: 0, width: 170, paddingVertical: 4,
+    borderRadius: 8, backgroundColor: '#fff', borderWidth: 1, borderColor: colors.border,
+    elevation: 6, shadowColor: '#000', shadowOpacity: 0.18, shadowRadius: 8, shadowOffset: { width: 0, height: 3 },
+  },
+  languageOption: {
+    minHeight: 42, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+  },
+  languageOptionActive: { backgroundColor: '#eef2ff' },
+  languageOptionText: { color: colors.text, fontSize: 14 },
+  languageOptionTextActive: { color: colors.primary, fontWeight: '700' },
+  languageCheck: { color: colors.primary, fontSize: 16, fontWeight: '700' },
   body: { flex: 1, backgroundColor: '#fff' },
   mapBox: { flex: 1, minHeight: 200 },
   sheet: { padding: 12, gap: 8, borderTopWidth: 1, borderTopColor: colors.border, backgroundColor: '#fff' },

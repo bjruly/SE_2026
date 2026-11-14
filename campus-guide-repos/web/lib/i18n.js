@@ -3,6 +3,10 @@ export const LANGS = [
   { code: 'vi', label: 'Tiếng Việt', speech: 'vi-VN' },
   { code: 'en', label: 'English', speech: 'en-US' },
   { code: 'zh', label: '中文', speech: 'zh-CN' },
+  { code: 'ja', label: '日本語', speech: 'ja-JP' },
+  { code: 'ko', label: '한국어', speech: 'ko-KR' },
+  { code: 'th', label: 'ภาษาไทย', speech: 'th-TH' },
+  { code: 'de', label: 'Deutsch', speech: 'de-DE' },
 ];
 
 export const STRINGS = {
@@ -196,3 +200,12 @@ export const STRINGS = {
     dataLocal: '数据：pois.json 文件（未配置服务器）',
   },
 };
+
+// Các bản dịch mới dùng tiếng Anh làm fallback cho những chuỗi chưa dịch.
+// Nội dung địa điểm vẫn được nhập riêng theo từng ngôn ngữ trong dashboard.
+Object.assign(STRINGS, {
+  ja: { ...STRINGS.en, language: '言語', play: '再生', pause: '一時停止', resume: '再開', stop: '停止' },
+  ko: { ...STRINGS.en, language: '언어', play: '재생', pause: '일시정지', resume: '계속', stop: '정지' },
+  th: { ...STRINGS.en, language: 'ภาษา', play: 'เล่น', pause: 'หยุดชั่วคราว', resume: 'เล่นต่อ', stop: 'หยุด' },
+  de: { ...STRINGS.en, language: 'Sprache', play: 'Abspielen', pause: 'Pause', resume: 'Fortsetzen', stop: 'Stopp' },
+});
