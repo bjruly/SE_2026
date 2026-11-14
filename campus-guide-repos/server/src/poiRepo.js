@@ -42,6 +42,7 @@ export async function getPoi(q, id) {
 async function upsertTranslations(q, id, translations) {
   for (const lang of LANG_CODES) {
     const t = translations[lang];
+    if (!t) continue;
     await q(
       `INSERT INTO poi_translations (poi_id, lang, name, description, audio_url)
        VALUES ($1, $2, $3, $4, $5)
