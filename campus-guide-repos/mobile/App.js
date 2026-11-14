@@ -59,6 +59,7 @@ function Main() {
   }, []);
 
   const [lang, setLang] = useState('vi');
+  const [languageOpen, setLanguageOpen] = useState(false);
   const [tab, setTab] = useState('map'); // 'map' | 'list' | 'qr'
   const [selectedId, setSelectedId] = useState(null);
   const [auto, setAuto] = useState(false);
@@ -164,12 +165,33 @@ function Main() {
             <Text style={styles.brandSubtitle} numberOfLines={1}>{t.brandSubtitle}</Text>
           </View>
         </View>
-        <View style={styles.langs} accessibilityLabel={t.language}>
-          {LANGS.map((l) => (
-            <Pressable key={l.code} onPress={() => setLang(l.code)} style={[styles.lang, lang === l.code && styles.langActive]}>
-              <Text style={[styles.langText, lang === l.code && styles.langTextActive]}>{l.short}</Text>
-            </Pressable>
-          ))}
+        <View style={styles.langPicker} accessibilityLabel={t.language}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityState={{ expanded: languageOpen }}
+            onPress={() => setLanguageOpen((open) => !open)}
+            style={styles.langButton}
+          >
+            <Text style={styles.langButtonCode}>{LANGS.find((item) => item.code === lang)?.short || 'VI'}</Text>
+            <Text style={styles.langButtonLabel}>{LANGS.find((item) => item.code === lang)?.label || t.language}</Text>
+            <Text style={styles.langButtonChevron}>{languageOpen ? '▲' : '▼'}</Text>
+          </Pressable>
+          {languageOpen && (
+            <View style={styles.langMenu} accessibilityRole="menu">
+              {LANGS.map((item) => (
+                <Pressable
+                  key={item.code}
+                  accessibilityRole="menuitem"
+                  onPress={() => { setLang(item.code); setLanguageOpen(false); }}
+                  style={[styles.langOption, lang === item.code && styles.langOptionActive]}
+                >
+                  <Text style={[styles.langOptionCode, lang === item.code && styles.langOptionTextActive]}>{item.short}</Text>
+                  <Text style={[styles.langOptionLabel, lang === item.code && styles.langOptionTextActive]}>{item.label}</Text>
+                  {lang === item.code && <Text style={styles.langCheck}>✓</Text>}
+                </Pressable>
+              ))}
+            </View>
+          )}
         </View>
       </View>
 
@@ -324,15 +346,27 @@ const styles = StyleSheet.create({
   brandEyebrow: { marginBottom: 2, color: '#a9e4dc', fontSize: 8, fontWeight: '800', letterSpacing: 1 },
   title: { color: '#fff', fontSize: 14, fontWeight: '700' },
   brandSubtitle: { marginTop: 2, color: 'rgba(255,255,255,0.76)', fontSize: 10 },
-  langs: { flexDirection: 'row', gap: 4 },
-  lang: {
-    minWidth: 32, minHeight: 34, justifyContent: 'center', alignItems: 'center',
-    paddingVertical: 5, paddingHorizontal: 6, borderRadius: 10,
-    borderWidth: 1, borderColor: 'rgba(255,255,255,0.28)', backgroundColor: 'rgba(255,255,255,0.08)',
+  langPicker: { position: 'relative', zIndex: 20, minWidth: 142 },
+  langButton: {
+    minHeight: 38, flexDirection: 'row', alignItems: 'center', gap: 7,
+    paddingVertical: 7, paddingHorizontal: 10, borderRadius: 10,
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.32)', backgroundColor: 'rgba(255,255,255,0.1)',
   },
-  langActive: { borderColor: '#d5fbf4', backgroundColor: '#e7f5f2' },
-  langText: { color: '#fff', fontSize: 10, fontWeight: '700' },
-  langTextActive: { color: colors.primary, fontWeight: '800' },
+  langButtonCode: { color: '#d5fbf4', fontSize: 11, fontWeight: '800' },
+  langButtonLabel: { flex: 1, color: '#fff', fontSize: 11, fontWeight: '700' },
+  langButtonChevron: { color: '#d5fbf4', fontSize: 10 },
+  langMenu: {
+    position: 'absolute', top: 44, right: 0, width: 190, padding: 6, borderRadius: 12,
+    backgroundColor: '#fff', borderWidth: 1, borderColor: '#d7e4e8',
+    shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 8, shadowOffset: { width: 0, height: 4 },
+    elevation: 8,
+  },
+  langOption: { minHeight: 38, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 9, borderRadius: 8 },
+  langOptionActive: { backgroundColor: '#e7f5f2' },
+  langOptionCode: { width: 26, color: colors.muted, fontSize: 10, fontWeight: '800' },
+  langOptionLabel: { flex: 1, color: colors.navy, fontSize: 12, fontWeight: '600' },
+  langOptionTextActive: { color: colors.primary, fontWeight: '800' },
+  langCheck: { color: colors.primary, fontSize: 15, fontWeight: '800' },
   body: { flex: 1, backgroundColor: colors.bg },
   mapScreen: { flex: 1 },
   mapBox: { flex: 1.08, minHeight: 190, backgroundColor: '#e5edf3' },
