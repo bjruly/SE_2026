@@ -6,6 +6,25 @@ import { API_URL } from '../config';
 
 export { fallbackPois };
 
+const EXTRA_LANGS = ['ja', 'ko', 'th', 'de'];
+
+// Production API có thể được deploy trước dữ liệu dịch mới. Giữ app dùng được
+// trong thời gian chờ seed/redeploy bằng cách bổ sung bản dịch fallback cục bộ.
+function withLanguageFallback(pois) {
+  return pois.map((poi) => {
+    const fallback = fallbackPois.find((item) => item.id === poi.id);
+    const name = { ...(poi.name || {}) };
+    const description = { ...(poi.description || {}) };
+    const audioUrl = { ...(poi.audioUrl || {}) };
+    for (const lang of EXTRA_LANGS) {
+      name[lang] ||= fallback?.name?.[lang] || name.en || '';
+      description[lang] ||= fallback?.description?.[lang] || description.en || '';
+      audioUrl[lang] ??= fallback?.audioUrl?.[lang] ?? null;
+    }
+    return { ...poi, name, description, audioUrl };
+  });
+}
+
 function isValidPoi(p) {
   return (
     p &&
@@ -27,7 +46,7 @@ export async function fetchPois(timeoutMs = 6000) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (!Array.isArray(data) || !data.every(isValidPoi)) throw new Error('Dữ liệu từ API không đúng định dạng');
-    return data;
+    return withLanguageFallback(data);
   } finally {
     clearTimeout(timer);
   }

@@ -6,16 +6,28 @@
     "longitude": 106.682,
     "radiusMeters": 25,
     "name": {
+      "ja": "サイゴン大学の紹介",
+      "ko": "사이공대학교 소개",
+      "th": "แนะนำมหาวิทยาลัยไซ่ง่อน",
+      "de": "Einführung in die Saigon-Universität",
       "vi": "Giới Thiệu về Trường Đại học Sài Gòn",
       "en": "Introduction to Saigon University",
       "zh": "介绍西贡大学"
     },
     "description": {
+      "ja": "サイゴン大学はホーチミン市にある、長い歴史と独特の景観を持つ大学です。",
+      "ko": "사이공대학교는 오랜 역사와 독특한 경관을 가진 호찌민시의 대학교입니다.",
+      "th": "มหาวิทยาลัยไซ่ง่อนเป็นมหาวิทยาลัยเก่าแก่ในนครโฮจิมินห์ที่มีทัศนียภาพโดดเด่น",
+      "de": "Die Saigon-Universität ist eine traditionsreiche Hochschule mit einer einzigartigen Landschaft in Ho-Chi-Minh-Stadt.",
       "vi": "Trường Đại học Sài Gòn là một trong những ngôi trường có bề dày lịch sử lâu đời và cảnh quan độc đáo bậc nhất tại Thành phố Hồ Chí Minh",
       "en": "Saigon University is one of the universities with a long history and unique scenery in Ho Chi Minh City.",
       "zh": "西贡大学是胡志明市历史悠久、风景独特的知名学府之一。"
     },
     "audioUrl": {
+      "ja": null,
+      "ko": null,
+      "th": null,
+      "de": null,
       "vi": null,
       "en": null,
       "zh": null
@@ -28,16 +40,28 @@
     "longitude": 106.682,
     "radiusMeters": 25,
     "name": {
+      "ja": "キャンパスの景観",
+      "ko": "캠퍼스 풍경",
+      "th": "ทัศนียภาพภายในมหาวิทยาลัย",
+      "de": "Campuslandschaft",
       "vi": "Cảnh quan sân trường",
       "en": "Campus Scenery",
       "zh": "校园风景"
     },
     "description": {
+      "ja": "このキャンパスは、ホーチミン市の百年の歴史を刻む、古く静かな美しさが特徴です。",
+      "ko": "이곳은 호찌민시의 100년 역사를 간직한 고요하고 오래된 아름다움이 돋보입니다.",
+      "th": "สถานที่แห่งนี้โดดเด่นด้วยความงดงามเก่าแก่และเงียบสงบ ซึ่งสะท้อนประวัติศาสตร์กว่าศตวรรษของนครโฮจิมินห์",
+      "de": "Der Campus besticht durch seine alte, ruhige Schönheit und trägt die über hundertjährige Geschichte von Ho-Chi-Minh-Stadt in sich.",
       "vi": "nổi bật với vẻ đẹp cổ kính, trầm mặc mang đậm dấu ấn lịch sử hơn một thế kỷ giữa lòng Thành phố Hồ Chí Minh",
       "en": "It stands out with its ancient and quiet beauty, bearing the historical mark of over a century in the heart of Ho Chi Minh City.",
       "zh": "它以古老而宁静的美丽脱颖而出，承载着胡志明市百年历史的印记。"
     },
     "audioUrl": {
+      "ja": null,
+      "ko": null,
+      "th": null,
+      "de": null,
       "vi": null,
       "en": null,
       "zh": null
@@ -50,16 +74,28 @@
     "longitude": 106.6824,
     "radiusMeters": 25,
     "name": {
+      "ja": "フランスと中国の様式を持つ百年建築",
+      "ko": "프랑스와 중국 양식의 100년 건축물",
+      "th": "สถาปัตยกรรมอายุกว่าศตวรรษแบบฝรั่งเศสและจีน",
+      "de": "Hundert Jahre alte Architektur im französisch-chinesischen Stil",
       "vi": "Kiến trúc trăm tuổi phong cách Pháp lẫn Trung Hoa",
       "en": "Centennial Architecture with French and Chinese Styles",
       "zh": "百年历史的法中风格建筑"
     },
     "description": {
+      "ja": "B棟の正門はフランスと中国の様式を取り入れた建物で、1910年に建設されました。",
+      "ko": "B동 정문은 프랑스와 중국 양식이 어우러진 건축물로 1910년에 지어졌습니다.",
+      "th": "ประตูทางเข้าอาคาร B ผสมผสานสถาปัตยกรรมฝรั่งเศสและจีน และสร้างขึ้นในปี 1910",
+      "de": "Das Eingangstor von Gebäude B verbindet französische und chinesische Architektur und wurde 1910 errichtet.",
       "vi": "Cổng mặt tiền tòa nhà B mang đặc trưng kiến trúc thấp tầng với mái đón, cửa sổ dạng vòm, đắp nổi những viên gạch gốm men xanh. Hình tượng rồng mây được khảm nổi. Đây là dãy phòng học đầu tiên được xây dựng, khánh thành và đưa vào sử dụng từ năm 1910.",
       "en": "The front gate of Building B features low-rise architecture with a welcoming roof, arched windows, and embossed green ceramic tiles. The dragon and cloud motifs are inlaid in relief. This was the first row of classrooms built, inaugurated, and put into use in 1910.",
       "zh": "B楼的正门采用低层建筑风格，设有迎宾屋顶、拱形窗户，并镶嵌绿色陶瓷砖。龙云图案以浮雕形式镶嵌。这是第一排教室，于1910年建成、启用。"
     },
     "audioUrl": {
+      "ja": null,
+      "ko": null,
+      "th": null,
+      "de": null,
       "vi": null,
       "en": null,
       "zh": null

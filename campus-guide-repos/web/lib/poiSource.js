@@ -5,6 +5,28 @@ import fallbackPois from '@/data/pois.json';
 export const API_URL = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
 export { fallbackPois };
 
+const EXTRA_LANGS = ['ja', 'ko', 'th', 'de'];
+
+// Production API có thể được deploy trước dữ liệu dịch mới. Bổ sung fallback
+// để người dùng không thấy nội dung trống trong lúc chờ cập nhật database.
+function withLanguageFallback(pois) {
+  return pois.map((poi) => {
+    const fallback = fallbackPois.find((item) => item.id === poi.id);
+    const name = { ...(poi.name || {}) };
+    const description = { ...(poi.description || {}) };
+    const audioUrl = { ...(poi.audioUrl || {}) };
+    for (const lang of EXTRA_LANGS) {
+      name[lang] ||= fallback?.name?.[lang] || name.en || '';
+      description[lang] ||= fallback?.description?.[lang] || description.en || '';
+      audioUrl[lang] ??= fallback?.audioUrl?.[lang] ?? null;
+    }
+    return { ...poi, name, description, audioUrl };
+  });
+}
+
+// Áp dụng luôn cho dữ liệu cục bộ khi web chạy không có API.
+withLanguageFallback(fallbackPois).forEach((poi, index) => Object.assign(fallbackPois[index], poi));
+
 function isValidPoi(p) {
   return (
     p &&
@@ -26,7 +48,7 @@ export async function fetchPois(timeoutMs = 6000) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     if (!Array.isArray(data) || !data.every(isValidPoi)) throw new Error('Dữ liệu từ API không đúng định dạng');
-    return data;
+    return withLanguageFallback(data);
   } finally {
     clearTimeout(timer);
   }
