@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import QRCode from 'qrcode';
 
-const APP_URL = 'https://se-2026-psi.vercel.app/';
+const APP_URL = 'https://se2026-mobile-phi.vercel.app/';
 
 export default function AppQrBubble({ t }) {
   const [open, setOpen] = useState(false);
