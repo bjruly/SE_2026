@@ -319,6 +319,15 @@ export default function Home() {
               >
                 ⏸ {t.pause}
               </button>
+              {(narration.status === 'playing' || narration.status === 'paused') && (
+                <button
+                  type="button"
+                  className="playback-button"
+                  onClick={narration.stop}
+                >
+                  ⏹ {t.stop}
+                </button>
+              )}
             </div>
           </div>
           <MapView

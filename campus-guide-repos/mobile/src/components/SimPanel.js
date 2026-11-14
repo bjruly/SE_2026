@@ -23,7 +23,10 @@ export default function SimPanel({ pois, lang, t, mode, activeKey, onUseGps, onS
 
   return (
     <View style={styles.wrap}>
-      <Text style={styles.title}>{t.simTitle}</Text>
+      <View style={styles.heading}>
+        <Text style={styles.title}>{t.simTitle}</Text>
+        <Text style={styles.marker}>⌖</Text>
+      </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
         {chips.map((c) => (
           <Pressable key={c.key} onPress={c.onPress} style={[styles.chip, current === c.key && styles.chipActive]}>
@@ -37,11 +40,13 @@ export default function SimPanel({ pois, lang, t, mode, activeKey, onUseGps, onS
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: 6 },
-  title: { fontSize: 13, fontWeight: '600', color: colors.text },
-  chips: { gap: 6 },
-  chip: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1, borderColor: '#d1d5db', backgroundColor: '#fff' },
-  chipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
-  chipText: { fontSize: 13, color: colors.text },
+  wrap: { gap: 8, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#e2e8f0' },
+  heading: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
+  title: { flex: 1, fontSize: 13, lineHeight: 18, fontWeight: '700', color: colors.navy },
+  marker: { color: colors.teal, fontSize: 17, fontWeight: '700' },
+  chips: { gap: 7, paddingRight: 4 },
+  chip: { minHeight: 34, justifyContent: 'center', paddingVertical: 6, paddingHorizontal: 12, borderRadius: 11, borderWidth: 1, borderColor: '#dbe3eb', backgroundColor: '#fff' },
+  chipActive: { backgroundColor: colors.teal, borderColor: colors.teal },
+  chipText: { fontSize: 12, fontWeight: '600', color: '#475569' },
   chipTextActive: { color: '#fff' },
 });

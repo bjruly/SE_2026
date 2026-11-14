@@ -1,12 +1,12 @@
 # App di động – Thuyết minh tự động (Expo / React Native)
 
-Phần app di động của đồ án. Công nghệ: **Expo SDK 57** (React Native, JavaScript), `expo-location` (GPS), `expo-speech` (giọng đọc của thiết bị), `expo-camera` (quét QR), `react-native-webview` (hiển thị bản đồ MapLibre GL, mặc định OpenFreeMap), `react-native-safe-area-context`.
+Phần app di động của đồ án. Công nghệ: **Expo SDK 58** (React Native, JavaScript), `expo-location` (GPS), `expo-speech` (giọng đọc của thiết bị), `expo-camera` (quét QR), `react-native-webview` (hiển thị bản đồ MapLibre GL, mặc định OpenFreeMap), `react-native-safe-area-context`.
 Xem README ở thư mục gốc để biết tổng quan, chức năng và các điểm chưa xác định.
 
 ## Cách chạy (bằng Expo Go trên điện thoại)
 
 1. Trên máy tính, cài **Node.js** (bản LTS, khuyến nghị 22 trở lên).
-2. Trên điện thoại, cài ứng dụng **Expo Go** từ App Store hoặc Google Play. Dự án dùng **SDK 57** để tương thích với Expo Go hiện có trên điện thoại.
+2. Trên điện thoại, cài ứng dụng **Expo Go** từ App Store hoặc Google Play. Dự án dùng **SDK 58** để tương thích với Expo Go SDK 58.
 3. Máy tính và điện thoại phải **cùng mạng Wi-Fi**.
 4. Chạy:
 
@@ -19,6 +19,14 @@ npx.cmd expo start
 6. Khi app mở, cấp quyền **vị trí** và **camera** khi được hỏi (nếu muốn dùng GPS thật và quét QR).
 
 Nếu điện thoại không kết nối được tới máy tính (mạng công ty/trường chặn, tường lửa), thử `npx.cmd expo start --tunnel`.
+
+## Deploy giao diện mobile lên Vercel (bản web)
+
+Nếu muốn mở giao diện app bằng trình duyệt trên điện thoại, trong Vercel tạo project với **Root Directory** là `campus-guide-repos/mobile`. Vercel dùng `npm run build` để chạy `expo export --platform web` và publish thư mục `dist` theo cấu hình trong `vercel.json`.
+
+Thêm `EXPO_PUBLIC_API_URL` trong **Project Settings → Environment Variables** với URL backend API giống cấu hình web/dashboard, rồi redeploy để giao diện mobile web lấy dữ liệu từ backend. Không dùng URL database hoặc URL web/dashboard. Nếu không cấu hình biến này, app dùng dữ liệu địa điểm mẫu cục bộ.
+
+Đây là bản chạy trong trình duyệt, không phải ứng dụng Android/iOS cài độc lập. Muốn tạo app cài trên điện thoại thì dùng EAS Build.
 
 Kiểm tra nhanh mã nguồn biên dịch được (không cần điện thoại):
 
@@ -57,7 +65,7 @@ mobile/
 
 ## Lỗi thường gặp
 
-- **Expo Go báo phiên bản không tương thích:** kiểm tra Expo Go có hỗ trợ SDK 57 và cài lại dependencies bằng `npm.cmd install`.
+- **Expo Go báo phiên bản không tương thích:** kiểm tra Expo Go có hỗ trợ SDK 58 và cài lại dependencies bằng `npm.cmd install`.
 - **Điện thoại không kết nối được:** kiểm tra cùng Wi-Fi, tắt VPN, thử `npx expo start --tunnel`.
 - **Không lấy được vị trí:** kiểm tra đã cấp quyền vị trí cho Expo Go và đã bật định vị trên điện thoại; hoặc dùng **Giả lập vị trí**.
 - **Không quét được QR:** kiểm tra quyền camera; có thể nhập mã thủ công, ví dụ `DHSG-POI-001`.
