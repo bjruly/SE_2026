@@ -336,6 +336,8 @@ const styles = StyleSheet.create({
   header: {
     minHeight: 88, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
     paddingHorizontal: 12, paddingVertical: 10, gap: 8, backgroundColor: colors.navy,
+    // Keep the language menu above the MapLibre iframe when it expands over the map.
+    position: 'relative', zIndex: 1000, elevation: 1000,
   },
   brand: { flex: 1, minWidth: 0, flexDirection: 'row', alignItems: 'center', gap: 9 },
   brandMark: {
@@ -358,6 +360,7 @@ const styles = StyleSheet.create({
   langMenu: {
     position: 'absolute', top: 44, right: 0, width: 190, padding: 6, borderRadius: 12,
     backgroundColor: '#fff', borderWidth: 1, borderColor: '#d7e4e8',
+    zIndex: 1001, elevation: 1001,
     shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 8, shadowOffset: { width: 0, height: 4 },
     elevation: 8,
   },
@@ -367,7 +370,7 @@ const styles = StyleSheet.create({
   langOptionLabel: { flex: 1, color: colors.navy, fontSize: 12, fontWeight: '600' },
   langOptionTextActive: { color: colors.primary, fontWeight: '800' },
   langCheck: { color: colors.primary, fontSize: 15, fontWeight: '800' },
-  body: { flex: 1, backgroundColor: colors.bg },
+  body: { flex: 1, backgroundColor: colors.bg, zIndex: 0 },
   mapScreen: { flex: 1 },
   mapBox: { flex: 1.08, minHeight: 190, backgroundColor: '#e5edf3' },
   sheetScroll: { flex: 1.1, backgroundColor: '#f8fafc' },
