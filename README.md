@@ -100,16 +100,12 @@ Các thư mục nặng và file bí mật (`node_modules`, `.next`, `out`, `dist
 | 25/10/2026 | Hỏi cách cập nhật web đang chạy trên Vercel (`se-2026-psi.vercel.app`, bản cũ) lên bản mới. Xác định: chỉ cần đẩy code mới lên GitHub là Vercel tự triển khai lại; muốn dùng backend thì phải triển khai `server/` trước, rồi đặt `NEXT_PUBLIC_API_URL` cho web và thêm địa chỉ web vào `CORS_ORIGINS` của server. |
 | 26/10/2026 | Hoàn thiện trang thống kê dashboard: chọn khoảng ngày, xử lý thống kê ở backend và cập nhật giao diện. Bổ sung ghi nhận phiên online từ web/mobile. Chỉnh giao diện web/mobile và bản đồ, thêm bong bóng QR dẫn tới ứng dụng. |
 | 28/10/2026 | Có commit “Done test” cho trang thống kê dashboard. |
-| 30/10/2026 | Có commit tự động dạng “Agent host session”; thông điệp commit không nêu rõ nội dung công việc. |
 | 31/10/2026 | Cải thiện bản đồ địa điểm và trải nghiệm phát thuyết minh trên web; chỉnh trang chính, danh sách POI, giao diện và biểu tượng. |
-| 02/11/2026 | Tạo tài liệu sơ đồ luồng dữ liệu ([DFD](./campus-guide-repos/docs/DFD.md)). |
-| 04/11/2026 | Có commit tự động; thông điệp commit không nêu rõ nội dung công việc. |
-| 05/11/2026 | Bổ sung tài liệu [PRD](./campus-guide-repos/PRD-HeThong-ThuyetMinh-DHSG/PRD/PRD-HeThong-ThuyetMinh-DHSG.md) và hình minh họa; cập nhật POI, cách đánh số địa điểm trên bản đồ, dữ liệu SQL và kiểm thử backend. |
+| 02/11/2026 | Tạo tài liệu sơ đồ luồng dữ liệu DFD. |
+| 05/11/2026 | Bổ sung tài liệu PRD và hình minh họa, cập nhật POI, cách đánh số địa điểm trên bản đồ, dữ liệu SQL và kiểm thử backend. |
 | 08/11/2026 | Thêm MapPicker vào dashboard; hỗ trợ URL audio trong biểu mẫu POI và phần phát thuyết minh trên web. Cập nhật PRD/DFD, UCD và dữ liệu địa điểm. |
-| 09/11/2026 | Đồng bộ dữ liệu ba POI campus giữa mobile, SQL seed và tài liệu; xóa một số QR mẫu POI 004–006. |
-| 10/11/2026 | Có commit tự động; thông điệp commit không nêu rõ nội dung công việc. |
+| 09/11/2026 | Đồng bộ dữ liệu ba POI campus giữa mobile, SQL seed và tài liệu; xóa một số QR mẫu POI test |
 | 11/11/2026 | Đồng bộ giao diện/chức năng mobile với web; cập nhật màn hình POI, QR scanner, biểu tượng và giao diện; nâng Expo SDK 57 lên 58 và cập nhật hook tải POI. |
 | 12/11/2026 | Cập nhật cấu hình và hướng dẫn triển khai lại ứng dụng mobile, gồm cấu hình Vercel. |
-| 13/11/2026 | Có commit tự động; thông điệp commit không nêu rõ nội dung công việc. |
 | 14/11/2026 | Thêm nút dừng thuyết minh trên web và emoji/icon cho năm POI trên web/mobile. |
-| 15/11/2026 | Cập nhật DFD; chỉnh giao diện mobile, bong bóng QR và bản dịch web/mobile; bổ sung hỗ trợ thêm bốn ngôn ngữ cùng các cập nhật liên quan đến dữ liệu POI và backend. |
+| 15/11/2026 | Cập nhật DFD; chỉnh giao diện mobile, bong bóng QR và bản dịch web/mobile, bổ sung hỗ trợ thêm bốn ngôn ngữ cùng các cập nhật liên quan đến dữ liệu POI và backend. Tạm hoàn thành đồ án  |
