@@ -2,9 +2,11 @@
 
 Đồ án môn học, **hướng 1: FE Dev** (React Native + React.js, gồm CD/CI). Nhóm 3 thành viên, giao tiếp và nộp bài qua GitHub.
 
-Hệ thống tự động phát thuyết minh theo ngôn ngữ người dùng chọn (Việt, Anh, Trung) khi họ đi vào vùng của một địa điểm trong khuôn viên Đại học Sài Gòn. Repository gồm **web (PWA)**, **app di động (Expo)**, **backend + PostgreSQL** và **dashboard quản trị**.
+Hệ thống tự động phát thuyết minh theo ngôn ngữ người dùng chọn (hỗ trợ **7 ngôn ngữ**: Tiếng Việt, English, 中文, 日本語, 한국어, ภาษาไทย, Deutsch) khi họ đi vào vùng của một địa điểm trong khuôn viên Đại học Sài Gòn (cơ sở 273 An Dương Vương, Q.5). Repository gồm **web (PWA)**, **app di động (Expo SDK 58)**, **backend + PostgreSQL** và **dashboard quản trị**.
 
-> **Trạng thái:** bản demo chạy được, dùng **3 điểm mẫu với tọa độ tạm**. Web đang chạy trên Vercel. Backend, database và dashboard mới chạy thử trên máy, **chưa triển khai thật**. Xem mục "Chưa xác định".
+> **Trạng thái hiện tại:** Hệ thống đã hoàn thiện tính năng cho cả 4 thành phần. Web PWA đang chạy trực tiếp trên Vercel (`se-2026-psi.vercel.app`); ứng dụng di động hỗ trợ chạy qua Expo Go lẫn bản web trên Vercel; Dashboard đã tích hợp bộ chọn tọa độ bản đồ trực quan (`MapPicker`), nghe thử audio và thống kê trực tiếp; hệ thống hỗ trợ phát âm thanh qua file `audioUrl` riêng kèm cơ chế tự động chuyển sang giọng đọc thiết bị (TTS). Dữ liệu hiện đồng bộ 3 địa điểm tiêu biểu (DHSG-POI-001–003) với đầy đủ 7 ngôn ngữ.
+
+> 💡 **Tài liệu vấn đáp / Control code:** Xem file [`HUONG-DAN-CONTROL-CODE.md`](./HUONG-DAN-CONTROL-CODE.md) để tra cứu nhanh vị trí code, giải thích luồng xử lý và các câu hỏi thường gặp khi bảo vệ đồ án.
 
 ## Cấu trúc repository
 
@@ -64,24 +66,25 @@ git push -u origin main
 
 Các thư mục nặng và file bí mật (`node_modules`, `.next`, `out`, `dist`, `.env`) đã được `.gitignore` của từng phần loại ra. **Không bao giờ đưa file `.env` (chứa mật khẩu database) lên GitHub.**
 
-## Đã chốt
+## Đã chốt và hoàn thiện
 
-- Chủ đề: khuôn viên Đại học Sài Gòn. Ngôn ngữ: Việt, Anh, Trung. Lập trình bằng JavaScript.
-- Web PWA (Next.js) và app React Native (Expo); tự động phát thuyết minh khi vào vùng địa điểm (GPS) là chức năng bắt buộc.
-- Bản đồ: MapLibre + OpenFreeMap (có dự phòng OpenStreetMap), thay cho bản đồ CartoDB đang báo cần khóa API.
-- Backend Node.js (Express) + PostgreSQL (Neon), SQL thuần. Dashboard là ứng dụng riêng, có 2 vai trò: Quản trị, Biên tập.
-- Web và app gọi API, mất mạng hoặc API lỗi thì dùng `pois.json` dự phòng.
-- Thống kê lượt nghe và lượt quét QR theo địa điểm và ngôn ngữ (ẩn danh, không lưu vị trí).
-- Âm thanh hiện là giọng đọc của thiết bị; về sau muốn dùng file audio của nhóm.
-- CD/CI bắt buộc. Dùng 1 repo, tên folder dự án là `campus-guide-repos`.
+- **Chủ đề & Phạm vi:** Khuôn viên Đại học Sài Gòn (cơ sở 273 An Dương Vương, Q.5).
+- **Đa ngôn ngữ:** Hỗ trợ đầy đủ **7 ngôn ngữ** gồm Tiếng Việt (`vi`), English (`en`), 中文 (`zh`), 日本語 (`ja`), 한국어 (`ko`), ภาษาไทย (`th`), Deutsch (`de`) xuyên suốt Web, Mobile, Server và Dashboard.
+- **Nền tảng người dùng:** Web PWA (Next.js 16 App Router) và ứng dụng di động (Expo SDK 58 / React Native).
+- **Thuyết minh & Âm thanh:** Tự động phát thuyết minh khi vào vùng địa điểm (GPS / Geofence Haversine) và quét mã QR. Hỗ trợ phát file âm thanh riêng (`audioUrl`) với cơ chế tự động chuyển sang giọng đọc thiết bị (Web Speech API / `expo-speech`) khi không có file hoặc file gặp sự cố; hỗ trợ đầy đủ các nút điều khiển Phát, Tạm dừng, Tiếp tục, Dừng.
+- **Bản đồ:** MapLibre GL JS vector (OpenFreeMap) với cơ chế tự động dự phòng sang ô ảnh OpenStreetMap nếu mất kết nối style.
+- **Dashboard quản trị:** Ứng dụng Next.js riêng biệt với 2 vai trò phân quyền (Quản trị, Biên tập). Tích hợp bộ chọn tọa độ bản đồ trực quan (`MapPicker`), nghe thử file audio, tạo & tải ảnh mã QR (kiểu mã và liên kết), theo dõi thống kê đa chiều và phiên online theo thời gian thực.
+- **Backend & Database:** Node.js (Express 5) + PostgreSQL (Neon), SQL thuần với kết nối pool, băm mật khẩu `bcryptjs`, xác thực JWT 8 giờ, giới hạn tần suất đăng nhập và kiểm tra dữ liệu bằng `zod`.
+- **Dữ liệu dự phòng:** Web và app tự động dùng file `pois.json` dự phòng nội bộ nếu API chưa cấu hình hoặc mất mạng.
+- **CD/CI:** GitHub Actions tự động kiểm thử và build cho cả Web, Mobile, Server và Dashboard; hỗ trợ triển khai tự động lên GitHub Pages và Vercel.
+- **Tài liệu thiết kế:** Đã hoàn thiện tài liệu sơ đồ luồng dữ liệu ([`DFD.md`](./campus-guide-repos/docs/DFD.md)), sơ đồ thực thể liên kết ([`ERD.md`](./campus-guide-repos/server/docs/ERD.md)), và tài liệu đặc tả yêu cầu chi tiết ([`PRD.md`](./campus-guide-repos/PRD-HeThong-ThuyetMinh-DHSG/PRD/PRD-HeThong-ThuyetMinh-DHSG.md)).
 
-## Chưa xác định (cần nhóm quyết hoặc hỏi thầy)
+## Kế hoạch báo cáo cuối kỳ
 
-- Backend và database nằm trong hướng 1 (FE) hay thuộc hướng 2, 3 của slide? Nên hỏi thầy.
-- Nghĩa chính xác của "tự động" theo thầy, và thầy cần thấy gì ở mốc tuần 7.
-- Triển khai thật server và dashboard (Vercel, Neon); CD cho app mobile tới mức nào.
-- Dữ liệu thật của các địa điểm trong khuôn viên; thời điểm chuyển sang file audio riêng.
-- Loại UML mà môn học yêu cầu (chưa vẽ).
+- **Dữ liệu thực địa:** Tiếp tục khảo sát và tinh chỉnh tọa độ GPS thực tế của các công trình trong khuôn viên ĐHSG để tăng độ chính xác ngoài sân trường.
+- **Triển khai chính thức:** Triển khai Backend và Database lên dịch vụ đám mây (Neon + Vercel) để kết nối trực tiếp với bản Web và Mobile phục vụ buổi báo cáo.
+- **Trình diễn:** Chuẩn bị kịch bản demo tính năng tự động phát bằng cả GPS ngoài trời lẫn chế độ giả lập vị trí tích hợp sẵn trong ứng dụng.
+- **Vấn đáp mã nguồn:** Sử dụng tài liệu [`HUONG-DAN-CONTROL-CODE.md`](./HUONG-DAN-CONTROL-CODE.md) để đối chiếu vị trí code và giải thích kiến trúc hệ thống.
 
 ## Nhật ký
 

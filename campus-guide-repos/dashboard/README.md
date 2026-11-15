@@ -1,6 +1,6 @@
 # Dashboard quản trị (Next.js)
 
-Trang quản trị cho nhóm: thêm/sửa/xóa địa điểm và bản dịch 3 ngôn ngữ, tạo và tải mã QR, xem thống kê lượt nghe và lượt quét QR, quản lý tài khoản admin. Cần **backend** (thư mục `../server`) đang chạy.
+Trang quản trị cho nhóm: thêm/sửa/xóa địa điểm và bản dịch 7 ngôn ngữ (`vi`, `en`, `zh`, `ja`, `ko`, `th`, `de`), tạo và tải mã QR, xem thống kê lượt nghe và lượt quét QR, quản lý tài khoản admin. Cần **backend** (thư mục `../server`) đang chạy.
 
 - **Công nghệ:** Next.js (App Router, JavaScript), thư viện `qrcode` (tạo ảnh QR trên trình duyệt). Giao diện dùng CSS thuần, chưa trau chuốt, để bạn tiếp tục cải thiện UI/UX.
 
@@ -36,8 +36,9 @@ Mã QR có hai kiểu: **mã** (chứa `DHSG-POI-001`, dùng cho ô "Quét QR" t
 
 - Việc ẩn/hiện nút theo vai trò chỉ để cho gọn (`lib/permissions.js`); **backend mới là nơi quyết định quyền thật**.
 - Token đăng nhập lưu trong `localStorage` của trình duyệt (hết hạn sau 8 giờ).
-- Tọa độ nhập bằng tay (vĩ độ, kinh độ); chưa có chức năng chọn điểm trên bản đồ.
-- Ô "Đường dẫn audio" lưu được vào database nhưng web/app chưa dùng; chưa có chức năng tải file audio lên.
+- **Tọa độ & Bản đồ trực quan:** Hỗ trợ chọn điểm trực quan trên bản đồ (`MapPicker` - MapLibre + OpenStreetMap), click chuột để chọn tọa độ, kéo thả ghim vị trí, hiển thị vòng bán kính geofence theo thời gian thực và phím tắt chuyển nhanh về khuôn viên ĐHSG (273 An Dương Vương).
+- **Âm thanh:** Hỗ trợ nhập đường dẫn file âm thanh thuyết minh (`audioUrl`) kèm trình nghe thử trực tiếp `<audio controls>` ngay trên form biên tập, tự động đồng bộ sang Web/Mobile với cơ chế fallback sang giọng đọc thiết bị (TTS).
+- **Xem nhanh vị trí:** Nút mở nhanh vị trí hiện tại trên Google Maps ngoài đời thực.
 - Triển khai: tạo project Vercel riêng, **Root Directory** là `campus-guide-repos/dashboard`, đặt `NEXT_PUBLIC_API_URL` và `NEXT_PUBLIC_WEB_URL` trong Environment Variables. Chưa triển khai thử thật.
 
 ## Cấu trúc
@@ -52,6 +53,6 @@ dashboard/
 │     ├─ page.js               thống kê
 │     ├─ pois/ (page, new/, [id]/)
 │     ├─ qr/page.js, users/page.js, account/page.js
-├─ components/                 Shell (menu), PoiForm (form địa điểm)
-└─ lib/                        api.js (gọi backend), auth.js (đăng nhập), permissions.js
+├─ components/                 Shell (menu), PoiForm (form địa điểm), MapPicker (chọn tọa độ trên bản đồ)
+└─ lib/                        api.js (gọi backend), auth.js (đăng nhập), permissions.js, circle.js
 ```

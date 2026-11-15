@@ -1,6 +1,6 @@
 # Web PWA – Thuyết minh tự động (Next.js)
 
-Phần web của đồ án. Công nghệ: **Next.js** (App Router, JavaScript), **React**, **MapLibre GL JS 5.x** (bản đồ vector, mặc định OpenFreeMap), **html5-qrcode** (quét QR bằng camera), giọng đọc có sẵn của trình duyệt (Web Speech API).
+Phần web của đồ án. Công nghệ: **Next.js 16** (App Router, JavaScript), **React**, **MapLibre GL JS 5.x** (bản đồ vector, mặc định OpenFreeMap), **html5-qrcode** (quét QR bằng camera), phát file âm thanh thuyết minh (`audioUrl`) kết hợp giọng đọc có sẵn của trình duyệt (Web Speech API) tự động fallback. Hỗ trợ đầy đủ **7 ngôn ngữ**.
 Xem README ở thư mục gốc để biết tổng quan, chức năng và các điểm chưa xác định.
 
 ## Cách chạy
@@ -47,10 +47,15 @@ web/
 │  ├─ geofence.js, circle.js   logic vùng và hình học (có kiểm thử)
 │  ├─ poiSource.js, qr.js      API/dữ liệu dự phòng, xử lý mã QR
 │  ├─ mapConfig.js             cấu hình nhà cung cấp bản đồ
-│  └─ i18n.js                  chuỗi giao diện Việt, Anh, Trung
-├─ data/pois.json              dữ liệu địa điểm (mẫu)
+│  └─ i18n.js                  chuỗi giao diện 7 ngôn ngữ (Việt, Anh, Trung, Nhật, Hàn, Thái, Đức)
+├─ data/pois.json              dữ liệu địa điểm (mẫu 7 ngôn ngữ)
 └─ public/                     sw.js, icon-192.png, icon-512.png
 ```
+
+## Triển khai (Vercel & GitHub Pages)
+
+- **Vercel:** Triển khai gốc (mặc định không cần cấu hình thêm `basePath`).
+- **GitHub Pages:** Hỗ trợ dynamic `basePath` qua biến môi trường `NEXT_PUBLIC_BASE_PATH=/SE_2026` được tự động nạp trong GitHub Actions workflow.
 
 ## Lỗi thường gặp
 
