@@ -102,9 +102,9 @@ Các thư mục nặng và file bí mật (`node_modules`, `.next`, `out`, `dist
 | 28/10/2026 | Có commit “Done test” cho trang thống kê dashboard. |
 | 30/10/2026 | Có commit tự động dạng “Agent host session”; thông điệp commit không nêu rõ nội dung công việc. |
 | 31/10/2026 | Cải thiện bản đồ địa điểm và trải nghiệm phát thuyết minh trên web; chỉnh trang chính, danh sách POI, giao diện và biểu tượng. |
-| 02/11/2026 | Tạo tài liệu sơ đồ luồng dữ liệu ([DFD](./campus-guide-repos/docs/DFD.md)). |
+| 02/11/2026 | Tạo tài liệu sơ đồ luồng dữ liệu DFD |
 | 04/11/2026 | Có commit tự động; thông điệp commit không nêu rõ nội dung công việc. |
-| 05/11/2026 | Bổ sung tài liệu [PRD](./campus-guide-repos/PRD-HeThong-ThuyetMinh-DHSG/PRD/PRD-HeThong-ThuyetMinh-DHSG.md) và hình minh họa; cập nhật POI, cách đánh số địa điểm trên bản đồ, dữ liệu SQL và kiểm thử backend. |
+| 05/11/2026 | Bổ sung tài liệu PRD và hình minh họa; cập nhật POI, cách đánh số địa điểm trên bản đồ, dữ liệu SQL và kiểm thử backend. |
 | 08/11/2026 | Thêm MapPicker vào dashboard; hỗ trợ URL audio trong biểu mẫu POI và phần phát thuyết minh trên web. Cập nhật PRD/DFD, UCD và dữ liệu địa điểm. |
 | 09/11/2026 | Đồng bộ dữ liệu ba POI campus giữa mobile, SQL seed và tài liệu; xóa một số QR mẫu POI 004–006. |
 | 10/11/2026 | Có commit tự động; thông điệp commit không nêu rõ nội dung công việc. |
@@ -112,4 +112,4 @@ Các thư mục nặng và file bí mật (`node_modules`, `.next`, `out`, `dist
 | 12/11/2026 | Cập nhật cấu hình và hướng dẫn triển khai lại ứng dụng mobile, gồm cấu hình Vercel. |
 | 13/11/2026 | Có commit tự động; thông điệp commit không nêu rõ nội dung công việc. |
 | 14/11/2026 | Thêm nút dừng thuyết minh trên web và emoji/icon cho năm POI trên web/mobile. |
-| 15/11/2026 | Cập nhật DFD; chỉnh giao diện mobile, bong bóng QR và bản dịch web/mobile; bổ sung hỗ trợ thêm bốn ngôn ngữ cùng các cập nhật liên quan đến dữ liệu POI và backend. |
+| 15/11/2026 | Cập nhật DFD; chỉnh giao diện mobile, bong bóng QR và bản dịch web/mobile; bổ sung hỗ trợ thêm bốn ngôn ngữ cùng các cập nhật liên quan đến dữ liệu POI và backend. Tạm hoàn thành đồ án |
