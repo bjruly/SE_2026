@@ -13,6 +13,7 @@ import PoiList from '@/components/PoiList';
 import QrScanner from '@/components/QrScanner';
 import SimulationPanel from '@/components/SimulationPanel';
 import AppQrBubble from '@/components/AppQrBubble';
+import DistanceTool from '@/components/DistanceTool';
 
 function LanguagePicker({ lang, onChange, label }) {
   const [open, setOpen] = useState(false);
@@ -411,6 +412,9 @@ export default function Home() {
             <button type="button" role="tab" aria-selected={tab === 'qr'} className={tab === 'qr' ? 'active' : ''} onClick={() => setTab('qr')}>
               {t.tabQr}
             </button>
+            <button type="button" role="tab" aria-selected={tab === 'dist'} className={tab === 'dist' ? 'active' : ''} onClick={() => setTab('dist')}>
+              {t.tabDist}
+            </button>
           </nav>
 
           {tab === 'list' && (
@@ -426,6 +430,7 @@ export default function Home() {
             </>
           )}
           {tab === 'qr' && <QrScanner t={t} onCode={openByQr} notFound={qrNotFound} />}
+          {tab === 'dist' && <DistanceTool pois={pois} lang={lang} t={t} position={position} />}
 
           <SimulationPanel
             pois={pois}
