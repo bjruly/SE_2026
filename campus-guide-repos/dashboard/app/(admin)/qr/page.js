@@ -57,7 +57,7 @@ export default function QrPage() {
     <>
       <h1>Mã QR</h1>
       <p className="muted small">
-        QR dạng <b>mã</b> dùng cho chức năng “Quét QR” trong web và app.
+        QR dạng <b>mã</b> dùng cho chức năng “Quét QR” trong web và apps
         {WEB_URL ? <> QR dạng <b>liên kết</b> mở thẳng web ({WEB_URL}) khi quét bằng camera điện thoại.</> : <> Chưa đặt NEXT_PUBLIC_WEB_URL nên chưa tạo được QR dạng liên kết.</>}
       </p>
       {error && <p className="error">{error}</p>}
