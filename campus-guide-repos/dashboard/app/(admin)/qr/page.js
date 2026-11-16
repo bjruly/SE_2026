@@ -23,7 +23,7 @@ function QrCard({ poi }) {
     a.download = name;
     a.click();
   };
-
+// QRCode
   return (
     <div className="card qr-card">
       <h3>{poi.name.vi}</h3>
